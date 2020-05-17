@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "id": "withery",
+  "id": "quartus",
   "version": "${version}",
-  "name": "Withery",
-  "description": "A wither-focused enhancement to Minecraft.",
+  "name": "Quartus",
+  "description": "Fabric Mod for Minecraft that adds a FPGA compiler to the game.",
   "authors": [
-    "geeleonidas"
+    "marcuscastelo"
   ],
   "contact": {
     "homepage": "https://geeleonidas.github.io/Withery/"
@@ -15,13 +15,13 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.geeleonidas.withery.Withery"
+      "io.github.marcuscastelo.quartus.Quartus"
     ],
     "client": [
     ]
   },
   "mixins": [
-    "withery.mixins.json"
+    "quartus.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.7.8+build.189",
