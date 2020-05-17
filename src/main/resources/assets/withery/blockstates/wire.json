@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "turn=false,facing=north": { "model": "withery:block/wire", "y": 0},
+    "turn=false,facing=east": { "model": "withery:block/wire", "y": 90},
+    "turn=false,facing=south": { "model": "withery:block/wire", "y": 180},
+    "turn=false,facing=west": { "model": "withery:block/wire", "y": 270},
+    "turn=true,facing=north": { "model": "withery:block/wire_turn", "y": 0},
+    "turn=true,facing=east": { "model": "withery:block/wire_turn", "y": 90},
+    "turn=true,facing=south": { "model": "withery:block/wire_turn", "y": 180},
+    "turn=true,facing=west": { "model": "withery:block/wire_turn", "y": 270}
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "withery",
+  "version": "${version}",
+  "name": "Withery",
+  "description": "A wither-focused enhancement to Minecraft.",
+  "authors": [
+    "geeleonidas"
+  ],
+  "contact": {
+    "homepage": "https://geeleonidas.github.io/Withery/"
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/withery/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.geeleonidas.withery.Withery"
+    ],
+    "client": [
+    ]
+  },
+  "mixins": [
+    "withery.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.7.8+build.189",
+    "fabric": "*",
+    "minecraft": "1.15.2"
+  }
+}
