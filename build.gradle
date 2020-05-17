@@ -23,6 +23,18 @@ dependencies {
 
 repositories { maven {url "http://tehnut.info/maven"} }
 dependencies { modCompile "mcp.mobius.waila:Hwyla:1.15.2-1.9.20-71" }
+
+repositories {
+    maven {
+        name = "CottonMC"
+        url = "http://server.bbkr.space:8081/artifactory/libs-release"
+    }
+}
+
+dependencies {
+    modImplementation "io.github.cottonmc:LibGui:1.10.0+1.15.2"
+}
+
 processResources {
     inputs.property "version", project.version
 

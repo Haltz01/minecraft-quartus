@@ -1,6 +1,7 @@
 package io.github.marcuscastelo.quartus.block.circuit_components;
 
 import io.github.marcuscastelo.quartus.Quartus;
+import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
@@ -40,7 +41,7 @@ public class WireBlock extends HorizontalFacingBlock {
         List<Direction> foundDirs = new ArrayList<>();
         for (Direction direction : lookDirs) {
             Block aroundBlock = world.getBlockState(pos.offset(direction)).getBlock();
-            if (aroundBlock == Quartus.wireBlock || aroundBlock instanceof AbstractGateBlock || aroundBlock instanceof LeverBlock) {
+            if (aroundBlock == QuartusBlocks.WIRE || aroundBlock instanceof AbstractGateBlock || aroundBlock instanceof LeverBlock) {
                 foundDirs.add(direction);
             }
         }

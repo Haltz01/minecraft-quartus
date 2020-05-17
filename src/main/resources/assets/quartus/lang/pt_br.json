@@ -1,3 +1,4 @@
 {
-  "itemGroup.quartus.item_group": "Quartus"
+  "itemGroup.quartus.item_group": "Quartus",
+  "gui.quartus.compile_btn": "Compilar"
 }
