@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 public abstract class AbstractGateBlock extends HorizontalFacingBlock {
     public AbstractGateBlock() {
         super(Settings.copy(Blocks.REPEATER));
-        this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.EAST));
+        this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
 
     @Override

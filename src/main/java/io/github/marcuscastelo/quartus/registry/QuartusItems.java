@@ -11,6 +11,7 @@ import net.minecraft.util.registry.Registry;
 
 public class QuartusItems {
     public static final BlockItem WIRE;
+    public static final BlockItem EXTENSOR_GATE;
     public static final BlockItem AND_GATE;
     public static final BlockItem OR_GATE;
     public static final BlockItem XOR_GATE;
@@ -18,6 +19,7 @@ public class QuartusItems {
     public static final BlockItem NAND_GATE;
     public static final BlockItem NOR_GATE;
     public static final BlockItem COMPILER;
+    public static final BlockItem INPUT;
 
     public static final Item FLOPPY_DISK;
 
@@ -32,12 +34,17 @@ public class QuartusItems {
     }
 
     static {
+        WIRE = register("wire", QuartusBlocks.WIRE);
+        EXTENSOR_GATE = register("extensor_gate", QuartusBlocks.EXTENSOR_GATE);
+
         AND_GATE = register("and_gate", QuartusBlocks.AND_GATE);
         OR_GATE = register("or_gate", QuartusBlocks.OR_GATE);
-        WIRE = register("wire", QuartusBlocks.WIRE);
         XOR_GATE = NOR_GATE = NOT_GATE = NAND_GATE = null;
 
         COMPILER = register("compiler", QuartusBlocks.COMPILER);
+        INPUT = register("input", QuartusBlocks.INPUT);
+
         FLOPPY_DISK = register("floppy_disk", new Item(new Item.Settings().group(Quartus.ITEMGROUP)));
+
     }
 }

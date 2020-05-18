@@ -17,8 +17,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import javax.swing.*;
-
 public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityProvider {
     public CompilerBlock() {
         super(Settings.copy(Blocks.ANVIL));
@@ -42,7 +40,7 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) return ActionResult.PASS;
+        if (world.isClient) return ActionResult.SUCCESS;
 
         ContainerProviderRegistry.INSTANCE.openContainer(Quartus.id("compiler"), player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
 

@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "io.github.geeleonidas.withery.mixin",
+  "package": "io.github.marcuscastelo.quartus.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
   ],

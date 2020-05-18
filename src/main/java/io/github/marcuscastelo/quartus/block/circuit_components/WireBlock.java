@@ -1,6 +1,7 @@
 package io.github.marcuscastelo.quartus.block.circuit_components;
 
 import io.github.marcuscastelo.quartus.Quartus;
+import io.github.marcuscastelo.quartus.circuit_logic.QuartusTransportInfoProvider;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityContext;
@@ -18,12 +19,15 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
+import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class WireBlock extends HorizontalFacingBlock {
+public class WireBlock extends HorizontalFacingBlock implements QuartusTransportInfoProvider {
     public static final BooleanProperty TURN;
+
+    private static final List<Direction> HORIZONTAL_DIRECTIONS = Arrays.asList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
     public WireBlock() {
         super(Settings.copy(Blocks.REPEATER));
         this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH).with(TURN, false));
@@ -37,9 +41,9 @@ public class WireBlock extends HorizontalFacingBlock {
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos, boolean moved) {
         Quartus.LOGGER.info("Update received");
-        List<Direction> lookDirs = Arrays.asList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
+
         List<Direction> foundDirs = new ArrayList<>();
-        for (Direction direction : lookDirs) {
+        for (Direction direction : HORIZONTAL_DIRECTIONS) {
             Block aroundBlock = world.getBlockState(pos.offset(direction)).getBlock();
             if (aroundBlock == QuartusBlocks.WIRE || aroundBlock instanceof AbstractGateBlock || aroundBlock instanceof LeverBlock) {
                 foundDirs.add(direction);
@@ -54,7 +58,7 @@ public class WireBlock extends HorizontalFacingBlock {
         }
 
         if (foundDirs.size() == 2 && foundDirs.get(0).getOpposite()==foundDirs.get(1)) {
-            Direction newDir = lookDirs.get(Math.min(lookDirs.indexOf(foundDirs.get(0)), lookDirs.indexOf(foundDirs.get(1))));
+            Direction newDir = HORIZONTAL_DIRECTIONS.get(Math.min(HORIZONTAL_DIRECTIONS.indexOf(foundDirs.get(0)), HORIZONTAL_DIRECTIONS.indexOf(foundDirs.get(1))));
             world.setBlockState(pos, state.with(FACING, newDir).with(TURN, false));
             return;
         }
@@ -68,10 +72,10 @@ public class WireBlock extends HorizontalFacingBlock {
 
 
         Direction facingDir = state.get(FACING);
-        int facingDirVal = lookDirs.indexOf(facingDir);
+        int facingDirVal = HORIZONTAL_DIRECTIONS.indexOf(facingDir);
 
-        int foundDirVal1 = lookDirs.indexOf(foundDirs.get(0));
-        int foundDirVal2 = lookDirs.indexOf(foundDirs.get(1));
+        int foundDirVal1 = HORIZONTAL_DIRECTIONS.indexOf(foundDirs.get(0));
+        int foundDirVal2 = HORIZONTAL_DIRECTIONS.indexOf(foundDirs.get(1));
 
         int targetDirVal;
 
@@ -83,7 +87,7 @@ public class WireBlock extends HorizontalFacingBlock {
 
         int rotationsNeeded = (facingDirVal - targetDirVal);
 
-        Quartus.LOGGER.info("Trying to rotate to " + lookDirs.get(targetDirVal));
+        Quartus.LOGGER.info("Trying to rotate to " + HORIZONTAL_DIRECTIONS.get(targetDirVal));
 
         Direction newDir;
         switch (rotationsNeeded) {
@@ -174,5 +178,29 @@ public class WireBlock extends HorizontalFacingBlock {
 
     static {
         TURN = BooleanProperty.of("turn");
+    }
+
+    @Override
+    public Direction nextDirection(World world, BlockPos pos, Direction facingBefore) {
+        BlockState bs = world.getBlockState(pos);
+        boolean turned = bs.get(TURN);
+        Direction facingNow = bs.get(FACING);
+
+        int fbVal = HORIZONTAL_DIRECTIONS.indexOf(facingBefore);
+        int fnVal = HORIZONTAL_DIRECTIONS.indexOf(facingNow);
+
+        if (!turned) {
+            if (!facingBefore.equals(facingNow) && !facingBefore.equals(facingNow.getOpposite())) {
+                throw new RuntimeException("Fio não está alinhado! (turn=false)");
+            }
+            return facingBefore;
+        } else {
+            if (!facingBefore.equals(facingNow.getOpposite()) && fbVal != (fnVal + 3) % 4)
+                throw new RuntimeException("Fio não está alinhado! (turn=true)");
+            if (facingBefore.equals(facingBefore.getOpposite()))
+                return HORIZONTAL_DIRECTIONS.get((fnVal + 3) % 4);
+            else
+                return facingNow;
+        }
     }
 }
