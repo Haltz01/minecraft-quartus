@@ -2,10 +2,10 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "quartus:block/extensor_gate/upperbase",
-		"1": "quartus:block/distributor_gate/baseside",
-		"2": "quartus:block/distributor_gate/lowerbase",
-		"3": "quartus:block/distributor_gate/centerbasetex",
-		"4": "quartus:block/distributor_gate/centersideopen",
+		"1": "quartus:block/extensor_gate/baseside",
+		"2": "quartus:block/extensor_gate/lowerbase",
+		"3": "quartus:block/extensor_gate/centerbasetex",
+		"4": "quartus:block/extensor_gate/centersideopen",
 		"particle": "quartus:block/extensor_gate/upperbase"
 	},
 	"elements": [

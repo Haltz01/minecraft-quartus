@@ -43,8 +43,6 @@ public class RENDER_TEST_BLOCK extends Block {
             world.setBlockState(r.offset(direction, d), Blocks.DIRT.getDefaultState());
         }
 
-
-
         return ActionResult.SUCCESS;
     }
 }
