@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.SlimeBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -21,7 +23,7 @@ public class RENDER_TEST_BLOCK extends Block {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) return ActionResult.SUCCESS;
+        if (world.isClient) return ActionResult.SUCCESS;
 
         int size = 10;
         net.minecraft.util.math.Direction direction = player.getHorizontalFacing();

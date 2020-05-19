@@ -1,6 +1,7 @@
 package io.github.marcuscastelo.quartus.registry;
 
 import io.github.marcuscastelo.quartus.Quartus;
+import io.github.marcuscastelo.quartus.item.FloppyDiskItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
@@ -46,7 +47,7 @@ public class QuartusItems {
         COMPILER = register("compiler", QuartusBlocks.COMPILER);
         INPUT = register("input", QuartusBlocks.INPUT);
 
-        FLOPPY_DISK = register("floppy_disk", new Item(new Item.Settings().group(Quartus.ITEMGROUP)));
+        FLOPPY_DISK = register("floppy_disk", new FloppyDiskItem());
 
     }
 }

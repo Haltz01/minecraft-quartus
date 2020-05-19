@@ -15,25 +15,23 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class QuartusCottonGUIs {
-    public static void initServer() {
-
-    }
-
     public static void initClient() {
         ContainerProviderRegistry.INSTANCE.registerFactory(Quartus.id("compiler"),  (syncId, identifier, playerEntity, packetByteBuf) -> {
-            Inventory blockInventory = getBlockInventory(playerEntity.world, packetByteBuf.readBlockPos());
-            return new CompilerBlockController(syncId, playerEntity.inventory, blockInventory);
+            BlockPos compilerPos = packetByteBuf.readBlockPos();
+            Inventory blockInventory = getBlockInventory(playerEntity.world, compilerPos);
+            return new CompilerBlockController(syncId, playerEntity.inventory, blockInventory, compilerPos);
         });
 
         ScreenProviderRegistry.INSTANCE.registerFactory(Quartus.id("compiler"), (syncId, identifier, playerEntity, packetByteBuf) -> {
-            Inventory blockInventory = getBlockInventory(playerEntity.world, packetByteBuf.readBlockPos());
-            CompilerBlockController controller = new CompilerBlockController(syncId, playerEntity.inventory, blockInventory);
+            BlockPos compilerPos = packetByteBuf.readBlockPos();
+            Inventory blockInventory = getBlockInventory(playerEntity.world, compilerPos);
+            CompilerBlockController controller = new CompilerBlockController(syncId, playerEntity.inventory, blockInventory, compilerPos);
             return new CompilerBlockScreen(controller, playerEntity);
         });
 
     }
 
-    private static Inventory getBlockInventory(World world, BlockPos pos) {
+    public static Inventory getBlockInventory(World world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof CompilerBlockEntity)
             return (CompilerBlockEntity)blockEntity;

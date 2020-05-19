@@ -1,5 +1,8 @@
 package io.github.marcuscastelo.quartus.blockentity;
 
+import io.github.marcuscastelo.quartus.Quartus;
+import io.github.marcuscastelo.quartus.circuit_logic.QuartusInput;
+import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
@@ -104,5 +107,15 @@ public interface ImplementedInventory extends Inventory {
     @Override
     default boolean canPlayerUseInv(PlayerEntity player) {
         return true;
+    }
+
+    @Override
+    default boolean isValidInvStack(int slot, ItemStack stack) {
+        return stack.getItem().equals(QuartusItems.FLOPPY_DISK);
+    }
+
+    @Override
+    default int getInvMaxStackAmount() {
+        return 1;
     }
 }
