@@ -18,7 +18,7 @@ public class CircuitUtils {
     public static List<QuartusNode> getConnectedNodes(QuartusCircuit circuit, QuartusNode node) {
         World world = node.world;
         List<QuartusNode> connectedNodes = new ArrayList<>();
-        for (Direction approachDirection: node.getOutputDirections()) {
+        for (Direction approachDirection: node.getPossibleOutputDirections()) {
             BlockPos neighborPos = node.pos.offset(approachDirection);
             Block neighborBlock = world.getBlockState(neighborPos).getBlock();
             QuartusNode connectedNode = null;
@@ -56,7 +56,8 @@ public class CircuitUtils {
             //Nenhum nó nessa direção
             if (connectedNode == null) continue;
 
-            if (connectedNode.getInputDirections().contains(approachDirection.getOpposite()))
+            if (connectedNode.isDirectionInput(approachDirection.getOpposite()))
+            if (connectedNode.isDirectionInput(approachDirection.getOpposite()))
                 connectedNodes.add(connectedNode);
             else
                 System.out.println(connectedNode.getNodeType() + " aproximado por direção ruim");

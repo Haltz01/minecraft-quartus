@@ -19,12 +19,12 @@ public class AndGateBlock extends AbstractGateBlock implements QuartusNodeConver
 
         return new AndGateNode(world, pos) {
             @Override
-            public List<Direction> getOutputDirections() {
+            public List<Direction> getPossibleOutputDirections() {
                 return Arrays.asList(facingDirection);
             }
 
             @Override
-            public List<Direction> getInputDirections() {
+            public List<Direction> getPossibleInputDirections() {
                 return Arrays.asList(facingDirection.rotateYClockwise(), facingDirection.rotateYCounterclockwise());
             }
         };

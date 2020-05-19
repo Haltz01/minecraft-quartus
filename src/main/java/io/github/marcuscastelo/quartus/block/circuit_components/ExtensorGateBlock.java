@@ -18,12 +18,12 @@ public class ExtensorGateBlock extends AbstractGateBlock implements QuartusNodeC
         Direction direction = bs.get(FACING);
         return new ExtensorGateNode(world, pos) {
             @Override
-            public List<Direction> getOutputDirections() {
+            public List<Direction> getPossibleOutputDirections() {
                 return Arrays.asList(direction.rotateYCounterclockwise());
             }
 
             @Override
-            public List<Direction> getInputDirections() {
+            public List<Direction> getPossibleInputDirections() {
                 return Arrays.asList(direction.rotateYClockwise(), direction.getOpposite());
             }
         };

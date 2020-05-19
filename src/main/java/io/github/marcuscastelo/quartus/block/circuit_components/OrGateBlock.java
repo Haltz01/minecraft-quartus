@@ -19,12 +19,12 @@ public class OrGateBlock extends AbstractGateBlock implements QuartusNodeConvert
         Direction facingDirection = bs.get(FACING);
         return new OrGateNode(world, pos) {
             @Override
-            public List<Direction> getOutputDirections() {
+            public List<Direction> getPossibleOutputDirections() {
                 return Arrays.asList(facingDirection);
             }
 
             @Override
-            public List<Direction> getInputDirections() {
+            public List<Direction> getPossibleInputDirections() {
                 return Arrays.asList(facingDirection.rotateYClockwise(), facingDirection.rotateYCounterclockwise());
             }
         };

@@ -29,12 +29,7 @@ public class CompilerBlockController extends CottonCraftingController {
         QuartusCircuit circuit = compiler.compile();
 
         System.out.println(circuit);
-        System.out.println(circuit.getNodeConnections());
-        for (Map.Entry<QuartusNode, List<QuartusNode>> entry: circuit.getNodeConnections().entrySet()) {
-            for (QuartusNode destNode: entry.getValue())
-                System.out.println(entry.getKey().toString() + " -> " + destNode.toString());
-            System.out.println();
-        }
+
     }
 
     public CompilerBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory) {

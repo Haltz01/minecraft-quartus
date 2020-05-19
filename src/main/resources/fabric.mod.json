@@ -18,6 +18,7 @@
       "io.github.marcuscastelo.quartus.Quartus"
     ],
     "client": [
+      "io.github.marcuscastelo.quartus.QuartusClient"
     ]
   },
   "mixins": [

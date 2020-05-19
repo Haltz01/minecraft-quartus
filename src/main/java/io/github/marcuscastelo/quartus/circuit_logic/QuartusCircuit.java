@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class QuartusCircuit {
     HashMap<BlockPos, QuartusNode> nodeInPosition;
@@ -29,7 +30,7 @@ public class QuartusCircuit {
         return nodeInPosition.getOrDefault(pos, null);
     }
 
-    public boolean isNodeAlreadyVisited(QuartusNode node) {
+    public boolean isNodeAlreadyExplored(QuartusNode node) {
         return nodeConnections.containsKey(node);
     }
 
@@ -39,5 +40,15 @@ public class QuartusCircuit {
         if (nodeConnections.get(fromNode).contains(toNode)) return;
 
         nodeConnections.get(fromNode).add(toNode);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder repr = new StringBuilder();
+        for (Map.Entry<QuartusNode, List<QuartusNode>> entry: getNodeConnections().entrySet()) {
+            for (QuartusNode destNode: entry.getValue())
+                repr.append(entry.getKey().toString()).append(" -> ").append(destNode.toString()).append('\n');
+        }
+        return repr.toString();
     }
 }

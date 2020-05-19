@@ -2,7 +2,6 @@ package io.github.marcuscastelo.quartus.circuit_logic;
 
 import io.github.marcuscastelo.quartus.Quartus;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -72,7 +71,7 @@ public class CircuitCompiler {
     private void exploreCircuit() {
         while (explorePoll.peek() != null) {
             BlockPos nodePos = explorePoll.poll();
-            if (program.isNodeAlreadyVisited(program.getNodeAt(nodePos))) continue;
+            if (program.isNodeAlreadyExplored(program.getNodeAt(nodePos))) continue;
 
             System.out.println("Explorando a pos " + nodePos.toString());
             QuartusNode node = program.getNodeAt(nodePos);
@@ -85,7 +84,7 @@ public class CircuitCompiler {
 
                 program.addLink(node, nextNode);
 
-                if (program.isNodeAlreadyVisited(nextNode)) continue;
+                if (program.isNodeAlreadyExplored(nextNode)) continue;
                 explorePoll.offer(nextPos);
             }
         }

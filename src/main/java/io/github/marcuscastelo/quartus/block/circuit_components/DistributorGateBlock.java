@@ -19,12 +19,12 @@ public class DistributorGateBlock extends AbstractGateBlock implements QuartusNo
 
         return new DistributorGateNode(world, pos) {
             @Override
-            public List<Direction> getOutputDirections() {
+            public List<Direction> getPossibleOutputDirections() {
                 return Arrays.asList(facingDir, facingDir.rotateYCounterclockwise(), facingDir.rotateYClockwise());
             }
 
             @Override
-            public List<Direction> getInputDirections() {
+            public List<Direction> getPossibleInputDirections() {
                 return Arrays.asList(facingDir.getOpposite());
             }
         };

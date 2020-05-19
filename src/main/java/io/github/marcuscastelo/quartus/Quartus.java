@@ -27,7 +27,6 @@ public class Quartus implements ModInitializer {
         QuartusBlocks.init();
         QuartusItems.init();
         QuartusBlockEntities.init();
-        QuartusCottonGUIs.init();
 
         LOGGER.info("[Withery] Server withered away!");
     }

@@ -15,12 +15,12 @@ public abstract class QuartusInput extends QuartusNode {
     List<Direction> DIRECTIONS_NONE = new ArrayList<>();
 
     @Override
-    public List<Direction> getOutputDirections() {
+    public List<Direction> getPossibleOutputDirections() {
         return CircuitUtils.getHorizontalDirections();
     }
 
     @Override
-    public List<Direction> getInputDirections() {
+    public List<Direction> getPossibleInputDirections() {
         return DIRECTIONS_NONE;
     }
 

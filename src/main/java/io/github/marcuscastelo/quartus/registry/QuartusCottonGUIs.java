@@ -15,26 +15,28 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class QuartusCottonGUIs {
-    public static void init() {}
+    public static void initServer() {
 
-    private static Inventory getBlockInventory(World world, BlockPos pos) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CompilerBlockEntity)
-            return (CompilerBlockEntity)blockEntity;
-        return null;
     }
 
-    static {
-        ContainerProviderRegistry.INSTANCE.registerFactory(Quartus.id("compiler"),
-                (syncId, identifier, playerEntity, packetByteBuf) -> {
-                    Inventory blockInventory = getBlockInventory(playerEntity.world, packetByteBuf.readBlockPos());
-                    return new CompilerBlockController(syncId, playerEntity.inventory, blockInventory);
-                });
+    public static void initClient() {
+        ContainerProviderRegistry.INSTANCE.registerFactory(Quartus.id("compiler"),  (syncId, identifier, playerEntity, packetByteBuf) -> {
+            Inventory blockInventory = getBlockInventory(playerEntity.world, packetByteBuf.readBlockPos());
+            return new CompilerBlockController(syncId, playerEntity.inventory, blockInventory);
+        });
 
         ScreenProviderRegistry.INSTANCE.registerFactory(Quartus.id("compiler"), (syncId, identifier, playerEntity, packetByteBuf) -> {
             Inventory blockInventory = getBlockInventory(playerEntity.world, packetByteBuf.readBlockPos());
             CompilerBlockController controller = new CompilerBlockController(syncId, playerEntity.inventory, blockInventory);
             return new CompilerBlockScreen(controller, playerEntity);
         });
+
+    }
+
+    private static Inventory getBlockInventory(World world, BlockPos pos) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof CompilerBlockEntity)
+            return (CompilerBlockEntity)blockEntity;
+        return null;
     }
 }
