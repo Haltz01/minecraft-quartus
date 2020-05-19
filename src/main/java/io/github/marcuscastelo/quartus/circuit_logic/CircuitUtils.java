@@ -1,11 +1,7 @@
 package io.github.marcuscastelo.quartus.circuit_logic;
 
-import com.sun.org.apache.bcel.internal.generic.RET;
 import io.github.marcuscastelo.quartus.Quartus;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.PistonBlock;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -14,7 +10,6 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CircuitUtils {
     public static final List<Direction> HORIZONTAL_DIRECTIONS = Arrays.asList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
@@ -31,38 +26,68 @@ public class CircuitUtils {
                 connectedNode = circuit.getNodeAt(neighborPos);
             }
             else if (neighborBlock instanceof QuartusTransportInfoProvider) {
-                Pair<BlockPos, Direction> throughWireNodeInfo = getNodePosThroughWire(neighborPos);
-                assert throughWireNodeInfo != null;
+                Pair<BlockPos, Direction> throughWireNodeInfo = getTransportDestinationInfo(world, neighborPos, approachDirection);
+
+                if (throughWireNodeInfo == null) {
+                    System.out.println("Fios mal conectados foram encontrados na linha " + neighborPos.toShortString());
+                    continue;
+                };
 
                 BlockPos connectedNodePos = throughWireNodeInfo.getLeft();
                 approachDirection = throughWireNodeInfo.getRight();
 
                 if (connectedNodePos != null) {
                     Block connectedNodeBlock = world.getBlockState(connectedNodePos).getBlock();
-                    if (connectedNodeBlock instanceof QuartusNodeConvertible)
+                    if (connectedNodeBlock instanceof QuartusNodeConvertible) {
+                        System.out.println("Após os fios, encontrado " + connectedNodeBlock);
                         connectedNode = circuit.getNodeAt(connectedNodePos);
+                    }
+                    else {
+                        System.out.println("O FIO ESTÁ DESCONECTADO NO FIM DELE");
+                        System.out.println("Acaba em " + connectedNodePos);
+                        System.out.println("É um " + connectedNodeBlock);
+                    }
                 }
             } else {
                 Quartus.LOGGER.info(String.format("Node com porta desconectada em %s", neighborPos.toString()));
                 continue;
             }
 
+            //Nenhum nó nessa direção
+            if (connectedNode == null) continue;
 
-            try{
-                if (connectedNode.getInputDirections().contains(approachDirection.getOpposite()))
-                    connectedNodes.add(connectedNode);
-            } catch (NullPointerException npe) {
-                System.out.println("Node q deu merda: " + connectedNode);
-                npe.printStackTrace();
-            }
+            if (connectedNode.getInputDirections().contains(approachDirection.getOpposite()))
+                connectedNodes.add(connectedNode);
+            else
+                System.out.println(connectedNode.getNodeType() + " aproximado por direção ruim");
 
         }
         return connectedNodes;
     }
 
-    private static Pair<BlockPos, Direction> getNodePosThroughWire(BlockPos wirePos) {
-        Quartus.LOGGER.warn("NÃO USE FIOS AINDA, N TEM O CÓDIGO");
-        return null;
+    private static Pair<BlockPos, Direction> getTransportDestinationInfo(World world, BlockPos initialPos, Direction initialApproach) {
+        Block currBlock = world.getBlockState(initialPos).getBlock();
+        BlockPos currPos = initialPos;
+        Direction lastApproachDir = initialApproach;
+        while (currBlock instanceof QuartusTransportInfoProvider) {
+            try {
+                lastApproachDir = ((QuartusTransportInfoProvider) currBlock).nextDirection(world, currPos, lastApproachDir);
+            } catch (Exception e) {
+                System.out.println("Exception em: " + currPos);
+                e.printStackTrace();
+                return new Pair<>(currPos, initialApproach);
+            }
+            if (lastApproachDir == null) return null;
+
+            System.out.println("*** POSICAO: " + currPos);
+            System.out.println("*** ANDANDO NO FIO PARA" + lastApproachDir.asString());
+            currPos = currPos.offset(lastApproachDir);
+            System.out.println("*** POSICAO: " + currPos);
+
+            currBlock = world.getBlockState(currPos).getBlock();
+        }
+
+        return new Pair<>(currPos, lastApproachDir);
     }
 
     public static List<Direction> getHorizontalDirections() {

@@ -195,11 +195,15 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
             }
             return facingBefore;
         } else {
-            if (!facingBefore.equals(facingNow.getOpposite()) && fbVal != (fnVal + 3) % 4)
+            if (!facingBefore.equals(facingNow.getOpposite()) && fbVal != (fnVal + 1) % 4) {
                 throw new RuntimeException("Fio não está alinhado! (turn=true)");
-            if (facingBefore.equals(facingBefore.getOpposite()))
+            }
+            if (facingBefore.equals(facingNow.getOpposite())) {
+                System.out.println("Proximo fio O: " + HORIZONTAL_DIRECTIONS.get((fnVal + 3) % 4).asString());
                 return HORIZONTAL_DIRECTIONS.get((fnVal + 3) % 4);
+            }
             else
+                System.out.println("Proximo fio NO: " + facingNow.asString());
                 return facingNow;
         }
     }
