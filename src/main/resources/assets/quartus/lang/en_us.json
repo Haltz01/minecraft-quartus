@@ -1,4 +1,13 @@
 {
   "itemGroup.quartus.item_group": "Quartus",
-  "gui.quartus.compile_btn": "Compile"
+  "gui.quartus.compiler.compile_btn": "Compile",
+  "gui.quartus.compiler.empty": "There are no floppy disks in the compiler",
+  "item.quartus.floppy_disk": "Floppy Disk",
+  "block.quartus.compiler": "Compiler",
+  "block.quartus.and_gate": "And Gate",
+  "block.quartus.or_gate": "Or Gate",
+  "block.quartus.extensor_gate": "Extensor Gate",
+  "block.quartus.distributor_gate": "Distributor Gate",
+  "block.quartus.wire": "Wire"
+
 }

@@ -1,4 +1,12 @@
 {
   "itemGroup.quartus.item_group": "Quartus",
-  "gui.quartus.compile_btn": "Compilar"
+  "gui.quartus.compiler.compile_btn": "Compilar",
+  "gui.quartus.compiler.empty": "Não há disquetes no compilador",
+  "item.quartus.floppy_disk": "Disquete",
+  "block.quartus.compiler": "Compilador",
+  "block.quartus.and_gate": "Porta E",
+  "block.quartus.or_gate": "Porta OU",
+  "block.quartus.extensor_gate": "Porta Extensora",
+  "block.quartus.distributor_gate": "Porta Distribuidora",
+  "block.quartus.wire": "Fio"
 }
