@@ -2,6 +2,7 @@ package io.github.marcuscastelo.quartus.block.circuit_components;
 
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusInput;
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusInputConvertible;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeverBlock;

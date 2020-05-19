@@ -12,6 +12,7 @@ import net.minecraft.util.registry.Registry;
 public class QuartusItems {
     public static final BlockItem WIRE;
     public static final BlockItem EXTENSOR_GATE;
+    public static final BlockItem DISTRIBUTOR_GATE;
     public static final BlockItem AND_GATE;
     public static final BlockItem OR_GATE;
     public static final BlockItem XOR_GATE;
@@ -36,6 +37,7 @@ public class QuartusItems {
     static {
         WIRE = register("wire", QuartusBlocks.WIRE);
         EXTENSOR_GATE = register("extensor_gate", QuartusBlocks.EXTENSOR_GATE);
+        DISTRIBUTOR_GATE = register("distributor_gate", QuartusBlocks.DISTRIBUTOR_GATE);
 
         AND_GATE = register("and_gate", QuartusBlocks.AND_GATE);
         OR_GATE = register("or_gate", QuartusBlocks.OR_GATE);

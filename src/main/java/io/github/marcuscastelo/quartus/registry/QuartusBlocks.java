@@ -5,11 +5,12 @@ import io.github.marcuscastelo.quartus.block.CompilerBlock;
 import io.github.marcuscastelo.quartus.block.circuit_components.*;
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
-import org.apache.http.impl.conn.Wire;
 
 public class QuartusBlocks {
     public static final Block WIRE;
     public static final Block EXTENSOR_GATE;
+    public static final Block DISTRIBUTOR_GATE;
+
     public static final Block AND_GATE;
     public static final Block OR_GATE;
     public static final Block XOR_GATE;
@@ -27,9 +28,9 @@ public class QuartusBlocks {
     }
 
     static {
-        System.out.println("Oi gente, eu to aqui!!");
         WIRE = register("wire", new WireBlock());
         EXTENSOR_GATE = register("extensor_gate", new ExtensorGateBlock());
+        DISTRIBUTOR_GATE = register("distributor_gate", new DistributorGateBlock());
 
         AND_GATE = register("and_gate", new AndGateBlock());
         OR_GATE = register("or_gate", new OrGateBlock());

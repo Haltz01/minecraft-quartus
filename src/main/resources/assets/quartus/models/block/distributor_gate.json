@@ -1,11 +1,12 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "quartus:block/input/upperbase",
-		"1": "quartus:block/input/baseside",
-		"2": "quartus:block/input/lowerbase",
-		"3": "quartus:block/input/centerbasetex",
-		"particle": "quartus:block/input/upperbase"
+		"0": "quartus:block/distributor_gate/upperbase",
+		"1": "quartus:block/distributor_gate/baseside",
+		"2": "quartus:block/distributor_gate/lowerbase",
+		"3": "quartus:block/distributor_gate/centerbasetex",
+		"4": "quartus:block/distributor_gate/centersideopen",
+		"particle": "quartus:block/distributor_gate/upperbase"
 	},
 	"elements": [
 		{
@@ -22,13 +23,13 @@
 		},
 		{
 			"from": [6, 1, 6],
-			"to": [10, 13, 10],
+			"to": [10, 2, 10],
 			"rotation": {"angle": 0, "axis": "y", "origin": [14, 9, 14]},
 			"faces": {
 				"north": {"uv": [0, 0, 4, 1], "texture": "#3"},
-				"east": {"uv": [0, 0, 4, 1], "texture": "#3"},
-				"south": {"uv": [0, 0, 4, 1], "texture": "#3"},
-				"west": {"uv": [0, 0, 4, 1], "texture": "#3"},
+				"east": {"uv": [0, 0, 4, 1], "texture": "#4"},
+				"south": {"uv": [0, 0, 4, 1], "texture": "#4"},
+				"west": {"uv": [0, 0, 4, 1], "texture": "#4"},
 				"up": {"uv": [0, 0, 4, 4], "texture": "#3"},
 				"down": {"uv": [0, 0, 4, 4], "texture": "#missing"}
 			}
