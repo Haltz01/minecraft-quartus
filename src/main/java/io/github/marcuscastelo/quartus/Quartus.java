@@ -1,5 +1,7 @@
 package io.github.marcuscastelo.quartus;
 
+import io.github.marcuscastelo.quartus.blockentity.ImplementedInventory;
+import io.github.marcuscastelo.quartus.gui.CompilerBlockController;
 import io.github.marcuscastelo.quartus.item.FloppyDiskItem;
 import io.github.marcuscastelo.quartus.registry.QuartusBlockEntities;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
@@ -7,6 +9,7 @@ import io.github.marcuscastelo.quartus.registry.QuartusCottonGUIs;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.network.PacketConsumer;
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
@@ -44,10 +47,10 @@ public class Quartus implements ModInitializer {
         ServerSidePacketRegistry.INSTANCE.register(Quartus.id("foda"), (packetContext, packetByteBuf) -> {
             BlockPos blockPos = packetByteBuf.readBlockPos();
             CompoundTag compoundTag = packetByteBuf.readCompoundTag();
+            World world = packetContext.getPlayer().world;
 
             packetContext.getTaskQueue().execute(() -> {
-                World world = packetContext.getPlayer().world;
-                Inventory inv = QuartusCottonGUIs.getBlockInventory(world, blockPos);
+                Inventory inv =  (ImplementedInventory) world.getBlockEntity(blockPos);
 
                 assert inv != null;
                 ItemStack itemStack = inv.getInvStack(0);
@@ -60,7 +63,13 @@ public class Quartus implements ModInitializer {
             });
         });
 
-        LOGGER.info("[Withery] Server withered away!");
+        ContainerProviderRegistry.INSTANCE.registerFactory(Quartus.id("compiler"),  (syncId, identifier, playerEntity, packetByteBuf) -> {
+            BlockPos compilerPos = packetByteBuf.readBlockPos();
+            Inventory blockInventory = (ImplementedInventory) playerEntity.world.getBlockEntity(compilerPos);
+            return new CompilerBlockController(syncId, playerEntity.inventory, blockInventory, compilerPos);
+        });
+
+        LOGGER.info("[Quartus] Server ready!");
     }
 
     public static Identifier id(String name) {

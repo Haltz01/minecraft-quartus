@@ -40,6 +40,9 @@ public class QuartusCircuit {
         if (nodeConnections.get(fromNode).contains(toNode)) return;
 
         nodeConnections.get(fromNode).add(toNode);
+
+        fromNode.addOutput(toNode);
+        toNode.addInput(fromNode);
     }
 
     @Override

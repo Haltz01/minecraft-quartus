@@ -16,11 +16,7 @@ import net.minecraft.world.World;
 
 public class QuartusCottonGUIs {
     public static void initClient() {
-        ContainerProviderRegistry.INSTANCE.registerFactory(Quartus.id("compiler"),  (syncId, identifier, playerEntity, packetByteBuf) -> {
-            BlockPos compilerPos = packetByteBuf.readBlockPos();
-            Inventory blockInventory = getBlockInventory(playerEntity.world, compilerPos);
-            return new CompilerBlockController(syncId, playerEntity.inventory, blockInventory, compilerPos);
-        });
+
 
         ScreenProviderRegistry.INSTANCE.registerFactory(Quartus.id("compiler"), (syncId, identifier, playerEntity, packetByteBuf) -> {
             BlockPos compilerPos = packetByteBuf.readBlockPos();

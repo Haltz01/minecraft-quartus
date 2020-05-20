@@ -2,11 +2,17 @@ package io.github.marcuscastelo.quartus.block;
 
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.blockentity.CompilerBlockEntity;
+import io.github.marcuscastelo.quartus.registry.QuartusCottonGUIs;
+import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
@@ -45,5 +51,41 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
         ContainerProviderRegistry.INSTANCE.openContainer(Quartus.id("compiler"), player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
 
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack compilerIS) {
+        if (compilerIS.getTag() == null) return;
+        if (!compilerIS.getTag().contains("hasFloppy")) return;
+
+        if (!compilerIS.getTag().getBoolean("hasFloppy")) return;
+
+        Inventory inv = QuartusCottonGUIs.getBlockInventory(world, pos);
+        ItemStack floppyIS = new ItemStack(QuartusItems.FLOPPY_DISK, 1);
+        if (compilerIS.getTag().contains("floppyTag"))
+            floppyIS.setTag(compilerIS.getTag().getCompound("floppyTag"));
+
+        assert inv != null;
+        inv.setInvStack(0, floppyIS);
+    }
+
+    @Override
+    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+        if (!(world instanceof World)) {
+            System.out.println("VTNC ME MATA WORLD");
+            return new ItemStack(this);
+        }
+        Inventory inv = QuartusCottonGUIs.getBlockInventory((World)world, pos);
+        ItemStack floppyIS = inv.getInvStack(0);
+
+        if (floppyIS.isEmpty()) return new ItemStack(this);
+
+        ItemStack compilerIS = new ItemStack(this, 1);
+        CompoundTag floppyTag = floppyIS.getTag();
+        compilerIS.getOrCreateTag().putBoolean("hasFloppy", true);
+        if (floppyTag == null) return compilerIS;
+
+        compilerIS.getOrCreateTag().put("floppyTag", floppyTag);
+        return compilerIS;
     }
 }

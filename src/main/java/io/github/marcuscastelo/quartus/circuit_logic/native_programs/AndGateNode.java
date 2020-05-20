@@ -15,4 +15,12 @@ public abstract class AndGateNode extends QuartusNode {
     public String getNodeType() {
         return "AndGate";
     }
+
+    @Override
+    protected boolean calcOutputValue() {
+        for (QuartusNode inp: getInputs()) {
+            if (!inp.getOutputValue()) return false;
+        }
+        return true;
+    }
 }

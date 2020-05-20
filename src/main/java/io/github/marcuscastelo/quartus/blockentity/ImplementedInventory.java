@@ -102,7 +102,7 @@ public interface ImplementedInventory extends Inventory {
     }
     @Override
     default void markDirty() {
-        // Override if you want behavior.
+
     }
     @Override
     default boolean canPlayerUseInv(PlayerEntity player) {
