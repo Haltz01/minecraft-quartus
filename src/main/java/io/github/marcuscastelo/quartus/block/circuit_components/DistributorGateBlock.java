@@ -11,22 +11,24 @@ import net.minecraft.world.World;
 import java.util.Arrays;
 import java.util.List;
 
-public class DistributorGateBlock extends AbstractGateBlock implements QuartusNodeConvertible {
+public class DistributorGateBlock extends AbstractGateBlock {
     @Override
-    public QuartusNode createQuartusNode(World world, BlockPos pos) {
+    public List<Direction> getPossibleOutputDirections(World world, BlockPos pos) {
         BlockState bs = world.getBlockState(pos);
         Direction facingDir = bs.get(FACING);
+        return Arrays.asList(facingDir, facingDir.rotateYCounterclockwise(), facingDir.rotateYClockwise());
+    }
 
-        return new DistributorGateNode(world, pos) {
-            @Override
-            public List<Direction> getPossibleOutputDirections() {
-                return Arrays.asList(facingDir, facingDir.rotateYCounterclockwise(), facingDir.rotateYClockwise());
-            }
+    @Override
+    public List<Direction> getPossibleInputDirections(World world, BlockPos pos) {
+        BlockState bs = world.getBlockState(pos);
+        Direction facingDir = bs.get(FACING);
+        return Arrays.asList(facingDir.getOpposite());
+    }
 
-            @Override
-            public List<Direction> getPossibleInputDirections() {
-                return Arrays.asList(facingDir.getOpposite());
-            }
-        };
+    @Override
+    public QuartusNode createQuartusNode(World world, BlockPos pos) throws QuartusNode.QuartusWrongNodeBlockException {
+        return new DistributorGateNode(world, pos);
     }
 }
+

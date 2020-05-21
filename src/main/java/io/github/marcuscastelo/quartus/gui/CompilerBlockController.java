@@ -52,6 +52,7 @@ public class CompilerBlockController extends CottonCraftingController {
     private void onCompilerButtonClick() {
         QuartusCircuit circuit = compileCircuit();
         updateFloppyDisk(circuit);
+        System.out.println(circuit.toString());
     }
 
     public CompilerBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos compilerPosition) {

@@ -2,7 +2,6 @@ package io.github.marcuscastelo.quartus.registry;
 
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.CompilerBlock;
-import io.github.marcuscastelo.quartus.block.RENDER_TEST_BLOCK;
 import io.github.marcuscastelo.quartus.block.circuit_components.*;
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
@@ -41,9 +40,5 @@ public class QuartusBlocks {
         COMPILER = register("compiler", new CompilerBlock());
 
         INPUT = register("input", new InputBlock());
-
-
-
-        register("render", new RENDER_TEST_BLOCK());
     }
 }

@@ -1,14 +1,20 @@
 package io.github.marcuscastelo.quartus.circuit_logic.native_programs;
 
+import io.github.marcuscastelo.quartus.block.circuit_components.AndGateBlock;
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusCircuit;
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusNode;
+import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public abstract class AndGateNode extends QuartusNode {
+import java.util.List;
 
-    public AndGateNode(World world, BlockPos pos) {
+public class AndGateNode extends QuartusNode {
+
+    public AndGateNode(World world, BlockPos pos) throws QuartusWrongNodeBlockException {
         super(world, pos);
+        if (!(world.getBlockState(pos).getBlock() instanceof AndGateBlock)) throw new QuartusWrongNodeBlockException();
     }
 
     @Override
@@ -16,11 +22,4 @@ public abstract class AndGateNode extends QuartusNode {
         return "AndGate";
     }
 
-    @Override
-    protected boolean calcOutputValue() {
-        for (QuartusNode inp: getInputs()) {
-            if (!inp.getOutputValue()) return false;
-        }
-        return true;
-    }
 }

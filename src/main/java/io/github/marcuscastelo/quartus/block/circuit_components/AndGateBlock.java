@@ -3,6 +3,7 @@ package io.github.marcuscastelo.quartus.block.circuit_components;
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusNode;
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusNodeConvertible;
 import io.github.marcuscastelo.quartus.circuit_logic.native_programs.AndGateNode;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -11,22 +12,24 @@ import net.minecraft.world.World;
 import java.util.Arrays;
 import java.util.List;
 
-public class AndGateBlock extends AbstractGateBlock implements QuartusNodeConvertible {
+public class AndGateBlock extends AbstractGateBlock{
+
     @Override
-    public QuartusNode createQuartusNode(World world, BlockPos pos) {
+    public List<Direction> getPossibleInputDirections(World world, BlockPos pos) {
         BlockState bs = world.getBlockState(pos);
         Direction facingDirection = bs.get(FACING);
+        return Arrays.asList(facingDirection.rotateYClockwise(), facingDirection.rotateYCounterclockwise());
+    }
 
-        return new AndGateNode(world, pos) {
-            @Override
-            public List<Direction> getPossibleOutputDirections() {
-                return Arrays.asList(facingDirection);
-            }
+    @Override
+    public List<Direction> getPossibleOutputDirections(World world, BlockPos pos) {
+        BlockState bs = world.getBlockState(pos);
+        Direction facingDirection = bs.get(FACING);
+        return Arrays.asList(facingDirection);
+    }
 
-            @Override
-            public List<Direction> getPossibleInputDirections() {
-                return Arrays.asList(facingDirection.rotateYClockwise(), facingDirection.rotateYCounterclockwise());
-            }
-        };
+    @Override
+    public QuartusNode createQuartusNode(World world, BlockPos pos) throws QuartusNode.QuartusWrongNodeBlockException {
+        return new AndGateNode(world, pos);
     }
 }

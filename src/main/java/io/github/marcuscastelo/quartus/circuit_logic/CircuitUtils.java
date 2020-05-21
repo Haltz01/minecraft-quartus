@@ -84,10 +84,7 @@ public class CircuitUtils {
             }
             if (lastApproachDir == null) return null;
 
-            System.out.println("*** POSICAO: " + currPos);
-            System.out.println("*** ANDANDO NO FIO PARA" + lastApproachDir.asString());
             currPos = currPos.offset(lastApproachDir);
-            System.out.println("*** POSICAO: " + currPos);
 
             currBlock = world.getBlockState(currPos).getBlock();
         }

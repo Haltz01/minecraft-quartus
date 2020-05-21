@@ -45,7 +45,11 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
         List<Direction> foundDirs = new ArrayList<>();
         for (Direction direction : HORIZONTAL_DIRECTIONS) {
             Block aroundBlock = world.getBlockState(pos.offset(direction)).getBlock();
-            if (aroundBlock == QuartusBlocks.WIRE || aroundBlock instanceof AbstractGateBlock || aroundBlock instanceof LeverBlock) {
+            if (    aroundBlock == QuartusBlocks.WIRE ||
+                    aroundBlock instanceof InputBlock ||
+                    aroundBlock instanceof AbstractGateBlock &&
+                            (((AbstractGateBlock) aroundBlock).getPossibleInputDirections(world, pos.offset(direction)).contains(direction.getOpposite())
+                            || ((AbstractGateBlock) aroundBlock).getPossibleOutputDirections(world, pos.offset(direction)).contains(direction.getOpposite()))) {
                 foundDirs.add(direction);
             }
         }
