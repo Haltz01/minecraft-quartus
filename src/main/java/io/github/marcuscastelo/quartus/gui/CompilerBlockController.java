@@ -23,7 +23,6 @@ import net.minecraft.util.math.Direction;
 public class CompilerBlockController extends CottonCraftingController {
     BlockPos compilerPosition;
 
-
     private void updateFloppyDisk(QuartusCircuit circuit) {
         ItemStack floppyItemStack = blockInventory.getInvStack(0);
         if (floppyItemStack.isEmpty()) {
@@ -53,12 +52,6 @@ public class CompilerBlockController extends CottonCraftingController {
     private void onCompilerButtonClick() {
         QuartusCircuit circuit = compileCircuit();
         updateFloppyDisk(circuit);
-
-        //TODO: simulação
-//        for (QuartusNode node: circuit.getNodeConnections().keySet()) {
-//            node.getOutputValue()
-//        }
-
     }
 
     public CompilerBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos compilerPosition) {

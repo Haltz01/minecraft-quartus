@@ -42,7 +42,8 @@ public class QuartusItems {
 
         AND_GATE = register("and_gate", QuartusBlocks.AND_GATE);
         OR_GATE = register("or_gate", QuartusBlocks.OR_GATE);
-        XOR_GATE = NOR_GATE = NOT_GATE = NAND_GATE = null;
+        NOR_GATE = register("nor_gate", QuartusBlocks.NOR_GATE);
+        XOR_GATE = NOT_GATE = NAND_GATE = null;
 
         COMPILER = register("compiler", QuartusBlocks.COMPILER);
         INPUT = register("input", QuartusBlocks.INPUT);

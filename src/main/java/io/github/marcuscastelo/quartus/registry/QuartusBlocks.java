@@ -35,7 +35,8 @@ public class QuartusBlocks {
 
         AND_GATE = register("and_gate", new AndGateBlock());
         OR_GATE = register("or_gate", new OrGateBlock());
-        XOR_GATE = NOR_GATE = NOT_GATE = NAND_GATE = null;
+        NOR_GATE = register("nor_gate", new NorGateBlock());
+        XOR_GATE = NOT_GATE = NAND_GATE = null;
 
         COMPILER = register("compiler", new CompilerBlock());
 
