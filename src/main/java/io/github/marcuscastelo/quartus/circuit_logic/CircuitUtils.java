@@ -2,6 +2,10 @@ package io.github.marcuscastelo.quartus.circuit_logic;
 
 import io.github.marcuscastelo.quartus.Quartus;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -93,5 +97,32 @@ public class CircuitUtils {
 
     public static List<Direction> getHorizontalDirections() {
         return HORIZONTAL_DIRECTIONS;
+    }
+
+
+    ///TEMP TODO: REMOVE
+
+    public static void outlineCompileRegionForClient(World world, BlockPos compilerPos, int size, Block fillBlock) {
+        if (!world.isClient) return;
+
+        BlockState fillState = fillBlock.getDefaultState();
+        net.minecraft.util.math.Direction direction = world.getBlockState(compilerPos).get(Properties.HORIZONTAL_FACING).getOpposite();
+
+        BlockPos oPos = compilerPos.offset(direction,10);
+        world.setBlockState(oPos, fillState);
+        for (int s = 1; s <= size/2; s++) {
+            world.setBlockState(compilerPos.offset(direction.rotateYClockwise(), s), fillState);
+            world.setBlockState(compilerPos.offset(direction.rotateYCounterclockwise(), s), fillState);
+            world.setBlockState(oPos.offset(direction.rotateYClockwise(), s), fillState);
+            world.setBlockState(oPos.offset(direction.rotateYCounterclockwise(), s), fillState);
+        }
+
+        BlockPos l, r;
+        l = compilerPos.offset(direction.rotateYCounterclockwise(), size/2);
+        r = compilerPos.offset(direction.rotateYClockwise(), size/2);
+        for (int d = 1; d < size; d++) {
+            world.setBlockState(l.offset(direction, d), fillState);
+            world.setBlockState(r.offset(direction, d), fillState);
+        }
     }
 }

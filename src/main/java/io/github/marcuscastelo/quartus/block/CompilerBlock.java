@@ -2,6 +2,7 @@ package io.github.marcuscastelo.quartus.block;
 
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.blockentity.CompilerBlockEntity;
+import io.github.marcuscastelo.quartus.circuit_logic.CircuitUtils;
 import io.github.marcuscastelo.quartus.registry.QuartusCottonGUIs;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -15,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -53,8 +55,7 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
         return ActionResult.SUCCESS;
     }
 
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack compilerIS) {
+    private void handleBlockTagOnPlace(World world, BlockPos pos, ItemStack compilerIS) {
         if (compilerIS.getTag() == null) return;
         if (!compilerIS.getTag().contains("hasFloppy")) return;
 
@@ -70,9 +71,20 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
     }
 
     @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack compilerIS) {
+        handleBlockTagOnPlace(world, pos, compilerIS);
+        CircuitUtils.outlineCompileRegionForClient(world, pos, 10, Blocks.DIRT);
+    }
+
+    @Override
+    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        //TODO: make it work
+        CircuitUtils.outlineCompileRegionForClient(world, pos, 10, Blocks.COAL_BLOCK);
+    }
+
+    @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         if (!(world instanceof World)) {
-            System.out.println("VTNC ME MATA WORLD");
             return new ItemStack(this);
         }
         Inventory inv = QuartusCottonGUIs.getBlockInventory((World)world, pos);
