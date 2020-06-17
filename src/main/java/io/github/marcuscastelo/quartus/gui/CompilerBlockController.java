@@ -31,12 +31,13 @@ public class CompilerBlockController extends CottonCraftingController {
             return;
         }
 
-        CompoundTag tag = floppyItemStack.getOrCreateTag();
-        tag.putBoolean("circuit", true);
+        //TODO: salvar circuito no disquete com posição e tudo mais
+        CompoundTag compoundTag = floppyItemStack.getOrCreateTag();
+//        compoundTag.put("circuit", circuit);
 
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBlockPos(compilerPosition);
-        buf.writeCompoundTag(tag);
+        buf.writeCompoundTag(compoundTag);
 
         ClientSidePacketRegistry.INSTANCE.sendToServer(Quartus.id("foda"), buf);
     }
