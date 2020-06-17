@@ -1,0 +1,28 @@
+{
+  "variants": {
+	"extensor_state=void,facing=north": { "model": "quartus:block/extensor_void", "y": 0 },
+	"extensor_state=void,facing=east": { "model": "quartus:block/extensor_void", "y": 90 },
+	"extensor_state=void,facing=south": { "model": "quartus:block/extensor_void", "y": 180 },
+	"extensor_state=void,facing=west": { "model": "quartus:block/extensor_void", "y": 270 },
+
+	"extensor_state=void_end,facing=north": { "model": "quartus:block/extensor_void_end", "y": 0 },
+	"extensor_state=void_end,facing=east": { "model": "quartus:block/extensor_void_end", "y": 90 },
+	"extensor_state=void_end,facing=south": { "model": "quartus:block/extensor_void_end", "y": 180 },
+	"extensor_state=void_end,facing=west": { "model": "quartus:block/extensor_void_end", "y": 270 },
+
+	"extensor_state=input,facing=north": { "model": "quartus:block/extensor_input", "y": 0 },
+	"extensor_state=input,facing=east": { "model": "quartus:block/extensor_input", "y": 90 },
+	"extensor_state=input,facing=south": { "model": "quartus:block/extensor_input", "y": 180 },
+	"extensor_state=input,facing=west": { "model": "quartus:block/extensor_input", "y": 270 },
+	
+	"extensor_state=output,facing=north": { "model": "quartus:block/extensor_output", "y": 0 },
+	"extensor_state=output,facing=east": { "model": "quartus:block/extensor_output", "y": 90 },
+	"extensor_state=output,facing=south": { "model": "quartus:block/extensor_output", "y": 180 },
+	"extensor_state=output,facing=west": { "model": "quartus:block/extensor_output", "y": 270 },
+	
+	"extensor_state=io,facing=north": { "model": "quartus:block/extensor_io", "y": 0 },
+	"extensor_state=io,facing=east": { "model": "quartus:block/extensor_io", "y": 90 },
+	"extensor_state=io,facing=south": { "model": "quartus:block/extensor_io", "y": 180 },
+	"extensor_state=io,facing=west": { "model": "quartus:block/extensor_io", "y": 270 }
+  }
+}
