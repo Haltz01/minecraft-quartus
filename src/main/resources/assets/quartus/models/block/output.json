@@ -1,11 +1,11 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "quartus:block/input/upperbase",
-		"1": "quartus:block/input/baseside",
-		"2": "quartus:block/input/lowerbase",
-		"3": "quartus:block/input/centerbasetex",
-		"particle": "quartus:block/input/upperbase"
+		"0": "quartus:block/output/upperbase",
+		"1": "quartus:block/output/baseside",
+		"2": "quartus:block/output/lowerbase",
+		"3": "quartus:block/output/centerbasetex",
+		"particle": "quartus:block/output/upperbase"
 	},
 	"elements": [
 		{
@@ -21,9 +21,9 @@
 			}
 		},
 		{
-			"from": [5.5, 2, 7],
-			"to": [10.5, 3, 12],
-			"rotation": {"angle": 0, "axis": "y", "origin": [14, 9, 15]},
+			"from": [5.5, 2, 1],
+			"to": [10.5, 3, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [14, 9, 9]},
 			"faces": {
 				"north": {"uv": [0, 0, 5, 1], "texture": "#3"},
 				"east": {"uv": [0, 0, 5, 1], "texture": "#3"},
@@ -36,7 +36,7 @@
 	],
 	"display": {
 		"thirdperson_righthand": {
-			"rotation": [90, 1, 0],
+			"rotation": [91, -180, 0],
 			"translation": [0, 2.75, 3.25],
 			"scale": [0.4, 0.4, 0.4]
 		},
