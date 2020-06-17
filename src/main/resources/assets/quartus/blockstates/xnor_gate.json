@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "quartus:block/xnor_gate", "y": 0 },
+    "facing=east": { "model": "quartus:block/xnor_gate", "y": 90 },
+    "facing=south": { "model": "quartus:block/xnor_gate", "y": 180 },
+    "facing=west": { "model": "quartus:block/xnor_gate", "y": 270 }
+  }
+}
