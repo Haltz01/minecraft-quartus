@@ -89,7 +89,42 @@
 				"down": {"uv": [0, 0, 6, 1], "texture": "#missing"}
 			}
 		}
-	],
+	],"display": {
+		"thirdperson_righthand": {
+			"rotation": [-90, -180, 0],
+			"translation": [0, 2, -3],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [-90, -180, 0],
+			"translation": [0, 2, -3],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_righthand": {
+			"rotation": [34, 0, 0],
+			"translation": [0, 5, 3],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [34, 0, 0],
+			"translation": [0, 5, 3],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 4.25, 0],
+			"scale": [0.3, 0.3, 0.3]
+		},
+		"gui": {
+			"rotation": [90, 0, 0]
+		},
+		"head": {
+			"translation": [0, 14, 0]
+		},
+		"fixed": {
+			"rotation": [-90, -180, 0],
+			"translation": [0, -0.25, -7.25]
+		}
+	},
 	"groups": [
 		{
 			"name": "model",

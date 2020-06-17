@@ -17,11 +17,10 @@ public interface QuartusInputConvertible extends QuartusNodeConvertible {
     default QuartusNode createQuartusNode(World world, BlockPos pos) throws QuartusNode.QuartusWrongNodeBlockException {
         return createQuartusInput(world, pos);
     }
-
     @Override
     default List<Direction> getPossibleOutputDirections(World world, BlockPos pos) {
-        Direction facingDirection = world.getBlockState(pos).get(Properties.FACING);
-        return Arrays.asList(facingDirection.getOpposite());
+        Direction facingDirection = world.getBlockState(pos).get(Properties.HORIZONTAL_FACING);
+        return Arrays.asList(facingDirection);
     }
 
     @Override

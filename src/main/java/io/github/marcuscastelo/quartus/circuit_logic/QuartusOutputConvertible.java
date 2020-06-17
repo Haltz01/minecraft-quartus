@@ -10,12 +10,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface QuartusOutputConvertible extends QuartusNodeConvertible {
-    QuartusInput createQuartusInput(World world, BlockPos pos) throws QuartusNode.QuartusWrongNodeBlockException;
+    QuartusOutput createQuartusOutput(World world, BlockPos pos) throws QuartusNode.QuartusWrongNodeBlockException;
     List<Direction> DIRECTIONS_NONE = new ArrayList<>();
 
     @Override
     default QuartusNode createQuartusNode(World world, BlockPos pos) throws QuartusNode.QuartusWrongNodeBlockException {
-        return createQuartusInput(world, pos);
+        return createQuartusOutput(world, pos);
     }
 
     @Override
@@ -25,7 +25,7 @@ public interface QuartusOutputConvertible extends QuartusNodeConvertible {
 
     @Override
     default List<Direction> getPossibleInputDirections(World world, BlockPos pos) {
-        final Direction facingDirection = world.getBlockState(pos).get(Properties.FACING);
+        final Direction facingDirection = world.getBlockState(pos).get(Properties.HORIZONTAL_FACING);
         return Arrays.asList(facingDirection.getOpposite());
     }
 }

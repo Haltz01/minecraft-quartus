@@ -40,16 +40,13 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos, boolean moved) {
-        Quartus.LOGGER.info("Update received");
-
         List<Direction> foundDirs = new ArrayList<>();
         for (Direction direction : HORIZONTAL_DIRECTIONS) {
             Block aroundBlock = world.getBlockState(pos.offset(direction)).getBlock();
             if (    aroundBlock == QuartusBlocks.WIRE ||
-                    aroundBlock instanceof InputBlock ||
-                    aroundBlock instanceof AbstractGateBlock &&
-                            (((AbstractGateBlock) aroundBlock).getPossibleInputDirections(world, pos.offset(direction)).contains(direction.getOpposite())
-                            || ((AbstractGateBlock) aroundBlock).getPossibleOutputDirections(world, pos.offset(direction)).contains(direction.getOpposite()))) {
+                    aroundBlock instanceof AbstractNodeBlock &&
+                            (((AbstractNodeBlock) aroundBlock).getPossibleInputDirections(world, pos.offset(direction)).contains(direction.getOpposite())
+                            || ((AbstractNodeBlock) aroundBlock).getPossibleOutputDirections(world, pos.offset(direction)).contains(direction.getOpposite()))) {
                 foundDirs.add(direction);
             }
         }
@@ -135,39 +132,39 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
         if (state.get(TURN)) {
             //Adds center part
-            VoxelShape shape = VoxelShapes.cuboid(6/16f, 0, 6/16f, 10/16f, 3/16f, 10/16f);
+            VoxelShape shape = VoxelShapes.cuboid(6/16f, 0, 6/16f, 10/16f, 2/16f, 10/16f);
             Direction d = state.get(FACING);
 
             if (d == Direction.NORTH) {
                 //North
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(6/16f, 0, 0, 10/16f, 3/16f, 6/16f));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(6/16f, 0, 0, 10/16f, 2/16f, 6/16f));
                 //West
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, 0, 6/16f, 6/16f, 3/16f, 10/16f));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, 0, 6/16f, 6/16f, 2/16f, 10/16f));
             }
             else if (d == Direction.SOUTH) {
                 //South
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(6/16f, 0, 10/16f, 10/16f, 3/16f, 1f));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(6/16f, 0, 10/16f, 10/16f, 2/16f, 1f));
                 //East
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(10/16f, 0, 6/16f, 1f, 3/16f, 10/16f));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(10/16f, 0, 6/16f, 1f, 2/16f, 10/16f));
             }
             else if (d == Direction.WEST) {
                 //West
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, 0, 6/16f, 6/16f, 3/16f, 10/16f));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, 0, 6/16f, 6/16f, 2/16f, 10/16f));
                 //South
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(6/16f, 0, 10/16f, 10/16f, 3/16f, 1f));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(6/16f, 0, 10/16f, 10/16f, 2/16f, 1f));
             } else {
                 //East
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(10/16f, 0, 6/16f, 1f, 3/16f, 10/16f));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(10/16f, 0, 6/16f, 1f, 2/16f, 10/16f));
                 //North
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(6/16f, 0, 0, 10/16f, 3/16f, 6/16f));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(6/16f, 0, 0, 10/16f, 2/16f, 6/16f));
             }
             return shape;
 
         }
         else if (state.get(FACING) == Direction.NORTH || state.get(FACING) == Direction.SOUTH)
-            return VoxelShapes.cuboid(6/16f, 0.0f, 0f, 10/16f, 3/16f, 1f);
+            return VoxelShapes.cuboid(6/16f, 0.0f, 0f, 10/16f, 2/16f, 1f);
         else
-            return VoxelShapes.cuboid(0, 0.0f, 6/16f, 1f, 3/16f, 10/16f);
+            return VoxelShapes.cuboid(0, 0.0f, 6/16f, 1f, 2/16f, 10/16f);
     }
 
     @Override

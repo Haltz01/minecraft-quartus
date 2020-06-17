@@ -2,6 +2,7 @@ package io.github.marcuscastelo.quartus.registry;
 
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.blockentity.CompilerBlockEntity;
+import io.github.marcuscastelo.quartus.blockentity.ExecutorBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -11,6 +12,7 @@ import java.util.function.Supplier;
 
 public class QuartusBlockEntities {
     public static BlockEntityType<CompilerBlockEntity> COMPILER_BLOCK_ENTITY;
+    public static BlockEntityType<ExecutorBlockEntity> EXECUTOR_BLOCK_ENTITY;
 
     public static void init() {}
 
@@ -20,5 +22,6 @@ public class QuartusBlockEntities {
 
     static {
         COMPILER_BLOCK_ENTITY = register("compiler", CompilerBlockEntity::new, QuartusBlocks.COMPILER);
+        EXECUTOR_BLOCK_ENTITY = register("executor", ExecutorBlockEntity::new, QuartusBlocks.EXECUTOR);
     }
 }

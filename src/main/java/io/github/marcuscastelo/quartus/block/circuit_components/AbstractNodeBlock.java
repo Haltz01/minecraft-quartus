@@ -17,6 +17,7 @@ import java.util.List;
 public abstract class AbstractNodeBlock extends HorizontalFacingBlock implements QuartusNodeConvertible {
     protected AbstractNodeBlock(Settings settings) {
         super(settings);
+        this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
 
     @Override
@@ -26,23 +27,5 @@ public abstract class AbstractNodeBlock extends HorizontalFacingBlock implements
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
-    }
-
-    //TODO: remover (para forçar que seja criado com subclasse apropriada pelos filhos)
-    @Override
-    @Nullable
-    public QuartusNode createQuartusNode(World world, BlockPos pos) throws QuartusNode.QuartusWrongNodeBlockException {
-        final AbstractNodeBlock nodeBlock = this;
-        return new QuartusNode(world, pos) {
-            @Override
-            public List<Direction> getPossibleOutputDirections() {
-                return nodeBlock.getPossibleOutputDirections(world, pos);
-            }
-
-            @Override
-            public List<Direction> getPossibleInputDirections() {
-                return nodeBlock.getPossibleInputDirections(world, pos);
-            }
-        };
     }
 }

@@ -46,7 +46,7 @@ public class CircuitCompiler {
     }
 
     @Nullable
-    private QuartusNode scanNodeAt(BlockPos pos) {
+    private QuartusNode createNodeAt(BlockPos pos) {
         Block nodeBlock = world.getBlockState(pos).getBlock();
         try {
             if (nodeBlock instanceof QuartusNodeConvertible)
@@ -57,8 +57,9 @@ public class CircuitCompiler {
         return null;
     }
 
-    //Adiciona todos os inputs na area de escaneamento à lista de exploração
-    private void scanProgramNodes() {
+    //Escaneia todos os nodes do circuito e os coloca num hashmap relacionando a posição com o node.
+    //Adicionalmente, também alimenta uma fila de exploração com a posição de todos os inputs
+    private void scanCircuitNodes() {
         int startX, startY, startZ;
         startX = Math.min(startPos.getX(), endPos.getX());
         startY = Math.min(startPos.getY(), endPos.getY());
@@ -75,11 +76,9 @@ public class CircuitCompiler {
         for (int x = startX; x <= endX; x++) {
             for (int z = startZ; z <= endZ; z++) {
                 for (int y = startY; y <= endY; y++) {
-                    QuartusNode node = scanNodeAt(new BlockPos(x,y,z));
-                    if (node == null) {
-//                        System.out.printf("%d, %d, %d Não é um node\n", x, y, z );
-                        continue;
-                    }
+                    QuartusNode node = createNodeAt(new BlockPos(x,y,z));
+                    if (node == null) continue; //Ignora blocos que não fazem parte do circuito
+
                     BlockPos nodePos = new BlockPos(x,y,z);
                     System.out.println(String.format("Encontrei um node em %d, %d, %d", x,y,z));
                     circuit.nodeInPosition.putIfAbsent(nodePos, node);
@@ -132,7 +131,7 @@ public class CircuitCompiler {
         System.out.println("[Compile] * Iniciando Compilação... *");
 
         System.out.println("[Compile] Escaneando nodes...");
-        scanProgramNodes();
+        scanCircuitNodes();
         System.out.println("[Compile] Escaneamento completo!");
 
         System.out.println("[Compile] Explorando nodes...");

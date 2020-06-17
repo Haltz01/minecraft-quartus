@@ -1,6 +1,5 @@
-package io.github.marcuscastelo.quartus.circuit_logic.native_programs;
+package io.github.marcuscastelo.quartus.circuit_logic.real_nodes;
 
-import io.github.marcuscastelo.quartus.block.circuit_components.OrGateBlock;
 import io.github.marcuscastelo.quartus.block.circuit_components.XnorGateBlock;
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusNode;
 import net.minecraft.util.math.BlockPos;

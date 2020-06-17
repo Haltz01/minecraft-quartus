@@ -10,6 +10,7 @@ import java.util.List;
 public abstract class QuartusInput extends QuartusNode {
     public QuartusInput(World world, BlockPos pos) {
         super(world, pos);
+
     }
 
     List<Direction> DIRECTIONS_NONE = new ArrayList<>();
@@ -28,6 +29,6 @@ public abstract class QuartusInput extends QuartusNode {
 
     @Override
     public String getNodeType() {
-        return "GenericInput";
+        return "Input";
     }
 }

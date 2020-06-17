@@ -4,61 +4,66 @@ import io.github.cottonmc.cotton.gui.CottonCraftingController;
 import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
-import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.circuit_logic.CircuitCompiler;
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusCircuit;
+import io.github.marcuscastelo.quartus.network.QuartusFloppyDiskUpdateC2SPacket;
+import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 public class CompilerBlockController extends CottonCraftingController {
-    BlockPos compilerPosition;
+    final BlockPos compilerBlockPosition;
 
-    private void updateFloppyDisk(QuartusCircuit circuit) {
-        ItemStack floppyItemStack = blockInventory.getInvStack(0);
-        if (floppyItemStack.isEmpty()) {
-            assert MinecraftClient.getInstance().player != null;
-            MinecraftClient.getInstance().player.sendMessage(new TranslatableText("gui.quartus.compiler.empty"));
-            return;
-        }
+    private void updateFloppyDisk(ItemStack floppyItemStack, QuartusCircuit circuit) {
+        System.out.println(circuit.toString());
 
-        //TODO: salvar circuito no disquete com posição e tudo mais
-        CompoundTag compoundTag = floppyItemStack.getOrCreateTag();
-//        compoundTag.put("circuit", circuit);
+        //Update client's itemstack
+        floppyItemStack.getOrCreateTag().putString("circuit", circuit.toString());
 
+        //Send updated itemstack to server
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        buf.writeBlockPos(compilerPosition);
-        buf.writeCompoundTag(compoundTag);
+        QuartusFloppyDiskUpdateC2SPacket floppyDiskUpdateC2SPacket = new QuartusFloppyDiskUpdateC2SPacket(compilerBlockPosition, floppyItemStack);
 
-        ClientSidePacketRegistry.INSTANCE.sendToServer(Quartus.id("foda"), buf);
+        floppyDiskUpdateC2SPacket.write(buf);
+        floppyDiskUpdateC2SPacket.send(buf);
     }
 
     private QuartusCircuit compileCircuit() {
-        BlockPos startPos = compilerPosition.offset(Direction.EAST, 10).offset(Direction.NORTH,10);
-        BlockPos endPos = compilerPosition.offset(Direction.WEST, 10);
-        CircuitCompiler compiler = new CircuitCompiler(world, compilerPosition, startPos, endPos);
+        Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
+        BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), 5).offset(facingDir.getOpposite(),10);
+        BlockPos endPos = compilerBlockPosition.offset(facingDir.rotateYCounterclockwise(), 5);
+
+        System.out.println("Compiling from " + startPos + " to " + endPos);
+        CircuitCompiler compiler = new CircuitCompiler(world, compilerBlockPosition, startPos, endPos);
         System.out.println("Começando compilação");
         return compiler.compile();
     }
 
     private void onCompilerButtonClick() {
+        ItemStack floppyItemStack = blockInventory.getInvStack(0);
+        if (floppyItemStack.isEmpty() || !floppyItemStack.getItem().equals(QuartusItems.FLOPPY_DISK)) {
+            assert MinecraftClient.getInstance().player != null;
+            MinecraftClient.getInstance().player.sendMessage(new TranslatableText("gui.quartus.compiler.empty"));
+            return;
+        }
+
         QuartusCircuit circuit = compileCircuit();
-        updateFloppyDisk(circuit);
+        updateFloppyDisk(floppyItemStack, circuit);
         System.out.println(circuit.toString());
     }
 
-    public CompilerBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos compilerPosition) {
+    public CompilerBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos compilerBlockPosition) {
         super(RecipeType.CRAFTING, syncId, playerInventory, blockInventory, null);
-        this.compilerPosition = compilerPosition;
+        this.compilerBlockPosition = compilerBlockPosition;
 
         WGridPanel root = new WGridPanel();
         setRootPanel(root);

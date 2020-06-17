@@ -55,7 +55,7 @@ public class QuartusBlocks {
 
         EXTENSOR_IO = register("extensor_io", new ExtensorIOBlock());
 
-        INPUT = register("input", new InputBlock());
-        OUTPUT = register("output", new OutputBlock());
+        INPUT = register("input", new InputGateBlock());
+        OUTPUT = register("output", new OutputGateBlock());
     }
 }

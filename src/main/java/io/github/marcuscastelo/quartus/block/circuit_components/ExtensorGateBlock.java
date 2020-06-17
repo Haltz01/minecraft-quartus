@@ -1,7 +1,7 @@
 package io.github.marcuscastelo.quartus.block.circuit_components;
 
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusNode;
-import io.github.marcuscastelo.quartus.circuit_logic.native_programs.ExtensorGateNode;
+import io.github.marcuscastelo.quartus.circuit_logic.resolvable_nodes.ExtensorGateNode;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;

@@ -1,9 +1,6 @@
-package io.github.marcuscastelo.quartus.circuit_logic.native_programs;
+package io.github.marcuscastelo.quartus.circuit_logic.resolvable_nodes;
 
-import io.github.marcuscastelo.quartus.Quartus;
-import io.github.marcuscastelo.quartus.block.circuit_components.DistributorGateBlock;
 import io.github.marcuscastelo.quartus.block.circuit_components.ExtensorGateBlock;
-import io.github.marcuscastelo.quartus.circuit_logic.QuartusNode;
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusResolvableNode;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

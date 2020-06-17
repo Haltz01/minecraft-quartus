@@ -12,7 +12,6 @@ import net.minecraft.world.BlockView;
 public abstract class AbstractGateBlock extends AbstractNodeBlock {
     public AbstractGateBlock() {
         super(Settings.copy(Blocks.REPEATER));
-        this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
 
     @Override

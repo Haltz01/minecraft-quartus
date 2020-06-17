@@ -28,6 +28,6 @@ public abstract class QuartusOutput extends QuartusNode {
 
     @Override
     public String getNodeType() {
-        return "GenericOutput";
+        return "Output";
     }
 }
