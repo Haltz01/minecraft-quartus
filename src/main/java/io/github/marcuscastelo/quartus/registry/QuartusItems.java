@@ -14,14 +14,24 @@ public class QuartusItems {
     public static final BlockItem WIRE;
     public static final BlockItem EXTENSOR_GATE;
     public static final BlockItem DISTRIBUTOR_GATE;
+
     public static final BlockItem AND_GATE;
-    public static final BlockItem OR_GATE;
-    public static final BlockItem XOR_GATE;
-    public static final BlockItem NOT_GATE;
     public static final BlockItem NAND_GATE;
+    public static final BlockItem OR_GATE;
     public static final BlockItem NOR_GATE;
+    public static final BlockItem XOR_GATE;
+    public static final BlockItem XNOR_GATE;
+    public static final BlockItem NOT_GATE;
+
+    public static final BlockItem MULTIPLEXER_GATE;
+
     public static final BlockItem COMPILER;
+    public static final BlockItem EXECUTOR;
+    public static final BlockItem EXTENSOR_IO;
+
+
     public static final BlockItem INPUT;
+    public static final BlockItem OUTPUT;
 
     public static final Item FLOPPY_DISK;
 
@@ -41,12 +51,21 @@ public class QuartusItems {
         DISTRIBUTOR_GATE = register("distributor_gate", QuartusBlocks.DISTRIBUTOR_GATE);
 
         AND_GATE = register("and_gate", QuartusBlocks.AND_GATE);
+        NAND_GATE = register("nand_gate", QuartusBlocks.NAND_GATE);
         OR_GATE = register("or_gate", QuartusBlocks.OR_GATE);
         NOR_GATE = register("nor_gate", QuartusBlocks.NOR_GATE);
-        XOR_GATE = NOT_GATE = NAND_GATE = null;
+        XOR_GATE = register("xor_gate", QuartusBlocks.XOR_GATE);
+        XNOR_GATE = register("xnor_gate", QuartusBlocks.XNOR_GATE);
+        NOT_GATE = register("not_gate", QuartusBlocks.NOT_GATE);
 
         COMPILER = register("compiler", QuartusBlocks.COMPILER);
+        EXECUTOR = register("executor", QuartusBlocks.EXECUTOR);
+        EXTENSOR_IO = register("extensor_io", QuartusBlocks.EXTENSOR_IO);
+
+        MULTIPLEXER_GATE = register("multiplexer", QuartusBlocks.MULTIPLEXER_GATE);
+
         INPUT = register("input", QuartusBlocks.INPUT);
+        OUTPUT = register("output", QuartusBlocks.OUTPUT);
 
         FLOPPY_DISK = register("floppy_disk", new FloppyDiskItem());
 
