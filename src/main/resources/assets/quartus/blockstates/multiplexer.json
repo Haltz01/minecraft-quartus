@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "quartus:block/multiplexer", "y": 0 },
+    "facing=east": { "model": "quartus:block/multiplexer", "y": 90 },
+    "facing=south": { "model": "quartus:block/multiplexer", "y": 180 },
+    "facing=west": { "model": "quartus:block/multiplexer", "y": 270 }
+  }
+}
