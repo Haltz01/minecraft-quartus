@@ -5,7 +5,10 @@ import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.marcuscastelo.quartus.block.ExtensorIOBlock;
+import io.github.marcuscastelo.quartus.network.QuartusExtensorIOUpdateC2SPacket;
+import io.github.marcuscastelo.quartus.network.handlers.QuartusExtensorIOUpdateC2SPacketHandler;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
+import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
@@ -14,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.StringUtils;
 import net.minecraft.util.math.Direction;
@@ -46,13 +50,23 @@ public class ExecutorBlockController extends CottonCraftingController {
         BlockState extensorState = world.getBlockState(extensorPos);
         int distance = 1;
         while (extensorState.getBlock().equals(QuartusBlocks.EXTENSOR_IO)) {
+            ExtensorIOBlock.ExtensorIOState newExtensorState;
             if (distance <= nInputs && distance <= nOutputs) {
-                world.setBlockState(extensorPos, extensorState.with(ExtensorIOBlock.EXTENSOR_STATE, ExtensorIOBlock.ExtensorIOState.IO));
+                newExtensorState =  ExtensorIOBlock.ExtensorIOState.IO;
             } else if (distance <= nInputs) {
-                world.setBlockState(extensorPos, extensorState.with(ExtensorIOBlock.EXTENSOR_STATE, ExtensorIOBlock.ExtensorIOState.INPUT));
+                newExtensorState = ExtensorIOBlock.ExtensorIOState.INPUT;
             } else if (distance <= nOutputs) {
-                world.setBlockState(extensorPos, extensorState.with(ExtensorIOBlock.EXTENSOR_STATE, ExtensorIOBlock.ExtensorIOState.OUPUT));
+                newExtensorState = ExtensorIOBlock.ExtensorIOState.OUPUT;
             } else break;
+
+            //Define os blocos no cliente
+            world.setBlockState(extensorPos, extensorState.with(ExtensorIOBlock.EXTENSOR_STATE, newExtensorState));
+
+            //Envia as alterações para o servidor
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+            QuartusExtensorIOUpdateC2SPacket packet = new QuartusExtensorIOUpdateC2SPacket(extensorPos, newExtensorState);
+            packet.write(buf);
+            packet.send(buf);
 
             distance++;
 

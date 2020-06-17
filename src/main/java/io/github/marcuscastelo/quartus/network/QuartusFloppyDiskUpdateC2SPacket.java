@@ -51,6 +51,6 @@ public class QuartusFloppyDiskUpdateC2SPacket implements QuartusPacket {
 
     @Override
     public void send(PacketByteBuf buf) {
-        ClientSidePacketRegistry.INSTANCE.sendToServer(QuartusFloppyDiskUpdateC2SPacket.ID, buf);
+        ClientSidePacketRegistry.INSTANCE.sendToServer(ID, buf);
     }
 }
