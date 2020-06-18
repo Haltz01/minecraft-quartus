@@ -1,13 +1,19 @@
-# Minecraft as Nether before!
-Withery is a (currently WIP) mod that aims to overhaul wither-related stuff in the game, giving them a deeper meaning.
+# Quartus in Minecraft - Digital Logic Mod for Minecraft
+"Quartus in Minecraft" is a mod that will add important digital logic components to Minecraft such as logic gates, a clocking system, flip-flops, logic inputs/outputs and more...
 
-I plan to add tons of things to the game, but some of my ideas are just concepts. Here's a draft of what I'm planning to cover:
-<ul>
-<li>Wither effect as a life balance mechanic</li>
-<li>Mob generation using plant essences</li>
-<li>New Wither mobs</li>
-<li>Piglin lore</li>
-</ul>
+New blocks to craft, innovative circuits to build, the option to save your creations in floppy disks... You can really learn digital logic with this mod.
 
-
-I owe Fabric Discord's people for making this possible! I respect a lot how supportive they are whenever I send a question in #mod-dev. I also owe FabricMC team for making this astounding Modding API and its wiki, you guys deserve all my praise.
+## So, what do we have in this mod?
+- Bit transmission wire
+- Multi-input logic gates
+    - AND
+    - NAND
+    - OR
+    - NOR
+    - XOR
+    - XNOR
+    - NOT
+- Extenders (a way to increase number of inputs in the logic gates)
+- Multiplexers
+- Flip-flops
+- Clocking

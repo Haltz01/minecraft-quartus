@@ -22,7 +22,7 @@ dependencies {
 }
 
 repositories { maven {url "http://tehnut.info/maven"} }
-dependencies { modCompile "mcp.mobius.waila:Hwyla:1.15.2-1.9.20-71" }
+// dependencies { modCompile "mcp.mobius.waila:Hwyla:1.15.2-1.9.20-71" }
 
 repositories {
     maven {

@@ -45,7 +45,7 @@ public class QuartusBlocks {
         OR_GATE = register("or_gate", new OrGateBlock());
         NOR_GATE = register("nor_gate", new NorGateBlock());
         XOR_GATE = register("xor_gate", new XorGateBlock());
-        XNOR_GATE = register("xnor_gate", new XorGateBlock());
+        XNOR_GATE = register("xnor_gate", new XnorGateBlock());
         NOT_GATE = register("not_gate", new NotGateBlock());
 
         MULTIPLEXER_GATE = register("multiplexer", new MultiplexerGateBlock());
