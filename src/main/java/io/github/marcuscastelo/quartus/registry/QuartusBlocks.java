@@ -6,6 +6,7 @@ import io.github.marcuscastelo.quartus.block.ExecutorBlock;
 import io.github.marcuscastelo.quartus.block.ExtensorIOBlock;
 import io.github.marcuscastelo.quartus.block.circuit_components.*;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.registry.Registry;
 
 public class QuartusBlocks {
@@ -45,7 +46,7 @@ public class QuartusBlocks {
         OR_GATE = register("or_gate", new OrGateBlock());
         NOR_GATE = register("nor_gate", new NorGateBlock());
         XOR_GATE = register("xor_gate", new XorGateBlock());
-        XNOR_GATE = register("xnor_gate", new XorGateBlock());
+        XNOR_GATE = register("xnor_gate", new XnorGateBlock());
         NOT_GATE = register("not_gate", new NotGateBlock());
 
         MULTIPLEXER_GATE = register("multiplexer", new MultiplexerGateBlock());

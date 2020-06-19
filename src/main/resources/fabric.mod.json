@@ -5,7 +5,7 @@
   "name": "Quartus",
   "description": "Fabric Mod for Minecraft that adds a FPGA compiler to the game.",
   "authors": [
-    "marcuscastelo"
+    "marcuscastelo","H4ltz"
   ],
   "contact": {
     "homepage": "https://geeleonidas.github.io/Withery/"

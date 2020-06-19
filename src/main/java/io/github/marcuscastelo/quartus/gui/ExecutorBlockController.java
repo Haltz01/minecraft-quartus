@@ -5,11 +5,14 @@ import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.marcuscastelo.quartus.block.ExtensorIOBlock;
+import io.github.marcuscastelo.quartus.blockentity.ExecutorBlockEntity;
+import io.github.marcuscastelo.quartus.circuit_logic.QuartusCircuit;
 import io.github.marcuscastelo.quartus.network.QuartusExtensorIOUpdateC2SPacket;
 import io.github.marcuscastelo.quartus.network.handlers.QuartusExtensorIOUpdateC2SPacketHandler;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -26,22 +29,9 @@ import sun.jvm.hotspot.opto.Block;
 public class ExecutorBlockController extends CottonCraftingController {
     BlockPos executorBlockPos;
 
-    //TODO: dar update no servidor
-    private void onExecuteButtonClicked() {
-        ItemStack stack = blockInventory.getInvStack(0);
-        assert MinecraftClient.getInstance().player != null;
-        if (stack.isEmpty()) {
-            MinecraftClient.getInstance().player.sendMessage(new TranslatableText("gui.quartus.executor.empty"));
-            return;
-        }
+    private void updateExtensorModels(String circuitStr) {
 
-        if (!stack.getOrCreateTag().contains("circuit")) {
-            MinecraftClient.getInstance().player.sendMessage(new TranslatableText("gui.quartus.executor.no_circuit"));
-            return;
-        }
-
-        String circuitStr = stack.getOrCreateTag().getString("circuit");
-
+        //TODO: usar método mais eficiente com o QuartusCircuit.of
         int nInputs = StringUtils.countMatches(circuitStr, "Input");
         int nOutputs = StringUtils.countMatches(circuitStr, "Output");
 
@@ -73,6 +63,33 @@ public class ExecutorBlockController extends CottonCraftingController {
             extensorPos = extensorPos.offset(exploreDirection);
             extensorState = world.getBlockState(extensorPos);
         }
+    }
+
+    //TODO: dar update no servidor
+    private void onExecuteButtonClicked() {
+        ItemStack stack = blockInventory.getInvStack(0);
+        assert MinecraftClient.getInstance().player != null;
+        if (stack.isEmpty()) {
+            MinecraftClient.getInstance().player.sendMessage(new TranslatableText("gui.quartus.executor.empty"));
+            return;
+        }
+
+        if (!stack.getOrCreateTag().contains("circuit")) {
+            MinecraftClient.getInstance().player.sendMessage(new TranslatableText("gui.quartus.executor.no_circuit"));
+            return;
+        }
+
+        String circuitStr = stack.getOrCreateTag().getString("circuit");
+
+        updateExtensorModels(circuitStr);
+
+        QuartusCircuit circuit = QuartusCircuit.of(circuitStr);
+
+        BlockEntity be = world.getBlockEntity(executorBlockPos);
+        if (be instanceof ExecutorBlockEntity) {
+            ((ExecutorBlockEntity) be).onExecutionStart(world, executorBlockPos);
+        }
+
     }
 
     public ExecutorBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos executorBlockPos) {

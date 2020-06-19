@@ -2,11 +2,15 @@ package io.github.marcuscastelo.quartus.block;
 
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.blockentity.ExecutorBlockEntity;
+import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BedItem;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.Items;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -15,6 +19,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityProvider {
     public ExecutorBlock() {
@@ -29,6 +35,13 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
         ContainerProviderRegistry.INSTANCE.openContainer(Quartus.id("executor"), player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
 
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        BlockEntity be = world.getBlockEntity(pos);
+        if (be instanceof ExecutorBlockEntity)
+            ((ExecutorBlockEntity) be).tick();
     }
 
     @Override

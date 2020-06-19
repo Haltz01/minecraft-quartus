@@ -6,6 +6,7 @@ import io.github.marcuscastelo.quartus.registry.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.minecraft.block.Blocks;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
@@ -31,8 +32,6 @@ public class Quartus implements ModInitializer {
         QuartusBlockEntities.init();
         QuartusNetworkHandlers.init();
         QuartusCottonControllers.init();
-
-
 
         LOGGER.info("[Quartus] Server ready!");
     }

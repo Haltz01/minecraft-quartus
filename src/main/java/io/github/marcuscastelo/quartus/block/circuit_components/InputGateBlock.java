@@ -6,6 +6,7 @@ import io.github.marcuscastelo.quartus.circuit_logic.QuartusNode;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.Material;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
@@ -17,7 +18,7 @@ import net.minecraft.world.World;
 
 public class InputGateBlock extends AbstractNodeBlock implements QuartusInputConvertible {
     public InputGateBlock() {
-        super(Settings.copy(Blocks.LEVER));
+        super(Settings.of(Material.PART));
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.POWERED, false));
     }
 

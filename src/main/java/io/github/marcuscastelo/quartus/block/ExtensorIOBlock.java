@@ -2,18 +2,19 @@ package io.github.marcuscastelo.quartus.block;
 
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class ExtensorIOBlock extends HorizontalFacingBlock {
     public enum ExtensorIOState implements StringIdentifiable {
@@ -31,15 +32,28 @@ public class ExtensorIOBlock extends HorizontalFacingBlock {
     }
 
     public static final EnumProperty<ExtensorIOState> EXTENSOR_STATE = EnumProperty.of("extensor_state", ExtensorIOState.class);
+    public static final BooleanProperty POWERED = Properties.POWERED;
 
     public ExtensorIOBlock() {
         super(Settings.of(Material.PART).nonOpaque());
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH).with(EXTENSOR_STATE, ExtensorIOState.VOID));
+        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH).with(EXTENSOR_STATE, ExtensorIOState.VOID).with(POWERED, true));
+    }
+
+    @Override
+    public boolean emitsRedstonePower(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
+        Direction outputDir = state.get(FACING);
+        if (facing != outputDir) return 0;
+        return state.get(POWERED)? 15: 0;
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, EXTENSOR_STATE);
+        builder.add(FACING, EXTENSOR_STATE, POWERED);
     }
 
     @Override

@@ -11,8 +11,8 @@ import net.minecraft.util.registry.Registry;
 import java.util.function.Supplier;
 
 public class QuartusBlockEntities {
-    public static BlockEntityType<CompilerBlockEntity> COMPILER_BLOCK_ENTITY;
-    public static BlockEntityType<ExecutorBlockEntity> EXECUTOR_BLOCK_ENTITY;
+    public static BlockEntityType<CompilerBlockEntity> COMPILER_BLOCK_ENTITY_TYPE;
+    public static BlockEntityType<ExecutorBlockEntity> EXECUTOR_BLOCK_ENTITY_TYPE;
 
     public static void init() {}
 
@@ -21,7 +21,7 @@ public class QuartusBlockEntities {
     }
 
     static {
-        COMPILER_BLOCK_ENTITY = register("compiler", CompilerBlockEntity::new, QuartusBlocks.COMPILER);
-        EXECUTOR_BLOCK_ENTITY = register("executor", ExecutorBlockEntity::new, QuartusBlocks.EXECUTOR);
+        COMPILER_BLOCK_ENTITY_TYPE = register("compiler", CompilerBlockEntity::new, QuartusBlocks.COMPILER);
+        EXECUTOR_BLOCK_ENTITY_TYPE = register("executor", ExecutorBlockEntity::new, QuartusBlocks.EXECUTOR);
     }
 }

@@ -41,7 +41,7 @@ public class CircuitCompiler {
         this.startPos = startPos;
         this.endPos = endPos;
         this.world = world;
-        this.circuit = new QuartusCircuit(world, compilerPos);
+        this.circuit = new QuartusCircuit();
         explorePoll = new LinkedList<>();
     }
 

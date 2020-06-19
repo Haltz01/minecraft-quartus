@@ -36,8 +36,6 @@ public abstract class QuartusNode {
 
     //VINICIUS MUDAR
 
-
-
     public List<QuartusNode> getInputs() {
         return new ArrayList<>(inputs);
     }
@@ -86,7 +84,7 @@ public abstract class QuartusNode {
 
     @Override
     public String toString() {
-        return this.getNodeType() + " " + pos.toShortString();
+        return this.getNodeType() + "@" + pos.toShortString();
     }
 
     public long getUniqueID() { return pos.asLong(); }
