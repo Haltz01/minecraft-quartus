@@ -13,7 +13,7 @@ import java.util.Queue;
 
 /**
  * Classe responsável por analisar uma região no mundo e criar um objeto contendo
- * as informações o circuito construído. Tal objeto é do tipo {@link QuartusCircuit}.
+ * as informações do circuito construído. Tal objeto é do tipo {@link QuartusCircuit}.
  *
  * Iniciamente, é feita uma análise cúbica de todos os blocos da região, criando nós {@link QuartusNode} -
  * que representam blocos no jogo e suas respectivas funções lógicas no circuito - e os adicionando à
@@ -61,6 +61,7 @@ public class CircuitCompiler {
     //Adicionalmente, também alimenta uma fila de exploração com a posição de todos os inputs
     private void scanCircuitNodes() {
         int startX, startY, startZ;
+        // TODO: Mudar valores iniciais e finais de X, Y e Z -> devem sempre começar da mesma posição (canto "superior" esquerdo do circuito - olhando para o circuito)
         startX = Math.min(startPos.getX(), endPos.getX());
         startY = Math.min(startPos.getY(), endPos.getY());
         startZ = Math.min(startPos.getZ(), endPos.getZ());
@@ -107,7 +108,16 @@ public class CircuitCompiler {
             QuartusNode node = circuit.getNodeAt(nodePos);
             assert node != null;
 
+            // TODO: mais ou menos por aqui deve ser adicionado um tratamento para os extensores e distribuidores!! -> eles não existem de verdade, são só facilitadores do que queremos fazer
+            // TODO: extensor só pode ser conectado em GATES!!
+            // Guerra vai fazer!!
+
+            // Percorre os fios a partir de um node
+            // Retorna 0 ou 1 nodes na maioria dos casos
+            // Caso "especial": distribuidor -> a saída de um outro gate gera mais de um fio para vários inputs (de outros gates)
+            // Caso "especial": extensores -> aumentam a quantidade de inputs de um gate
             List<QuartusNode> nextNodes = CircuitUtils.getConnectedNodes(circuit, node);
+
             for (QuartusNode nextNode: nextNodes) {
                 BlockPos nextPos = nextNode.pos;
                 System.out.println("Vizinho: " + nextPos.toString());

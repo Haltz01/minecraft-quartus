@@ -1,8 +1,6 @@
 package io.github.marcuscastelo.quartus.block.circuit_components;
 
-import io.github.marcuscastelo.quartus.circuit_logic.QuartusNode;
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusNodeConvertible;
-import jdk.internal.jline.internal.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -12,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.state.StateManager;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;

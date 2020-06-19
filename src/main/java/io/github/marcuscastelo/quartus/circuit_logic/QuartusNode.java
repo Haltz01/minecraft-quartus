@@ -1,7 +1,5 @@
 package io.github.marcuscastelo.quartus.circuit_logic;
 
-import io.github.marcuscastelo.quartus.block.circuit_components.AbstractGateBlock;
-import io.github.marcuscastelo.quartus.block.circuit_components.AndGateBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -9,7 +7,6 @@ import net.minecraft.util.math.Direction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public abstract class QuartusNode {
