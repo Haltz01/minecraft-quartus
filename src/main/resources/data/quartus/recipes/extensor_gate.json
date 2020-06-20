@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " I ",
+    "RSR",
+    " R "
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:repeater"
+    },
+    "S": {
+      "item": "minecraft:stone"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "quartus:extensor_gate",
+    "count": 1
+  }
+}

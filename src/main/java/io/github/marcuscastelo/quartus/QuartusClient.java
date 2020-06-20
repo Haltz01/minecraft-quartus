@@ -3,6 +3,8 @@ package io.github.marcuscastelo.quartus;
 import io.github.marcuscastelo.quartus.registry.QuartusCottonGUIs;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.minecraft.block.Blocks;
+import net.minecraft.item.Items;
 
 public class QuartusClient implements ClientModInitializer {
     @Override
@@ -10,3 +12,4 @@ public class QuartusClient implements ClientModInitializer {
         QuartusCottonGUIs.initClient();
     }
 }
+
