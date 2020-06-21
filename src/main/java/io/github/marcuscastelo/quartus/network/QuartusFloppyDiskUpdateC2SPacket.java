@@ -1,19 +1,12 @@
 package io.github.marcuscastelo.quartus.network;
 
 import io.github.marcuscastelo.quartus.Quartus;
-import io.github.marcuscastelo.quartus.circuit_logic.QuartusCircuit;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Packet;
-import net.minecraft.network.listener.ServerPlayPacketListener;
-import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
-import sun.jvm.hotspot.opto.Block;
-
-import java.io.IOException;
 
 public class QuartusFloppyDiskUpdateC2SPacket implements QuartusPacket {
     public static final Identifier ID = Quartus.id("floppy_disk_update_c2s");

@@ -1,13 +1,9 @@
 package io.github.marcuscastelo.quartus.circuit_logic;
 
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
-import jdk.internal.jline.internal.Nullable;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.RepeaterBlock;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.TickScheduler;
 import net.minecraft.world.World;
 import net.minecraft.util.math.Direction;
 
@@ -21,7 +17,7 @@ public class CircuitExecutor {
 
     private boolean paused;
 
-    public void setCircuit(QuartusCircuit circuit) {
+    public void setCircuit(QuartusCircuitExplorer circuit) {
         this.circuit = circuit;
         inputsPower = new boolean[circuit.getInputCount()];
         outputsPower = new boolean[2];//circuit.getOutputCount()];
@@ -39,7 +35,7 @@ public class CircuitExecutor {
         paused = true;
     }
 
-    private QuartusCircuit circuit;
+    private QuartusCircuitExplorer circuit;
 
     private boolean[] inputsPower = {}, outputsPower = {};
     private BlockPos[] extensorsIOPosition = {};
@@ -53,7 +49,7 @@ public class CircuitExecutor {
         }
     }
 
-    public CircuitExecutor(World world, BlockPos executorPosition, QuartusCircuit circuit) {
+    public CircuitExecutor(World world, BlockPos executorPosition, QuartusCircuitExplorer circuit) {
         this.world = world;
         this.executorPosition = executorPosition;
         this.paused = true;

@@ -2,10 +2,9 @@ package io.github.marcuscastelo.quartus.block.circuit_components;
 
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusInput;
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusInputConvertible;
-import io.github.marcuscastelo.quartus.circuit_logic.QuartusNode;
+import io.github.marcuscastelo.quartus.circuit_logic.QuartusWorldNode;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.state.StateManager;
@@ -34,13 +33,7 @@ public class InputGateBlock extends AbstractNodeBlock implements QuartusInputCon
     }
 
     @Override
-    public QuartusInput createQuartusInput(World world, BlockPos pos) throws QuartusNode.QuartusWrongNodeBlockException {
-        return new QuartusInput(world, pos) {
-            @Override
-            public boolean getInGameValue() {
-                BlockState bs = world.getBlockState(pos);
-                return bs.get(Properties.POWERED);
-            }
-        };
+    public QuartusInput createQuartusInput() {
+        return new QuartusInput() {};
     }
 }

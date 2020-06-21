@@ -6,9 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.marcuscastelo.quartus.block.ExtensorIOBlock;
 import io.github.marcuscastelo.quartus.blockentity.ExecutorBlockEntity;
-import io.github.marcuscastelo.quartus.circuit_logic.QuartusCircuit;
 import io.github.marcuscastelo.quartus.network.QuartusExtensorIOUpdateC2SPacket;
-import io.github.marcuscastelo.quartus.network.handlers.QuartusExtensorIOUpdateC2SPacketHandler;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
@@ -24,7 +22,6 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.StringUtils;
 import net.minecraft.util.math.Direction;
-import sun.jvm.hotspot.opto.Block;
 
 public class ExecutorBlockController extends CottonCraftingController {
     BlockPos executorBlockPos;
@@ -83,7 +80,7 @@ public class ExecutorBlockController extends CottonCraftingController {
 
         updateExtensorModels(circuitStr);
 
-        QuartusCircuit circuit = QuartusCircuit.of(circuitStr);
+//        QuartusCircuitExplorationGraph circuit = QuartusCircuitExplorationGraph.of(circuitStr);
 
         BlockEntity be = world.getBlockEntity(executorBlockPos);
         if (be instanceof ExecutorBlockEntity) {

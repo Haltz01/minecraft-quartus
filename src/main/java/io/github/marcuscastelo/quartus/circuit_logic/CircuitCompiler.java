@@ -13,9 +13,9 @@ import java.util.Queue;
 
 /**
  * Classe responsável por analisar uma região no mundo e criar um objeto contendo
- * as informações do circuito construído. Tal objeto é do tipo {@link QuartusCircuit}.
+ * as informações do circuito construído. Tal objeto é do tipo {@link QuartusCircuitExplorer}.
  *
- * Iniciamente, é feita uma análise cúbica de todos os blocos da região, criando nós {@link QuartusNode} -
+ * Iniciamente, é feita uma análise cúbica de todos os blocos da região, criando nós {@link QuartusWorldNode} -
  * que representam blocos no jogo e suas respectivas funções lógicas no circuito - e os adicionando à
  * lista de exploração.
  *
@@ -32,29 +32,24 @@ public class CircuitCompiler {
     private static boolean DEBUG_MESSAGES_ENABLED = true;
 
     BlockPos startPos, endPos;
-    QuartusCircuit circuit;
+    QuartusCircuitExplorer circuitExplorer;
     World world;
 
     Queue<BlockPos> explorePoll;
 
-    public CircuitCompiler(World world, BlockPos compilerPos, BlockPos startPos, BlockPos endPos) {
+    public CircuitCompiler(World world, BlockPos startPos, BlockPos endPos) {
         this.startPos = startPos;
         this.endPos = endPos;
         this.world = world;
-        this.circuit = new QuartusCircuit();
+        this.circuitExplorer = new QuartusCircuitExplorer(world);
         explorePoll = new LinkedList<>();
     }
 
     @Nullable
     private QuartusNode createNodeAt(BlockPos pos) {
         Block nodeBlock = world.getBlockState(pos).getBlock();
-        try {
-            if (nodeBlock instanceof QuartusNodeConvertible)
-                return ((QuartusNodeConvertible) nodeBlock).createQuartusNode(world, pos);
-        } catch (QuartusNode.QuartusWrongNodeBlockException exception) {
-            exception.printStackTrace();
-        }
-        return null;
+        if (nodeBlock instanceof QuartusNodeConvertible) return ((QuartusNodeConvertible) nodeBlock).createQuartusNode();
+        else return null;
     }
 
     //Escaneia todos os nodes do circuito e os coloca num hashmap relacionando a posição com o node.
@@ -82,7 +77,7 @@ public class CircuitCompiler {
 
                     BlockPos nodePos = new BlockPos(x,y,z);
                     System.out.println(String.format("Encontrei um node em %d, %d, %d", x,y,z));
-                    circuit.nodeInPosition.putIfAbsent(nodePos, node);
+                    circuitExplorer.addNoteAt(node, nodePos);
                     if (node instanceof QuartusInput) {
                         System.out.println(String.format("É um input!!", x,y,z));
                         explorePoll.add(nodePos);
@@ -100,12 +95,12 @@ public class CircuitCompiler {
             BlockPos nodePos = explorePoll.poll();
             System.out.println("Explorando a pos " + nodePos.toString());
 
-            if (circuit.isNodeAlreadyExplored(circuit.getNodeAt(nodePos))) {
+            if (circuitExplorer.isNodeAlreadyExplored(circuitExplorer.getNodeAt(nodePos))) {
                 System.out.println("Posição já explorada... ignorando!");
                 continue;
             }
 
-            QuartusNode node = circuit.getNodeAt(nodePos);
+            QuartusNode node = circuitExplorer.getNodeAt(nodePos);
             assert node != null;
 
             // TODO: mais ou menos por aqui deve ser adicionado um tratamento para os extensores e distribuidores!! -> eles não existem de verdade, são só facilitadores do que queremos fazer
@@ -116,15 +111,15 @@ public class CircuitCompiler {
             // Retorna 0 ou 1 nodes na maioria dos casos
             // Caso "especial": distribuidor -> a saída de um outro gate gera mais de um fio para vários inputs (de outros gates)
             // Caso "especial": extensores -> aumentam a quantidade de inputs de um gate
-            List<QuartusNode> nextNodes = CircuitUtils.getConnectedNodes(circuit, node);
+            List<QuartusNode> nextNodes = CircuitUtils.getConnectedNodes(circuitExplorer, node);
 
             for (QuartusNode nextNode: nextNodes) {
-                BlockPos nextPos = nextNode.pos;
+                BlockPos nextPos = circuitExplorer.getNodePos(nextNode);
                 System.out.println("Vizinho: " + nextPos.toString());
 
-                circuit.addLink(node, nextNode);
+                circuitExplorer.addLink(node, nextNode);
 
-                if (circuit.isNodeAlreadyExplored(nextNode)) {
+                if (circuitExplorer.isNodeAlreadyExplored(nextNode)) {
                     System.out.println("Vizinho já explorado... ignorando!");
                 } else {
                     System.out.println("Adiconando Vizinho: " + nextPos.toString());
@@ -137,7 +132,7 @@ public class CircuitCompiler {
     }
 
     //Escaneia uma área e retorna um grafo orientado representando as conexões entre os nós do circuito
-    public QuartusCircuit compile() {
+    public QuartusCircuitExplorer compile() {
         System.out.println("[Compile] * Iniciando Compilação... *");
 
         System.out.println("[Compile] Escaneando nodes...");
@@ -150,6 +145,6 @@ public class CircuitCompiler {
 
         System.out.println("[Compile] * Compilação completa! *");
 
-        return circuit;
+        return circuitExplorer;
     }
 }

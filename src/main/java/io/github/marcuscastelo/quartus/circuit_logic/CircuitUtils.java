@@ -17,15 +17,15 @@ public class CircuitUtils {
     public static final List<Direction> HORIZONTAL_DIRECTIONS = Arrays.asList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
 
     //Segue os fios até o próximo nó
-    public static List<QuartusNode> getConnectedNodes(QuartusCircuit circuit, QuartusNode node) {
-        World world = node.world;
+    public static List<QuartusNode> getConnectedNodes(QuartusCircuitExplorer circuitExplorer, QuartusNode node) {
+        World world = circuitExplorer.world;
         List<QuartusNode> connectedNodes = new ArrayList<>();
-        for (Direction approachDirection: node.getPossibleOutputDirections()) {
-            BlockPos neighborPos = node.pos.offset(approachDirection);
+        for (Direction approachDirection: node.getRelativeOutputDirections()) {
+            BlockPos neighborPos = circuitExplorer.getNodePos(node).offset(approachDirection);
             Block neighborBlock = world.getBlockState(neighborPos).getBlock();
             QuartusNode connectedNode = null;
             if (neighborBlock instanceof QuartusNodeConvertible){
-                connectedNode = circuit.getNodeAt(neighborPos);
+                connectedNode = circuitExplorer.getNodeAt(neighborPos);
             }
             else if (neighborBlock instanceof QuartusTransportInfoProvider) {
                 Pair<BlockPos, Direction> throughWireNodeInfo = getTransportDestinationInfo(world, neighborPos, approachDirection);
@@ -42,7 +42,7 @@ public class CircuitUtils {
                     Block connectedNodeBlock = world.getBlockState(connectedNodePos).getBlock();
                     if (connectedNodeBlock instanceof QuartusNodeConvertible) {
                         System.out.println("Após os fios, encontrado " + connectedNodeBlock);
-                        connectedNode = circuit.getNodeAt(connectedNodePos);
+                        connectedNode = circuitExplorer.getNodeAt(connectedNodePos);
                     }
                     else {
                         System.out.println("O FIO ESTÁ DESCONECTADO NO FIM DELE");

@@ -1,7 +1,6 @@
 package io.github.marcuscastelo.quartus.blockentity;
 
 import io.github.marcuscastelo.quartus.circuit_logic.CircuitExecutor;
-import io.github.marcuscastelo.quartus.circuit_logic.QuartusCircuit;
 import io.github.marcuscastelo.quartus.registry.QuartusBlockEntities;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.inventory.Inventories;
@@ -53,6 +52,7 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
 
     }
 
+    //TODO: refazer
     public void onExecutionStart(World world, BlockPos pos) {
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof ExecutorBlockEntity) {
@@ -60,13 +60,13 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
             ItemStack stack = ((ExecutorBlockEntity) be).getInvStack(0);
             //Obtém o circuito salvo no disquete
             //TODO: checar se não houver circuito no disquete
-            String circuitDescription = stack.getOrCreateTag().getString("circuit");
-            CircuitExecutor executor = ((ExecutorBlockEntity) be).getCircuitExecutor();
-            if (executor == null) return;
-            //Define o circuito no executor
-            executor.setCircuit(QuartusCircuit.of(circuitDescription));
-            //Inicia a simulação
-            executor.start();
+//            String circuitDescription = stack.getOrCreateTag().getString("circuit");
+//            CircuitExecutor executor = ((ExecutorBlockEntity) be).getCircuitExecutor();
+//            if (executor == null) return;
+//            //Define o circuito no executor
+//            executor.setCircuit(QuartusCircuitExplorationGraph.of(circuitDescription));
+//            //Inicia a simulação
+//            executor.start();
         }
     }
 

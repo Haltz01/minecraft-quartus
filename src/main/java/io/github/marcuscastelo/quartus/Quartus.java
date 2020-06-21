@@ -19,8 +19,11 @@ public class Quartus implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
     public static Quartus INSTANCE;
 
-    public static ItemGroup ITEMGROUP = FabricItemGroupBuilder.build(
-            id("item_group"), () -> new ItemStack(Items.WITHER_ROSE));
+    public static ItemGroup ITEMGROUP =
+            FabricItemGroupBuilder.create(id("item_group"))
+                    .icon(()->new ItemStack(QuartusItems.FLOPPY_DISK))
+                    .appendItems(QuartusItems::appendItemGroupStacksInorder)
+                    .build();
 
     @Override
     public void onInitialize() {

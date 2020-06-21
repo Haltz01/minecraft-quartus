@@ -2,15 +2,14 @@ package io.github.marcuscastelo.quartus.circuit_logic.real_nodes;
 
 import io.github.marcuscastelo.quartus.block.circuit_components.NandGateBlock;
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusNode;
+import io.github.marcuscastelo.quartus.circuit_logic.QuartusWorldNode;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public class NandGateNode extends QuartusNode {
-    public NandGateNode(World world, BlockPos pos) throws QuartusWrongNodeBlockException {
-        super(world, pos);
-        if (!(world.getBlockState(pos).getBlock() instanceof NandGateBlock)) throw new QuartusWrongNodeBlockException();
-    }
+import java.util.List;
 
+public class NandGateNode extends AndGateNode {
     @Override
     public String getNodeType() {
         return "NandGate";

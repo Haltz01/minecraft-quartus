@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.marcuscastelo.quartus.circuit_logic.CircuitCompiler;
-import io.github.marcuscastelo.quartus.circuit_logic.QuartusCircuit;
+import io.github.marcuscastelo.quartus.circuit_logic.QuartusCircuitExplorer;
 import io.github.marcuscastelo.quartus.network.QuartusFloppyDiskUpdateC2SPacket;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import io.netty.buffer.Unpooled;
@@ -23,7 +23,7 @@ import net.minecraft.util.math.Direction;
 public class CompilerBlockController extends CottonCraftingController {
     final BlockPos compilerBlockPosition;
 
-    private void updateFloppyDisk(ItemStack floppyItemStack, QuartusCircuit circuit) {
+    private void updateFloppyDisk(ItemStack floppyItemStack, QuartusCircuitExplorer circuit) {
         System.out.println(circuit.toString());
 
         //Update client's itemstack
@@ -37,13 +37,13 @@ public class CompilerBlockController extends CottonCraftingController {
         floppyDiskUpdateC2SPacket.send(buf);
     }
 
-    private QuartusCircuit compileCircuit() {
+    private QuartusCircuitExplorer compileCircuit() {
         Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
         BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), 5).offset(facingDir.getOpposite(),10);
         BlockPos endPos = compilerBlockPosition.offset(facingDir.rotateYCounterclockwise(), 5);
 
         System.out.println("Compiling from " + startPos + " to " + endPos);
-        CircuitCompiler compiler = new CircuitCompiler(world, compilerBlockPosition, startPos, endPos);
+        CircuitCompiler compiler = new CircuitCompiler(world, startPos, endPos);
         System.out.println("Começando compilação");
         return compiler.compile();
     }
@@ -55,10 +55,14 @@ public class CompilerBlockController extends CottonCraftingController {
             MinecraftClient.getInstance().player.sendMessage(new TranslatableText("gui.quartus.compiler.empty"));
             return;
         }
-
-        QuartusCircuit circuit = compileCircuit();
-        updateFloppyDisk(floppyItemStack, circuit);
-        System.out.println(circuit.toString());
+        try{
+            QuartusCircuitExplorer circuit = compileCircuit();
+            updateFloppyDisk(floppyItemStack, circuit);
+            System.out.println(circuit.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
     }
 
     public CompilerBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos compilerBlockPosition) {

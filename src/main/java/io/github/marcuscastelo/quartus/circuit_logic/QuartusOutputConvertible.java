@@ -10,12 +10,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface QuartusOutputConvertible extends QuartusNodeConvertible {
-    QuartusOutput createQuartusOutput(World world, BlockPos pos) throws QuartusNode.QuartusWrongNodeBlockException;
+    QuartusOutput createQuartusOutput();
     List<Direction> DIRECTIONS_NONE = new ArrayList<>();
 
     @Override
-    default QuartusNode createQuartusNode(World world, BlockPos pos) throws QuartusNode.QuartusWrongNodeBlockException {
-        return createQuartusOutput(world, pos);
+    default QuartusNode createQuartusNode() {
+        return createQuartusOutput();
     }
 
     @Override

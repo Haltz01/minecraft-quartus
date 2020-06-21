@@ -7,7 +7,5 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public interface QuartusNodeConvertible {
-    QuartusNode createQuartusNode(World world, BlockPos pos) throws QuartusNode.QuartusWrongNodeBlockException;
-    List<Direction> getPossibleInputDirections(World world, BlockPos pos);
-    List<Direction> getPossibleOutputDirections(World world, BlockPos pos);
+    QuartusNode createQuartusNode();
 }

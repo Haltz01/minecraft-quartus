@@ -4,11 +4,11 @@ import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.item.FloppyDiskItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.util.registry.Registry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuartusItems {
     public static final BlockItem WIRE;
@@ -29,20 +29,24 @@ public class QuartusItems {
     public static final BlockItem EXECUTOR;
     public static final BlockItem EXTENSOR_IO;
 
-
     public static final BlockItem INPUT;
     public static final BlockItem OUTPUT;
 
     public static final Item FLOPPY_DISK;
 
-    public static void init() {}
 
+    private static final List<ItemStack> sampleItemStacksInItemGroupOrder = new ArrayList<>();
     private static BlockItem register(String item_name, Block block) {
-        return Registry.register(Registry.ITEM, Quartus.id(item_name), new BlockItem(block, new Item.Settings().group(Quartus.ITEMGROUP)));
+        return register(item_name, new BlockItem(block, new Item.Settings().group(Quartus.ITEMGROUP)));
     }
 
-    private static Item register(String item_name, Item item) {
+    private static <T extends Item> T register(String item_name, T item) {
+        sampleItemStacksInItemGroupOrder.add(new ItemStack(item));
         return Registry.register(Registry.ITEM, Quartus.id(item_name), item);
+    }
+
+    public static void appendItemGroupStacksInorder(List<ItemStack> itemGroupStacks) {
+        itemGroupStacks.addAll(sampleItemStacksInItemGroupOrder);
     }
 
     static {
@@ -70,4 +74,5 @@ public class QuartusItems {
         FLOPPY_DISK = register("floppy_disk", new FloppyDiskItem());
 
     }
+    public static void init() {}
 }

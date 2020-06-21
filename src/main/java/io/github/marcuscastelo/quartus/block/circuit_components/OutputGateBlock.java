@@ -34,13 +34,7 @@ public class OutputGateBlock extends AbstractNodeBlock implements QuartusOutputC
     }
 
     @Override
-    public QuartusOutput createQuartusOutput(World world, BlockPos pos) {
-        return new QuartusOutput(world, pos) {
-            @Override
-            public void setInGameValue(boolean newValue) {
-                BlockState bs = world.getBlockState(pos);
-                world.setBlockState(pos, bs.with(Properties.POWERED, newValue));
-            }
-        };
+    public QuartusOutput createQuartusOutput() {
+        return new QuartusOutput() {};
     }
 }

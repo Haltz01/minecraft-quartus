@@ -1,6 +1,7 @@
 package io.github.marcuscastelo.quartus.block.circuit_components;
 
 import io.github.marcuscastelo.quartus.circuit_logic.QuartusNode;
+import io.github.marcuscastelo.quartus.circuit_logic.QuartusWorldNode;
 import io.github.marcuscastelo.quartus.circuit_logic.real_nodes.OrGateNode;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +27,7 @@ public class OrGateBlock extends AbstractGateBlock {
     }
 
     @Override
-    public QuartusNode createQuartusNode(World world, BlockPos pos) throws QuartusNode.QuartusWrongNodeBlockException {
-        return new OrGateNode(world, pos);
+    public QuartusNode createQuartusNode()  {
+        return new OrGateNode();
     }
 }
