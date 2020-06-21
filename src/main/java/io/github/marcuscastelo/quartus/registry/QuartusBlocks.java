@@ -6,7 +6,6 @@ import io.github.marcuscastelo.quartus.block.ExecutorBlock;
 import io.github.marcuscastelo.quartus.block.ExtensorIOBlock;
 import io.github.marcuscastelo.quartus.block.circuit_components.*;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.util.registry.Registry;
 
 public class QuartusBlocks {
