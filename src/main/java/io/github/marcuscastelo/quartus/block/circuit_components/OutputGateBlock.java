@@ -1,10 +1,8 @@
 package io.github.marcuscastelo.quartus.block.circuit_components;
 
-import io.github.marcuscastelo.quartus.circuit_logic.QuartusOutput;
-import io.github.marcuscastelo.quartus.circuit_logic.QuartusOutputConvertible;
+import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.state.StateManager;
@@ -13,9 +11,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 
-public class OutputGateBlock extends AbstractNodeBlock implements QuartusOutputConvertible {
+import java.util.function.Supplier;
+
+public class OutputGateBlock extends AbstractCircuitComponentBlock {
     public OutputGateBlock() {
         super(Settings.of(Material.PART));
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.POWERED, false));
@@ -34,7 +33,7 @@ public class OutputGateBlock extends AbstractNodeBlock implements QuartusOutputC
     }
 
     @Override
-    public QuartusOutput createQuartusOutput() {
-        return new QuartusOutput() {};
+    public Supplier<QuartusCircuitComponent> getComponentSupplier() {
+        return null;
     }
 }

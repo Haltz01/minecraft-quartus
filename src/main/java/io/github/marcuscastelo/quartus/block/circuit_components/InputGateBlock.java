@@ -1,8 +1,6 @@
 package io.github.marcuscastelo.quartus.block.circuit_components;
 
-import io.github.marcuscastelo.quartus.circuit_logic.QuartusInput;
-import io.github.marcuscastelo.quartus.circuit_logic.QuartusInputConvertible;
-import io.github.marcuscastelo.quartus.circuit_logic.QuartusWorldNode;
+import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
@@ -13,9 +11,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 
-public class InputGateBlock extends AbstractNodeBlock implements QuartusInputConvertible {
+import java.util.function.Supplier;
+
+public class InputGateBlock extends AbstractCircuitComponentBlock {
     public InputGateBlock() {
         super(Settings.of(Material.PART));
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.POWERED, false));
@@ -27,13 +26,13 @@ public class InputGateBlock extends AbstractNodeBlock implements QuartusInputCon
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(Properties.POWERED);
+    public Supplier<QuartusCircuitComponent> getComponentSupplier() {
+        return null;
     }
 
     @Override
-    public QuartusInput createQuartusInput() {
-        return new QuartusInput() {};
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(Properties.POWERED);
     }
 }

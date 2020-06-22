@@ -40,15 +40,15 @@ public class QuartusBlocks {
         EXTENSOR_GATE = register("extensor_gate", new ExtensorGateBlock());
         DISTRIBUTOR_GATE = register("distributor_gate", new DistributorGateBlock());
 
-        AND_GATE = register("and_gate", new AndGateBlock());
-        NAND_GATE = register("nand_gate", new NandGateBlock());
-        OR_GATE = register("or_gate", new OrGateBlock());
-        NOR_GATE = register("nor_gate", new NorGateBlock());
-        XOR_GATE = register("xor_gate", new XorGateBlock());
-        XNOR_GATE = register("xnor_gate", new XnorGateBlock());
-        NOT_GATE = register("not_gate", new NotGateBlock());
+        AND_GATE = register("and_gate", new AndLogicGateBlock());
+        NAND_GATE = register("nand_gate", new NandLogicGateBlock());
+        OR_GATE = register("or_gate", new OrLogicGateBlock());
+        NOR_GATE = register("nor_gate", new NorLogicGateBlock());
+        XOR_GATE = register("xor_gate", new XorLogicGateBlock());
+        XNOR_GATE = register("xnor_gate", new XnorLogicGateBlock());
+        NOT_GATE = register("not_gate", new NotLogicGateBlock());
 
-        MULTIPLEXER_GATE = register("multiplexer", new MultiplexerGateBlock());
+        MULTIPLEXER_GATE = register("multiplexer", new MultiplexerLogicGateBlock());
 
         COMPILER = register("compiler", new CompilerBlock());
         EXECUTOR = register("executor", new ExecutorBlock());

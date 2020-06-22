@@ -1,5 +1,7 @@
 package io.github.marcuscastelo.quartus.block.circuit_components;
 
+import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
+import io.github.marcuscastelo.quartus.circuit.components.QuartusLogicGate;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityContext;
@@ -8,9 +10,16 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-public abstract class AbstractGateBlock extends AbstractNodeBlock {
-    public AbstractGateBlock() {
+import java.util.function.Supplier;
+
+public abstract class AbstractLogicGateBlock extends AbstractCircuitComponentBlock {
+    public AbstractLogicGateBlock() {
         super(Settings.copy(Blocks.REPEATER));
+    }
+
+    @Override
+    public Supplier<QuartusCircuitComponent> getComponentSupplier() {
+        return QuartusLogicGate::new;
     }
 
     @Override

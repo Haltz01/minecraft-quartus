@@ -1,6 +1,5 @@
 package io.github.marcuscastelo.quartus.blockentity;
 
-import io.github.marcuscastelo.quartus.circuit_logic.CircuitExecutor;
 import io.github.marcuscastelo.quartus.registry.QuartusBlockEntities;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.inventory.Inventories;
@@ -14,11 +13,11 @@ import net.minecraft.world.World;
 public class ExecutorBlockEntity extends BlockEntity implements ImplementedInventory, Tickable {
     DefaultedList<ItemStack> inventoryItems;
 
-    public CircuitExecutor getCircuitExecutor() {
-        return circuitExecutor;
-    }
+//    public CircuitExecutor getCircuitExecutor() {
+//        return circuitExecutor;
+//    }
 
-    CircuitExecutor circuitExecutor = null;
+//    CircuitExecutor circuitExecutor = null;
 
     public ExecutorBlockEntity() {
         super(QuartusBlockEntities.EXECUTOR_BLOCK_ENTITY_TYPE);
@@ -28,7 +27,7 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
     @Override
     public void setLocation(World world, BlockPos pos) {
         super.setLocation(world, pos);
-        this.circuitExecutor = new CircuitExecutor(world, pos, null);
+//        this.circuitExecutor = new CircuitExecutor(world, pos, null);
     }
 
     @Override
@@ -72,6 +71,11 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
 
     @Override
     public void tick() {
-        circuitExecutor.tick();
+
     }
+
+//    @Override
+//    public void tick() {
+//        circuitExecutor.tick();
+//    }
 }

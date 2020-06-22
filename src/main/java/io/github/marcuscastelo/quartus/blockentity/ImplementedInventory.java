@@ -1,7 +1,5 @@
 package io.github.marcuscastelo.quartus.blockentity;
 
-import io.github.marcuscastelo.quartus.Quartus;
-import io.github.marcuscastelo.quartus.circuit_logic.QuartusInput;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
