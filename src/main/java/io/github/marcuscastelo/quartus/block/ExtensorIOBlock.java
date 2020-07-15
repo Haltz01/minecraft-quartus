@@ -14,8 +14,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import java.util.Random;
-
 public class ExtensorIOBlock extends HorizontalFacingBlock {
     public enum ExtensorIOState implements StringIdentifiable {
         VOID("void"), VOID_END("void_end"), INPUT("input"), OUPUT("output"), IO("io");

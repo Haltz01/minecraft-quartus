@@ -1,6 +1,7 @@
 package io.github.marcuscastelo.quartus.block.circuit_components;
 
 import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
+import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitInput;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
@@ -8,11 +9,13 @@ import net.minecraft.entity.EntityContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-import java.util.function.Supplier;
+import java.util.Collections;
+import java.util.List;
 
 public class InputGateBlock extends AbstractCircuitComponentBlock {
     public InputGateBlock() {
@@ -26,13 +29,39 @@ public class InputGateBlock extends AbstractCircuitComponentBlock {
     }
 
     @Override
-    public Supplier<QuartusCircuitComponent> getCircuitComponent() {
-        return null;
+    public QuartusCircuitComponent getCircuitComponent() {
+        return new QuartusCircuitInput() {
+            @Override
+            public void updateComponent() {}
+
+            @Override
+            public List<Direction> getPossibleInputDirections() {
+                return InputGateBlock.this.getPossibleInputDirections();
+            }
+
+            @Override
+            public List<Direction> getPossibleOutputDirections() {
+                return InputGateBlock.this.getPossibleOutputDirections();
+            }
+        };
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
         builder.add(Properties.POWERED);
+    }
+
+    List<Direction> possibleInputDirections = Collections.emptyList();
+    List<Direction> possibleOutputDirections = Collections.singletonList(Direction.NORTH);
+
+    @Override
+    public List<Direction> getPossibleInputDirections() {
+        return possibleInputDirections;
+    }
+
+    @Override
+    public List<Direction> getPossibleOutputDirections() {
+        return possibleOutputDirections;
     }
 }

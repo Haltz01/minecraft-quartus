@@ -4,6 +4,7 @@ import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponen
 import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitInput;
 import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitOutput;
 import io.github.marcuscastelo.quartus.network.QuartusSerializable;
+import jdk.internal.jline.internal.Nullable;
 
 import java.util.*;
 
@@ -32,6 +33,19 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
     public void addOutput(QuartusCircuitOutput output) { circuitOutputs.putIfAbsent(output.getID(), output); }
     public void addComponent(QuartusCircuitComponent component) { otherComponents.putIfAbsent(component.getID(), component); }
 
+    public void addLink(QuartusCircuitComponent compA, QuartusCircuitComponent compB) {
+        //TODO: ver pq to passando 2 pro connection type
+        compA.addConnection(new ComponentConnection<>(ComponentConnection.ConnectionType.OUTPUT, compA, compB));
+        compB.addConnection(new ComponentConnection<>(ComponentConnection.ConnectionType.INPUT, compB, compA));
+    }
+
+    @Nullable
+    public QuartusCircuitComponent getComponentByID(int ID) {
+        QuartusCircuitComponent component = otherComponents.getOrDefault(ID, null);
+        if (component == null) component = circuitInputs.getOrDefault(ID, null);
+        if (component == null) component = circuitOutputs.getOrDefault(ID, null);
+        return component;
+    }
 
     private void updateInputs() {
 
@@ -54,11 +68,17 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
     @Override
     public String serialize() {
         StringBuilder str = new StringBuilder();
-        Queue<QuartusCircuitComponent> componentsToPrint = new LinkedList<>();
-        for (QuartusCircuitInput input: circuitInputs.values()) componentsToPrint.add(input);
+        Queue<QuartusCircuitComponent> componentsToPrint = new LinkedList<>(circuitInputs.values());
 
+        List<QuartusCircuitComponent> alreadyPrintedComponents = new ArrayList<>();
         while (!componentsToPrint.isEmpty()) {
-            str.append(componentsToPrint.poll().getOutputConnectionsString());
+            QuartusCircuitComponent component = componentsToPrint.poll();
+            if (alreadyPrintedComponents.contains(component)) continue;
+            alreadyPrintedComponents.add(component);
+
+            str.append(component.getOutputConnectionsString());
+            for (ComponentConnection<QuartusCircuitComponent> connection: component.getOutputConnections())
+                componentsToPrint.add(connection.getB());
         }
 
         return str.toString();

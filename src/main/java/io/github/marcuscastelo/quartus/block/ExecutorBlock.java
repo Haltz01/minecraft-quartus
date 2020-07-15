@@ -2,14 +2,11 @@ package io.github.marcuscastelo.quartus.block;
 
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.blockentity.ExecutorBlockEntity;
-import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BedItem;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;

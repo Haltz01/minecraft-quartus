@@ -1,19 +1,12 @@
 package io.github.marcuscastelo.quartus.registry;
 
 import io.github.marcuscastelo.quartus.Quartus;
-import io.github.marcuscastelo.quartus.block.CompilerBlock;
-import io.github.marcuscastelo.quartus.blockentity.CompilerBlockEntity;
-import io.github.marcuscastelo.quartus.blockentity.ExecutorBlockEntity;
-import io.github.marcuscastelo.quartus.blockentity.ImplementedInventory;
 import io.github.marcuscastelo.quartus.gui.CompilerBlockController;
 import io.github.marcuscastelo.quartus.gui.ExecutorBlockController;
 import io.github.marcuscastelo.quartus.gui.client.CompilerBlockScreen;
 import io.github.marcuscastelo.quartus.gui.client.ExecutorBlockScreen;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.container.BlockContext;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

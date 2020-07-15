@@ -4,9 +4,9 @@ import io.github.cottonmc.cotton.gui.CottonCraftingController;
 import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
-import io.github.marcuscastelo.quartus.network.QuartusFloppyDiskUpdateC2SPacket;
+import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
+import io.github.marcuscastelo.quartus.circuit.analyze.CircuitCompiler;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
-import io.netty.buffer.Unpooled;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
@@ -35,33 +34,34 @@ public class CompilerBlockController extends CottonCraftingController {
 //        floppyDiskUpdateC2SPacket.send(buf);
 //    }
 //
-//    private WorldCircuitExplorer compileCircuit() {
-//        Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
-//        BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), 5).offset(facingDir.getOpposite(),10);
-//        BlockPos endPos = compilerBlockPosition.offset(facingDir.rotateYCounterclockwise(), 5);
-//
-//        System.out.println("Compiling from " + startPos + " to " + endPos);
-//        CircuitCompiler compiler = new CircuitCompiler(world, startPos, endPos);
-//        System.out.println("Começando compilação");
-//        return compiler.compile();
-//    }
-//
-//    private void onCompilerButtonClick() {
-//        ItemStack floppyItemStack = blockInventory.getInvStack(0);
-//        if (floppyItemStack.isEmpty() || !floppyItemStack.getItem().equals(QuartusItems.FLOPPY_DISK)) {
-//            assert MinecraftClient.getInstance().player != null;
-//            MinecraftClient.getInstance().player.sendMessage(new TranslatableText("gui.quartus.compiler.empty"));
-//            return;
-//        }
-//        try{
-//            WorldCircuitExplorer circuit = compileCircuit();
-//            updateFloppyDisk(floppyItemStack, circuit);
-//            System.out.println(circuit.toString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return;
-//        }
-//    }
+    private QuartusCircuit compileCircuit() {
+        Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
+        BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), 5).offset(facingDir.getOpposite(),10);
+        BlockPos endPos = compilerBlockPosition.offset(facingDir.rotateYCounterclockwise(), 5);
+
+        System.out.println("Compiling from " + startPos + " to " + endPos);
+        CircuitCompiler compiler = new CircuitCompiler(world, startPos, endPos);
+        System.out.println("Começando compilação");
+        return compiler.compile();
+    }
+
+    private void onCompilerButtonClick() {
+        ItemStack floppyItemStack = blockInventory.getInvStack(0);
+        if (floppyItemStack.isEmpty() || !floppyItemStack.getItem().equals(QuartusItems.FLOPPY_DISK)) {
+            assert MinecraftClient.getInstance().player != null;
+            MinecraftClient.getInstance().player.sendMessage(new TranslatableText("gui.quartus.compiler.empty"));
+            return;
+        }
+        try{
+            QuartusCircuit circuit = compileCircuit();
+            //TODO: uncomment
+            //updateFloppyDisk(floppyItemStack, circuit);
+            System.out.println(circuit.serialize());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+    }
 
     public CompilerBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos compilerBlockPosition) {
         super(RecipeType.CRAFTING, syncId, playerInventory, blockInventory, null);
@@ -76,7 +76,7 @@ public class CompilerBlockController extends CottonCraftingController {
         root.add(itemSlot, 1, 1);
 
         WButton compileButton = new WButton(new TranslatableText("gui.quartus.compiler.compile_btn"));
-//        compileButton.setOnClick(()-> onCompilerButtonClick());
+        compileButton.setOnClick(this::onCompilerButtonClick);
         root.add(compileButton, 0, 3,  3, 20);
 
         root.add(this.createPlayerInventoryPanel(),0,5);

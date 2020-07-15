@@ -20,8 +20,8 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
-import org.apache.commons.lang3.StringUtils;
 import net.minecraft.util.math.Direction;
+import org.apache.commons.lang3.StringUtils;
 
 public class ExecutorBlockController extends CottonCraftingController {
     BlockPos executorBlockPos;

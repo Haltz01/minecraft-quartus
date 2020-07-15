@@ -3,8 +3,9 @@ package io.github.marcuscastelo.quartus.registry;
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.item.FloppyDiskItem;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;

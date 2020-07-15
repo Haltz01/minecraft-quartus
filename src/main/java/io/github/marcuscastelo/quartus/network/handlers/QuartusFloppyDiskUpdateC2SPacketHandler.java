@@ -1,14 +1,11 @@
 package io.github.marcuscastelo.quartus.network.handlers;
 
-import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.blockentity.ImplementedInventory;
 import io.github.marcuscastelo.quartus.network.QuartusFloppyDiskUpdateC2SPacket;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class QuartusFloppyDiskUpdateC2SPacketHandler {

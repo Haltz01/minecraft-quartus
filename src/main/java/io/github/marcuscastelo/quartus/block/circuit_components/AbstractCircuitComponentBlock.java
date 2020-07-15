@@ -1,7 +1,6 @@
 package io.github.marcuscastelo.quartus.block.circuit_components;
 
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -17,7 +16,6 @@ import net.minecraft.world.WorldView;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Supplier;
 
 public abstract class AbstractCircuitComponentBlock extends HorizontalFacingBlock implements QuartusInGameComponent {
     protected AbstractCircuitComponentBlock(Settings settings) {

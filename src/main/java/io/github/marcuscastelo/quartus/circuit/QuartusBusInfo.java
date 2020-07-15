@@ -1,7 +1,5 @@
 package io.github.marcuscastelo.quartus.circuit;
 
-import io.github.marcuscastelo.quartus.Quartus;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

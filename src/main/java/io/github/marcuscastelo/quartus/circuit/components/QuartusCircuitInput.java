@@ -1,6 +1,9 @@
 package io.github.marcuscastelo.quartus.circuit.components;
 
-import io.github.marcuscastelo.quartus.circuit.QuartusBusInfo;
+public abstract class QuartusCircuitInput extends QuartusCircuitComponent {
+    public QuartusCircuitInput() {
+        super("QuartusInput");
+    }
 
-public abstract class QuartusCircuitInput {
+    public abstract void updateComponent();
 }

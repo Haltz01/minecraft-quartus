@@ -1,16 +1,11 @@
 package io.github.marcuscastelo.quartus;
 
-import io.github.marcuscastelo.quartus.blockentity.ImplementedInventory;
-import io.github.marcuscastelo.quartus.gui.CompilerBlockController;
 import io.github.marcuscastelo.quartus.registry.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

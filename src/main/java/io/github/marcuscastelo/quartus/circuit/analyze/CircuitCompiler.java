@@ -1,15 +1,16 @@
 package io.github.marcuscastelo.quartus.circuit.analyze;
 
-import io.github.marcuscastelo.quartus.Quartus;
+import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
+import io.github.marcuscastelo.quartus.circuit.CircuitUtils;
 import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
-import jdk.internal.jline.internal.Nullable;
+import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
+import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitInput;
+import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitOutput;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class CircuitCompiler {
     BlockPos startPos, endPos;
@@ -17,13 +18,15 @@ public class CircuitCompiler {
     World world;
 
     Queue<BlockPos> explorePoll;
+    Map<BlockPos, QuartusCircuitComponent> componentInPos;
 
     public CircuitCompiler(World world, BlockPos startPos, BlockPos endPos) {
         this.startPos = startPos;
         this.endPos = endPos;
         this.world = world;
         this.circuit = new QuartusCircuit();
-        explorePoll = new LinkedList<>();
+        this.explorePoll = new LinkedList<>();
+        this.componentInPos = new HashMap<>();
     }
 
     private void scanCircuitNodes() {
@@ -43,7 +46,19 @@ public class CircuitCompiler {
         for (int x = startX; x <= endX; x++) {
             for (int z = startZ; z <= endZ; z++) {
                 for (int y = startY; y <= endY; y++) {
-
+                    BlockPos nodePos = new BlockPos(x,y,z);
+                    Block nodeBlock = world.getBlockState(nodePos).getBlock();
+                    if (!(nodeBlock instanceof QuartusInGameComponent)) continue;
+                    QuartusCircuitComponent node = ((QuartusInGameComponent) nodeBlock).getCircuitComponent();
+                    componentInPos.putIfAbsent(nodePos, node);
+                    if (node instanceof QuartusCircuitInput) {
+                        explorePoll.add(nodePos);
+                        circuit.addInput((QuartusCircuitInput)node);
+                    } else if (node instanceof QuartusCircuitOutput) {
+                        circuit.addOutput((QuartusCircuitOutput)node);
+                    } else {
+                        circuit.addComponent(node);
+                    }
                 }
             }
         }
@@ -52,7 +67,41 @@ public class CircuitCompiler {
     private void exploreCircuit() {
         while (explorePoll.peek() != null) {
             BlockPos nodePos = explorePoll.poll();
+            System.out.println("Explorando a pos " + nodePos.toString());
+
+            QuartusCircuitComponent component = componentInPos.get(nodePos);
+            assert component != null;
+
+            if (component.hasOutputConnections()) {
+                System.out.println("Posição já explorada... ignorando!");
+                continue;
+            }
+
+            // TODO: mais ou menos por aqui deve ser adicionado um tratamento para os extensores e distribuidores!! -> eles não existem de verdade, são só facilitadores do que queremos fazer
+            // TODO: extensor só pode ser conectado em GATES!!
+            // Guerra vai fazer!!
+
+            // Percorre os fios a partir de um node
+            // Retorna 0 ou 1 nodes na maioria dos casos
+            // Caso "especial": distribuidor -> a saída de um outro gate gera mais de um fio para vários inputs (de outros gates)
+            // Caso "especial": extensores -> aumentam a quantidade de inputs de um gate
+            //TODO: resolver parâmetros redundantes
+            List<BlockPos> nextNodePositions = CircuitUtils.getConnectedNodesPos(world, circuit, component, nodePos);
+
+            for (BlockPos nextNodePos : nextNodePositions) {
+                System.out.println("Vizinho: " + nextNodePos);
+
+                circuit.addLink(component, componentInPos.get(nextNodePos));
+
+                if (componentInPos.get(nextNodePos).hasOutputConnections()) {
+                    System.out.println("Vizinho já explorado... ignorando!");
+                } else {
+                    System.out.println("Adiconando Vizinho: " + nextNodePos.toString());
+                    explorePoll.offer(nextNodePos);
+                }
+            }
         }
+        System.out.println("[Explore] Exploracão completa!");
     }
 
     public QuartusCircuit compile() {

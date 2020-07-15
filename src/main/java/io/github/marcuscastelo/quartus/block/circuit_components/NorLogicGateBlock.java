@@ -1,4 +1,28 @@
 package io.github.marcuscastelo.quartus.block.circuit_components;
 
-public class NorLogicGateBlock extends OrLogicGateBlock {
+import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
+import net.minecraft.util.math.Direction;
+
+import java.util.List;
+
+public class NorLogicGateBlock extends AbstractLogicGateBlock {
+    @Override
+    public QuartusCircuitComponent getCircuitComponent() {
+        return new QuartusCircuitComponent("NorGate") {
+            @Override
+            public void updateComponent() {
+
+            }
+
+            @Override
+            public List<Direction> getPossibleInputDirections() {
+                return NorLogicGateBlock.this.getPossibleInputDirections();
+            }
+
+            @Override
+            public List<Direction> getPossibleOutputDirections() {
+                return NorLogicGateBlock.this.getPossibleOutputDirections();
+            }
+        };
+    }
 }
