@@ -1,14 +1,20 @@
 package io.github.marcuscastelo.quartus.circuit.components;
 
-import io.github.marcuscastelo.quartus.circuit.ComponentConnections;
+import io.github.marcuscastelo.quartus.circuit.ComponentConnection;
 import io.github.marcuscastelo.quartus.circuit.QuartusBusInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import net.minecraft.util.math.Direction;
 
 public abstract class QuartusCircuitComponent {
-    //Componentes nas portas de input (não precisam ser inputs de fato)
-    List<ComponentConnections<QuartusCircuitComponent>> connections;
+    List<ComponentConnection<QuartusCircuitComponent>> connections;
+
+    Map<Direction, QuartusBusInfo> outputInfo;
+    Map<Direction, QuartusBusInfo> inputInfo;
 
     public static int LAST_ID = 1;
 
@@ -16,21 +22,26 @@ public abstract class QuartusCircuitComponent {
     private final String componentName;
     public QuartusCircuitComponent(String componentName) {
         this.componentName = componentName;
-        this.connections = new ArrayList<>();
+        connections = new ArrayList<>();
+        this.inputInfo = new HashMap<>();
+        this.outputInfo = new HashMap<>();
 
         ID = LAST_ID++;
     }
 
     public int getID() { return ID; }
 
-    public abstract QuartusBusInfo getOutput();
+    public abstract void updateComponent();
+
+    public Map<Direction, QuartusBusInfo> getOutputInfo() { return outputInfo; }
+    public Map<Direction, QuartusBusInfo> getInputInfo() { return inputInfo; }
 
     public String getOutputConnectionsString() {
         StringBuilder str = new StringBuilder();
 
-        for (ComponentConnections<QuartusCircuitComponent> componentConnections : connections) {
-            if (componentConnections.getType() == ComponentConnections.ConnectionType.OUTPUT) //Exibe apenas as conexões de saída
-                str.append(String.format("%s->%s\n", this.toString(), componentConnections.getB().toString()));
+        for (ComponentConnection<QuartusCircuitComponent> componentConnection : connections) {
+            if (componentConnection.getType() == ComponentConnection.ConnectionType.OUTPUT) //Exibe apenas as conexões de saída
+                str.append(String.format("%s->%s\n", this.toString(), componentConnection.getB().toString()));
         }
 
         return str.toString();

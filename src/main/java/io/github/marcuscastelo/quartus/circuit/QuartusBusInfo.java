@@ -1,5 +1,8 @@
 package io.github.marcuscastelo.quartus.circuit;
 
+import io.github.marcuscastelo.quartus.Quartus;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -7,7 +10,15 @@ public class QuartusBusInfo {
     public static final QuartusBusInfo HIGH1b;
     public static final QuartusBusInfo LOW1b;
 
-    List<Boolean> values;
+    public QuartusBusInfo copy() {
+        return new QuartusBusInfo(this);
+    }
+
+    public QuartusBusInfo(QuartusBusInfo cloneFrom) {
+        this.values = new ArrayList<>(cloneFrom.values);
+    }
+
+    public List<Boolean> values;
     public QuartusBusInfo(Boolean ...values) {
         this.values = Arrays.asList(values);
     }

@@ -26,8 +26,6 @@ public abstract class AbstractCircuitComponentBlock extends HorizontalFacingBloc
     }
 
     @Override
-    public abstract Supplier<QuartusCircuitComponent> getComponentSupplier();
-    @Override
     public Direction getFacingDirection(BlockState state) {
         return state.get(FACING);
     }

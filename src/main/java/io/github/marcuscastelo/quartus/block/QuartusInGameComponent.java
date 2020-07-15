@@ -8,5 +8,5 @@ import java.util.function.Supplier;
 
 public interface QuartusInGameComponent {
     Direction getFacingDirection(BlockState state);
-    Supplier<QuartusCircuitComponent> getComponentSupplier();
+    QuartusCircuitComponent getCircuitComponent();
 }

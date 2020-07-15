@@ -26,7 +26,7 @@ public class InputGateBlock extends AbstractCircuitComponentBlock {
     }
 
     @Override
-    public Supplier<QuartusCircuitComponent> getComponentSupplier() {
+    public Supplier<QuartusCircuitComponent> getCircuitComponent() {
         return null;
     }
 
