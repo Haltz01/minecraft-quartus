@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -77,7 +78,17 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
     @Override
     public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         //TODO: make it work
-        CircuitUtils.outlineCompileRegionForClient(world, pos, 10, Blocks.COAL_BLOCK);
+//        CircuitUtils.outlineCompileRegionForClient(world, pos, 10, Blocks.COAL_BLOCK);
+        if (state.getBlock() != newState.getBlock()) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+
+            if (blockEntity != null)
+                ItemScatterer.spawn(world, pos, (Inventory)blockEntity);
+
+            world.updateHorizontalAdjacent(pos, this);
+
+            super.onBlockRemoved(state, world, pos, newState, moved);
+        }
     }
 
     @Override
