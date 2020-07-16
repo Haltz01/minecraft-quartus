@@ -8,10 +8,12 @@ import io.github.marcuscastelo.quartus.block.ExecutorBlock;
 import io.github.marcuscastelo.quartus.block.ExtensorIOBlock;
 import io.github.marcuscastelo.quartus.blockentity.ExecutorBlockEntity;
 import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
+import io.github.marcuscastelo.quartus.network.QuartusExecutorStartC2SPacket;
 import io.github.marcuscastelo.quartus.network.QuartusExtensorIOUpdateC2SPacket;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ChestBlock;
 import net.minecraft.block.RepeaterBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -90,7 +92,12 @@ public class ExecutorBlockController extends CottonCraftingController {
         if (be instanceof ExecutorBlockEntity)
             ((ExecutorBlockEntity) be).setCircuit(circuit);
 
-        world.getBlockTickScheduler().schedule(executorBlockPos, QuartusBlocks.EXECUTOR, 2);
+        //Envia para o servidor o pedido de início da execução
+        PacketByteBuf packetByteBuf = new PacketByteBuf(Unpooled.buffer());
+        QuartusExecutorStartC2SPacket quartusExecutorStartPacket = new QuartusExecutorStartC2SPacket(executorBlockPos);
+        quartusExecutorStartPacket.write(packetByteBuf);
+        quartusExecutorStartPacket.send(packetByteBuf);
+
     }
 
     public ExecutorBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos executorBlockPos) {
@@ -112,4 +119,5 @@ public class ExecutorBlockController extends CottonCraftingController {
         root.add(this.createPlayerInventoryPanel(),0,5);
         root.validate(this);
     }
+
 }

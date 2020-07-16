@@ -1,15 +1,14 @@
 package io.github.marcuscastelo.quartus.blockentity;
 
-import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.registry.QuartusBlockEntities;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
+import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DefaultedList;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -53,8 +52,36 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         return currentCircuit != null;
     }
 
+    private boolean isCircuitPresent() {
+        if (inventoryItems == null || inventoryItems.size() == 0) return false;
+
+        ItemStack floppyDisk = inventoryItems.get(0);
+
+        if (!floppyDisk.getItem().equals(QuartusItems.FLOPPY_DISK)) return false;
+
+        return floppyDisk.getOrCreateTag().contains("circuit") && !floppyDisk.getOrCreateTag().getString("circuit").isEmpty();
+    }
+
+    private void tryLoadCircuitFromInv() {
+        if (isCircuitPresent()) {
+            ItemStack floppyDisk = inventoryItems.get(0);
+            currentCircuit = new QuartusCircuit();
+            currentCircuit.unserialize(floppyDisk.getOrCreateTag().getString("circuit"));
+        }
+    }
+
+    private void checkForCircuitChanges() {
+        if (currentCircuit == null) {
+            tryLoadCircuitFromInv();
+        }
+        else if (!isCircuitPresent()) {
+            setCircuit(null);
+        }
+    }
+
     public void tick() {
-//        if (!inventoryItems.get(0).getOrCreateTag().contains("circuit")) setCircuit(null);
+        checkForCircuitChanges();
+
         //TODO: remove debug message
         if (!hasCircuit())  {
             System.out.println("Acabou a execução");
