@@ -6,11 +6,13 @@ import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -55,5 +57,19 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
     @Override
     public BlockEntity createBlockEntity(BlockView view) {
         return new ExecutorBlockEntity();
+    }
+
+    @Override
+    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.getBlock() != newState.getBlock()) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+
+            if (blockEntity != null)
+                ItemScatterer.spawn(world, pos, (Inventory)blockEntity);
+
+            world.updateHorizontalAdjacent(pos, this);
+
+            super.onBlockRemoved(state, world, pos, newState, moved);
+        }
     }
 }

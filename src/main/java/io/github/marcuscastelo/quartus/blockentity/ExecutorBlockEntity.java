@@ -17,7 +17,6 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
     QuartusCircuit currentCircuit = null;
     DefaultedList<ItemStack> inventoryItems;
 
-    //TODO: drop disk
     public ExecutorBlockEntity() {
         super(QuartusBlockEntities.EXECUTOR_BLOCK_ENTITY_TYPE);
         this.inventoryItems = DefaultedList.ofSize(1, ItemStack.EMPTY);
