@@ -30,6 +30,8 @@ public class CircuitCompiler {
     }
 
     private void scanCircuitNodes() {
+        System.out.println("[Compile] Começando compilação");
+
         int startX, startY, startZ;
         // TODO: Mudar valores iniciais e finais de X, Y e Z -> devem sempre começar da mesma posição (canto "superior" esquerdo do circuito - olhando para o circuito)
         startX = Math.min(startPos.getX(), endPos.getX());
@@ -49,9 +51,12 @@ public class CircuitCompiler {
                     BlockPos nodePos = new BlockPos(x,y,z);
                     Block nodeBlock = world.getBlockState(nodePos).getBlock();
                     if (!(nodeBlock instanceof QuartusInGameComponent)) continue;
+                    System.out.println("[Compile] Encontrado um " + nodeBlock.getName().asString() + " em " + nodePos);
                     QuartusCircuitComponent node = ((QuartusInGameComponent) nodeBlock).getCircuitComponent();
                     componentInPos.putIfAbsent(nodePos, node);
                     circuit.addComponent(node);
+                    if (node instanceof QuartusCircuitInput)
+                        explorePoll.add(nodePos);
                 }
             }
         }
