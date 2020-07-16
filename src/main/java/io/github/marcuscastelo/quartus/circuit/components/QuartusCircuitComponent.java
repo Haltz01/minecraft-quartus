@@ -1,7 +1,9 @@
 package io.github.marcuscastelo.quartus.circuit.components;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.github.marcuscastelo.quartus.circuit.ComponentConnection;
 import io.github.marcuscastelo.quartus.circuit.QuartusBusInfo;
+import io.github.marcuscastelo.quartus.circuit.QuartusLogic;
 import net.minecraft.util.math.Direction;
 
 import java.util.ArrayList;
@@ -13,8 +15,11 @@ import java.util.stream.Collectors;
 public abstract class QuartusCircuitComponent {
     List<ComponentConnection<QuartusCircuitComponent>> connections;
 
+    //TODO: ver como fazer pros extensores
     Map<Direction, QuartusBusInfo> outputInfo;
     Map<Direction, QuartusBusInfo> inputInfo;
+
+    QuartusLogic logic;
 
     public static int LAST_ID = 1;
 
@@ -25,13 +30,21 @@ public abstract class QuartusCircuitComponent {
         connections = new ArrayList<>();
         this.inputInfo = new HashMap<>();
         this.outputInfo = new HashMap<>();
+        this.logic = null;
 
         ID = LAST_ID++;
     }
 
+    public QuartusCircuitComponent(String componentName, QuartusLogic logic) {
+        this(componentName);
+        this.logic = logic;
+    }
+
     public int getID() { return ID; }
 
-    public abstract void updateComponent();
+    public void updateComponent() {
+        if (logic != null) logic.updateLogic(inputInfo, outputInfo);
+    }
 
     public Map<Direction, QuartusBusInfo> getOutputInfo() { return outputInfo; }
     public Map<Direction, QuartusBusInfo> getInputInfo() { return inputInfo; }
@@ -70,6 +83,6 @@ public abstract class QuartusCircuitComponent {
 
     @Override
     public String toString() {
-        return componentName+getID();
+        return componentName+"_"+getID();
     }
 }

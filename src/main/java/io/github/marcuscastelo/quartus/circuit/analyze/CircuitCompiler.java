@@ -51,14 +51,7 @@ public class CircuitCompiler {
                     if (!(nodeBlock instanceof QuartusInGameComponent)) continue;
                     QuartusCircuitComponent node = ((QuartusInGameComponent) nodeBlock).getCircuitComponent();
                     componentInPos.putIfAbsent(nodePos, node);
-                    if (node instanceof QuartusCircuitInput) {
-                        explorePoll.add(nodePos);
-                        circuit.addInput((QuartusCircuitInput)node);
-                    } else if (node instanceof QuartusCircuitOutput) {
-                        circuit.addOutput((QuartusCircuitOutput)node);
-                    } else {
-                        circuit.addComponent(node);
-                    }
+                    circuit.addComponent(node);
                 }
             }
         }

@@ -8,5 +8,8 @@
   "block.quartus.or_gate": "Porta OU",
   "block.quartus.extensor_gate": "Porta Extensora",
   "block.quartus.distributor_gate": "Porta Distribuidora",
-  "block.quartus.wire": "Fio"
+  "block.quartus.wire": "Fio",
+  "gui.quartus.executor.empty": "Não há disquetes no compilador",
+  "gui.quartus.executor.no_circuit": "O disquete provido não contém um circuito",
+  "gui.quartus.executor.execute_btn": "Executar"
 }

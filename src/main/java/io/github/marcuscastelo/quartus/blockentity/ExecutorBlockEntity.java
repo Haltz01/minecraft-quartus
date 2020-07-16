@@ -1,6 +1,9 @@
 package io.github.marcuscastelo.quartus.blockentity;
 
+import io.github.marcuscastelo.quartus.Quartus;
+import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.registry.QuartusBlockEntities;
+import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
@@ -10,15 +13,11 @@ import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ExecutorBlockEntity extends BlockEntity implements ImplementedInventory, Tickable {
+public class ExecutorBlockEntity extends BlockEntity implements ImplementedInventory {
+    QuartusCircuit currentCircuit = null;
     DefaultedList<ItemStack> inventoryItems;
 
-//    public CircuitExecutor getCircuitExecutor() {
-//        return circuitExecutor;
-//    }
-
-//    CircuitExecutor circuitExecutor = null;
-
+    //TODO: drop disk
     public ExecutorBlockEntity() {
         super(QuartusBlockEntities.EXECUTOR_BLOCK_ENTITY_TYPE);
         this.inventoryItems = DefaultedList.ofSize(1, ItemStack.EMPTY);
@@ -27,7 +26,6 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
     @Override
     public void setLocation(World world, BlockPos pos) {
         super.setLocation(world, pos);
-//        this.circuitExecutor = new CircuitExecutor(world, pos, null);
     }
 
     @Override
@@ -47,35 +45,29 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         Inventories.fromTag(tag, inventoryItems);
     }
 
-    public void onExecutionStop(World world, BlockPos pos) {
-
+    public void setCircuit(QuartusCircuit circuit) {
+        this.currentCircuit = circuit;
     }
 
-    //TODO: refazer
-    public void onExecutionStart(World world, BlockPos pos) {
-        BlockEntity be = world.getBlockEntity(pos);
-        if (be instanceof ExecutorBlockEntity) {
-            //Obtém o disquete
-            ItemStack stack = ((ExecutorBlockEntity) be).getInvStack(0);
-            //Obtém o circuito salvo no disquete
-            //TODO: checar se não houver circuito no disquete
-//            String circuitDescription = stack.getOrCreateTag().getString("circuit");
-//            CircuitExecutor executor = ((ExecutorBlockEntity) be).getCircuitExecutor();
-//            if (executor == null) return;
-//            //Define o circuito no executor
-//            executor.setCircuit(QuartusCircuitExplorationGraph.of(circuitDescription));
-//            //Inicia a simulação
-//            executor.start();
-        }
+    public boolean hasCircuit() {
+        return currentCircuit != null;
     }
 
-    @Override
     public void tick() {
+//        if (!inventoryItems.get(0).getOrCreateTag().contains("circuit")) setCircuit(null);
+        //TODO: remove debug message
+        if (!hasCircuit())  {
+            System.out.println("Acabou a execução");
+            return;
+        }
 
+        //TODO: definir inputs e outputs do circuito de acordo com os extensores IO
+        //TODO: mensagem de erro extensores insuficientes
+        currentCircuit.updateCircuit();
+
+        System.out.println(currentCircuit.serialize());
+
+        assert world != null;
+        world.getBlockTickScheduler().schedule(pos, QuartusBlocks.EXECUTOR, 20);
     }
-
-//    @Override
-//    public void tick() {
-//        circuitExecutor.tick();
-//    }
 }

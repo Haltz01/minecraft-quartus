@@ -8,6 +8,8 @@
   "block.quartus.or_gate": "Or Gate",
   "block.quartus.extensor_gate": "Extensor Gate",
   "block.quartus.distributor_gate": "Distributor Gate",
-  "block.quartus.wire": "Wire"
-
+  "block.quartus.wire": "Wire",
+  "gui.quartus.executor.empty": "There are no floppy disks to execute",
+  "gui.quartus.executor.no_circuit": "The floppy disk provided doesn't have a circuit",
+  "gui.quartus.executor.execute_btn": "Execute"
 }

@@ -6,7 +6,9 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.circuit.analyze.CircuitCompiler;
+import io.github.marcuscastelo.quartus.network.QuartusFloppyDiskUpdateC2SPacket;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
+import io.netty.buffer.Unpooled;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -14,26 +16,27 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 public class CompilerBlockController extends CottonCraftingController {
     final BlockPos compilerBlockPosition;
 
-//    private void updateFloppyDisk(ItemStack floppyItemStack, WorldCircuitExplorer circuit) {
-//        System.out.println(circuit.toString());
-//
-//        //Update client's itemstack
-//        floppyItemStack.getOrCreateTag().putString("circuit", circuit.toString());
-//
-//        //Send updated itemstack to server
-//        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-//        QuartusFloppyDiskUpdateC2SPacket floppyDiskUpdateC2SPacket = new QuartusFloppyDiskUpdateC2SPacket(compilerBlockPosition, floppyItemStack);
-//
-//        floppyDiskUpdateC2SPacket.write(buf);
-//        floppyDiskUpdateC2SPacket.send(buf);
-//    }
-//
+    private void updateFloppyDisk(ItemStack floppyItemStack, QuartusCircuit circuit) {
+        System.out.println(circuit.serialize());
+
+        //Update client's itemstack
+        floppyItemStack.getOrCreateTag().putString("circuit", circuit.serialize());
+
+        //Send updated itemstack to server
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        QuartusFloppyDiskUpdateC2SPacket floppyDiskUpdateC2SPacket = new QuartusFloppyDiskUpdateC2SPacket(compilerBlockPosition, floppyItemStack);
+
+        floppyDiskUpdateC2SPacket.write(buf);
+        floppyDiskUpdateC2SPacket.send(buf);
+    }
+
     private QuartusCircuit compileCircuit() {
         Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
         BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), 5).offset(facingDir.getOpposite(),10);
@@ -54,8 +57,7 @@ public class CompilerBlockController extends CottonCraftingController {
         }
         try{
             QuartusCircuit circuit = compileCircuit();
-            //TODO: uncomment
-            //updateFloppyDisk(floppyItemStack, circuit);
+            updateFloppyDisk(floppyItemStack, circuit);
             System.out.println(circuit.serialize());
         } catch (Exception e) {
             e.printStackTrace();

@@ -36,6 +36,7 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        System.out.println("EAE SOU FODA");
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof ExecutorBlockEntity)
             ((ExecutorBlockEntity) be).tick();

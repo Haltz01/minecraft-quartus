@@ -1,14 +1,15 @@
 package io.github.marcuscastelo.quartus.block.circuit_components;
 
 import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
+import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import net.minecraft.util.math.Direction;
 
 import java.util.List;
 
-public class XnorLogicGateBlock extends AbstractLogicGateBlock {
+public class XnorLogicGateBlock extends LogicGateBlock {
     @Override
     public QuartusCircuitComponent getCircuitComponent() {
-        return new QuartusCircuitComponent("XnorGate") {
+        return new QuartusCircuitComponent("XnorGate", QuartusLogics.XNOR_GATE) {
             @Override
             public void updateComponent() {
 

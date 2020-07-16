@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DefaultedList;
 
+//TODO: drop disk
 public class CompilerBlockEntity extends BlockEntity implements ImplementedInventory {
     DefaultedList<ItemStack> inventoryItems;
     public CompilerBlockEntity() {

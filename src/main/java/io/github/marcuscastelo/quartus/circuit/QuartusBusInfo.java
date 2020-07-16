@@ -23,6 +23,10 @@ public class QuartusBusInfo {
 
     public int getBusSize() { return values.size(); }
 
+    public void setValue(QuartusBusInfo copyFrom) { values = new ArrayList<>(copyFrom.values); }
+    public void setValue(Boolean ...values) { setValue(new QuartusBusInfo(values)); }
+
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof QuartusBusInfo)) return false;

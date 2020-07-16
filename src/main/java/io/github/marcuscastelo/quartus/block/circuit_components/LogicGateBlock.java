@@ -1,5 +1,6 @@
 package io.github.marcuscastelo.quartus.block.circuit_components;
 
+import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityContext;
@@ -12,11 +13,23 @@ import net.minecraft.world.BlockView;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 //TODO: tranformar num registry
-public abstract class AbstractLogicGateBlock extends AbstractCircuitComponentBlock {
-    public AbstractLogicGateBlock() {
+public class LogicGateBlock extends AbstractCircuitComponentBlock {
+    private Supplier<QuartusCircuitComponent> componentSupplier;
+
+    protected LogicGateBlock() {
         super(Settings.copy(Blocks.REPEATER));
+    }
+    public LogicGateBlock(Supplier<QuartusCircuitComponent> componentSupplier) {
+        this();
+        this.componentSupplier = componentSupplier;
+    }
+
+    @Override
+    public QuartusCircuitComponent getCircuitComponent() {
+        return componentSupplier.get();
     }
 
     @Override
@@ -36,6 +49,4 @@ public abstract class AbstractLogicGateBlock extends AbstractCircuitComponentBlo
     public List<Direction> getPossibleOutputDirections() {
         return possibleOutputDirections;
     }
-
-
 }

@@ -4,12 +4,15 @@ import io.github.cottonmc.cotton.gui.CottonCraftingController;
 import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
+import io.github.marcuscastelo.quartus.block.ExecutorBlock;
 import io.github.marcuscastelo.quartus.block.ExtensorIOBlock;
 import io.github.marcuscastelo.quartus.blockentity.ExecutorBlockEntity;
+import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.network.QuartusExtensorIOUpdateC2SPacket;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.RepeaterBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
@@ -26,11 +29,11 @@ import org.apache.commons.lang3.StringUtils;
 public class ExecutorBlockController extends CottonCraftingController {
     BlockPos executorBlockPos;
 
-    private void updateExtensorModels(String circuitStr) {
+    private void updateExtensorModels(QuartusCircuit circuit) {
 
         //TODO: usar método mais eficiente com o QuartusCircuit.of
-        int nInputs = StringUtils.countMatches(circuitStr, "Input");
-        int nOutputs = StringUtils.countMatches(circuitStr, "Output");
+        int nInputs = circuit.getInputCount();
+        int nOutputs = circuit.getOutputCount();
 
         Direction exploreDirection = world.getBlockState(executorBlockPos).get(Properties.HORIZONTAL_FACING).rotateYCounterclockwise();
         BlockPos extensorPos = executorBlockPos.offset(exploreDirection);
@@ -78,15 +81,16 @@ public class ExecutorBlockController extends CottonCraftingController {
 
         String circuitStr = stack.getOrCreateTag().getString("circuit");
 
-        updateExtensorModels(circuitStr);
+        QuartusCircuit circuit = new QuartusCircuit();
+        circuit.unserialize(circuitStr);
 
-//        QuartusCircuitExplorationGraph circuit = QuartusCircuitExplorationGraph.of(circuitStr);
+        updateExtensorModels(circuit);
 
         BlockEntity be = world.getBlockEntity(executorBlockPos);
-        if (be instanceof ExecutorBlockEntity) {
-            ((ExecutorBlockEntity) be).onExecutionStart(world, executorBlockPos);
-        }
+        if (be instanceof ExecutorBlockEntity)
+            ((ExecutorBlockEntity) be).setCircuit(circuit);
 
+        world.getBlockTickScheduler().schedule(executorBlockPos, QuartusBlocks.EXECUTOR, 2);
     }
 
     public ExecutorBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos executorBlockPos) {

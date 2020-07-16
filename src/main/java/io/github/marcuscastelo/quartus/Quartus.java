@@ -1,5 +1,6 @@
 package io.github.marcuscastelo.quartus;
 
+import io.github.marcuscastelo.quartus.circuit.QuartusLogic;
 import io.github.marcuscastelo.quartus.registry.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
