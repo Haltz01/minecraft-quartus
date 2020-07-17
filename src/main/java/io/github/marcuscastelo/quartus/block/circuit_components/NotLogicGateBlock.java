@@ -4,6 +4,7 @@ import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponen
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import net.minecraft.util.math.Direction;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class NotLogicGateBlock extends LogicGateBlock {
@@ -24,5 +25,10 @@ public class NotLogicGateBlock extends LogicGateBlock {
                 return NotLogicGateBlock.this.getPossibleOutputDirections();
             }
         };
+    }
+
+    @Override
+    public List<Direction> getPossibleInputDirections() {
+        return Arrays.asList(Direction.SOUTH);
     }
 }
