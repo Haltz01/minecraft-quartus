@@ -58,7 +58,10 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
     }
 
     private void updateInputs() {
-
+        System.out.println("[Execution] updating input values");
+        for (QuartusCircuitInput input: circuitInputs.values()) {
+            input.updateComponent();
+        }
     }
 
     private void updateComponents() {
@@ -94,6 +97,16 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
         return str.toString();
     }
 
+    //TODO: remove hardcode "QuartusInput", etc. make registry
+    private QuartusCircuitComponent createPolimorphicComponent(String gateType, int gateID) {
+        if (gateType.equals("QuartusInput"))
+            return new QuartusCircuitInput(gateID);
+        else if (gateType.equals("QuartusOutput"))
+            return new QuartusCircuitOutput(gateID);
+        else
+            return new QuartusCircuitComponent(gateType, gateID);
+    }
+
     @Override
     public void unserialize(String serial) {
         Map<Integer, QuartusCircuitComponent> initializedGates = new HashMap<>();
@@ -110,48 +123,18 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
             QuartusCircuitComponent fromComp = initializedGates.getOrDefault(fromGateID, null);
             QuartusCircuitComponent toComp = initializedGates.getOrDefault(toGateID, null);
 
+
             if (fromComp == null) {
-                fromComp = new QuartusCircuitComponent(fromGateType, QuartusLogics.getLogicByID(fromGateType)) {
-                    @Override
-                    public List<Direction> getPossibleInputDirections() {
-                        return null;
-                    }
-
-                    @Override
-                    public List<Direction> getPossibleOutputDirections() {
-                        return null;
-                    }
-
-                    @Override
-                    public int getID() {
-                        return fromGateID;
-                    }
-                };
+                fromComp = createPolimorphicComponent(fromGateType, fromGateID);
                 initializedGates.putIfAbsent(fromGateID, fromComp);
                 addComponent(fromComp);
             }
 
             if (toComp == null) {
-                toComp = new QuartusCircuitComponent(toGateType, QuartusLogics.getLogicByID(toGateType)) {
-                    @Override
-                    public List<Direction> getPossibleInputDirections() {
-                        return null;
-                    }
-
-                    @Override
-                    public List<Direction> getPossibleOutputDirections() {
-                        return null;
-                    }
-
-                    @Override
-                    public int getID() {
-                        return toGateID;
-                    }
-                };
+                toComp = createPolimorphicComponent(toGateType, toGateID);
                 initializedGates.putIfAbsent(toGateID, toComp);
                 addComponent(toComp);
             }
-
             addLink(fromComp, toComp);
         }
     }

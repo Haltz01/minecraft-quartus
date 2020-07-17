@@ -45,6 +45,7 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
 
     public void setCircuit(QuartusCircuit circuit) {
         this.currentCircuit = circuit;
+        //TODO: substituir os inputs do cirtuito pelo worldInput
     }
 
     public boolean hasCircuit() {
@@ -64,8 +65,9 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
     private void tryLoadCircuitFromInv() {
         if (isCircuitPresent()) {
             ItemStack floppyDisk = inventoryItems.get(0);
-            currentCircuit = new QuartusCircuit();
-            currentCircuit.unserialize(floppyDisk.getOrCreateTag().getString("circuit"));
+            QuartusCircuit circuit = new QuartusCircuit();
+            circuit.unserialize(floppyDisk.getOrCreateTag().getString("circuit"));
+            setCircuit(circuit);
         }
     }
 
@@ -78,6 +80,7 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         }
     }
 
+    //TODO: verificar integridade das portas IO (parar se forem quebradas)
     public void tick() {
         checkForCircuitChanges();
 
@@ -90,8 +93,6 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         //TODO: definir inputs e outputs do circuito de acordo com os extensores IO
         //TODO: mensagem de erro extensores insuficientes
         currentCircuit.updateCircuit();
-
-        System.out.println(currentCircuit.serialize());
 
         assert world != null;
         world.getBlockTickScheduler().schedule(pos, QuartusBlocks.EXECUTOR, 20);

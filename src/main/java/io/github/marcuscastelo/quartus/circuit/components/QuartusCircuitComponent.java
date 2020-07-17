@@ -6,13 +6,10 @@ import io.github.marcuscastelo.quartus.circuit.QuartusBusInfo;
 import io.github.marcuscastelo.quartus.circuit.QuartusLogic;
 import net.minecraft.util.math.Direction;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class QuartusCircuitComponent {
+public class QuartusCircuitComponent {
     List<ComponentConnection<QuartusCircuitComponent>> connections;
 
     //TODO: ver como fazer pros extensores
@@ -25,14 +22,19 @@ public abstract class QuartusCircuitComponent {
 
     private final int ID;
     private final String componentName;
-    public QuartusCircuitComponent(String componentName) {
+
+    public QuartusCircuitComponent(String componentName, int ID) {
         this.componentName = componentName;
         connections = new ArrayList<>();
         this.inputInfo = new HashMap<>();
         this.outputInfo = new HashMap<>();
         this.logic = null;
 
-        ID = LAST_ID++;
+        this.ID = ID;
+    }
+
+    public QuartusCircuitComponent(String componentName) {
+        this(componentName, LAST_ID++);
     }
 
     public QuartusCircuitComponent(String componentName, QuartusLogic logic) {
@@ -78,8 +80,8 @@ public abstract class QuartusCircuitComponent {
         return connections.stream().filter(connection -> connection.getType() == ComponentConnection.ConnectionType.INPUT).collect(Collectors.toList());
     }
 
-    public abstract List<Direction> getPossibleInputDirections();
-    public abstract List<Direction> getPossibleOutputDirections();
+    public List<Direction> getPossibleInputDirections() { return Collections.emptyList(); }
+    public List<Direction> getPossibleOutputDirections() { return Collections.emptyList(); }
 
     @Override
     public String toString() {
