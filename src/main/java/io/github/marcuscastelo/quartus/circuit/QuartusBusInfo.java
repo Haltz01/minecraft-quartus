@@ -18,6 +18,7 @@ public class QuartusBusInfo {
 
     public List<Boolean> values;
     public QuartusBusInfo(Boolean ...values) {
+        if (values.length == 0) throw new IllegalArgumentException("Trying to create empty QuartusBusInfo");
         this.values = Arrays.asList(values);
     }
 
@@ -38,6 +39,16 @@ public class QuartusBusInfo {
         }
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder valuesStr = new StringBuilder("{ ");
+        for (boolean value: values) valuesStr.append(value?"1":"0" + " ");
+        valuesStr.append("}");
+        return "QuartusBusInfo{" +
+                "values=" + valuesStr.toString() +
+                '}';
     }
 
     static {

@@ -19,11 +19,7 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
 
     public QuartusCircuit(List<QuartusCircuitComponent> components) {
         this();
-        for (QuartusCircuitComponent component: components) {
-            if (component instanceof QuartusCircuitInput) circuitInputs.putIfAbsent(component.getID(), (QuartusCircuitInput) component);
-            else if (component instanceof QuartusCircuitOutput) circuitOutputs.putIfAbsent(component.getID(), (QuartusCircuitOutput) component);
-            this.otherComponents.putIfAbsent(component.getID(),component);
-        }
+        for (QuartusCircuitComponent component: components) addComponent(component);
     }
 
     public QuartusCircuit() {
@@ -46,13 +42,17 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
 
         QuartusCircuitComponent match = otherComponents.getOrDefault(ID, null);
 
-        if (match != null) otherComponents.put(ID, component);
+        if (match != null)  {
+            otherComponents.put(ID, component);
+            return;
+        }
         else match = circuitInputs.getOrDefault(ID, null);
 
         if (match != null) {
             if (component instanceof QuartusCircuitInput)
                 circuitInputs.put(ID, (QuartusCircuitInput) component);
             else Quartus.LOGGER.error("Illegal argument @QuartusCircuit::setComponentAt(): input is wrong type");
+            return;
         }
         else match = circuitOutputs.getOrDefault(ID, null);
 
@@ -60,6 +60,7 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
             if (component instanceof QuartusCircuitOutput)
                 circuitOutputs.put(ID, (QuartusCircuitOutput) component);
             else Quartus.LOGGER.error("Illegal argument @QuartusCircuit::setComponentAt(): output is wrong type");
+            return;
         }
 
         Quartus.LOGGER.warn("QuartusCircuit::setComponentAt should not be used to add new components (comp = " + component.toString() + ")");
@@ -86,19 +87,20 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
     }
 
     private void updateInputs() {
-        System.out.println("[Execution] updating input values");
         for (QuartusCircuitInput input: circuitInputs.values()) {
-            input.updateComponent();
+            input.updateComponent(this);
         }
     }
 
     private void updateComponents() {
-
+        for (QuartusCircuitComponent component: otherComponents.values()) {
+            component.updateComponent(this);
+        }
     }
 
     private void updateOutputs() {
         for (QuartusCircuitOutput output: circuitOutputs.values()) {
-            output.updateComponent();
+            output.updateComponent(this);
         }
     }
 

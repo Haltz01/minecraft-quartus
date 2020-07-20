@@ -1,74 +1,127 @@
 package io.github.marcuscastelo.quartus.circuit.components;
 
-import io.github.marcuscastelo.quartus.circuit.ComponentConnection;
-import io.github.marcuscastelo.quartus.circuit.QuartusBusInfo;
-import io.github.marcuscastelo.quartus.circuit.QuartusLogic;
+import com.google.common.collect.ImmutableList;
+import io.github.marcuscastelo.quartus.Quartus;
+import io.github.marcuscastelo.quartus.circuit.*;
+import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.Direction;
+import sun.awt.X11.XSystemTrayPeer;
 
+import java.sql.Connection;
 import java.util.*;
 
 public class QuartusCircuitComponent {
-    Map<Direction, List<ComponentConnection>> connections;
+    public static class QuartusCircuitComponentDirectionInfo {
+        public final ImmutableList<Direction> possibleInputDirections, possibleOutputDirections;
+        public QuartusCircuitComponentDirectionInfo(List<Direction> possibleInputDirections, List<Direction> possibleOutputDirections) {
+            this.possibleInputDirections = ImmutableList.copyOf(possibleInputDirections);
+            this.possibleOutputDirections = ImmutableList.copyOf(possibleOutputDirections);
+        }
+
+        public QuartusCircuitComponentDirectionInfo(Direction possibleInputDirection, List<Direction> possibleOutputDirections) {
+            this(Collections.singletonList(possibleInputDirection), possibleOutputDirections);
+        }
+
+        public QuartusCircuitComponentDirectionInfo(List<Direction> possibleInputDirections, Direction possibleOutputDirection) {
+            this(possibleInputDirections, Collections.singletonList(possibleOutputDirection));
+        }
+
+        public QuartusCircuitComponentDirectionInfo(Direction possibleInputDirection, Direction possibleOutputDirection) {
+            this(Collections.singletonList(possibleInputDirection), Collections.singletonList(possibleOutputDirection));
+        }
+    }
+
+    private final QuartusCircuitComponentDirectionInfo possibleDirectionsInfo;
+    private Map<Direction, List<ComponentConnection>> connections;
 
     //TODO: ver como fazer pros extensores
     //TODO: fazer map de lista
-    Map<Direction, QuartusBusInfo> outputInfo;
-    Map<Direction, QuartusBusInfo> inputInfo;
+    private Map<Direction, QuartusBusInfo> outputInfo;
+    private Map<Direction, QuartusBusInfo> inputInfo;
 
-    QuartusLogic logic;
+    private QuartusLogic logic;
 
     public static int LAST_ID = 1;
 
     private final int ID;
     private final String componentName;
 
-    public QuartusCircuitComponent(String componentName, int ID) {
+    public QuartusCircuitComponent(String componentName, QuartusCircuitComponentDirectionInfo possibleDirectionsInfo, int ID) {
         this.componentName = componentName;
         this.connections = new HashMap<>();
         this.inputInfo = new HashMap<>();
         this.outputInfo = new HashMap<>();
         this.logic = null;
+        this.possibleDirectionsInfo = possibleDirectionsInfo;
 
         this.ID = ID;
 
-        Direction[] HORIZONTAL_DIRECTIONS = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
+        final Direction[] HORIZONTAL_DIRECTIONS = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
         for (Direction dir: HORIZONTAL_DIRECTIONS) {
             connections.put(dir, new ArrayList<>());
-            outputInfo.put(dir, new QuartusBusInfo());
-            inputInfo.put(dir, new QuartusBusInfo());
+        }
+
+        for (Direction dir: possibleDirectionsInfo.possibleInputDirections) {
+            inputInfo.put(dir, new QuartusBusInfo(false));
+        }
+
+        for (Direction dir: possibleDirectionsInfo.possibleOutputDirections) {
+            outputInfo.put(dir, new QuartusBusInfo(false));
         }
     }
 
-    public QuartusCircuitComponent(String componentName) {
-        this(componentName, LAST_ID++);
+    public QuartusCircuitComponent(String componentName, QuartusCircuitComponentDirectionInfo possibleDirectionsInfo) {
+        this(componentName, possibleDirectionsInfo, LAST_ID++);
     }
 
-    public QuartusCircuitComponent(String componentName, QuartusLogic logic) {
-        this(componentName);
+    public QuartusCircuitComponent(String componentName, QuartusCircuitComponentDirectionInfo possibleDirectionsInfo, QuartusLogic logic) {
+        this(componentName, possibleDirectionsInfo);
         this.logic = logic;
     }
 
-    public QuartusCircuitComponent(String componentName, int ID, QuartusLogic logic) {
-        this(componentName, ID);
+    public QuartusCircuitComponent(String componentName, QuartusCircuitComponentDirectionInfo possibleDirectionsInfo, int ID, QuartusLogic logic) {
+        this(componentName, possibleDirectionsInfo, ID);
         this.logic = logic;
     }
 
     public int getID() { return ID; }
 
-    private void updateInputInfo() {
+    //TODO: tornar mais genérica: atualmente foca apenas em trazer a saída do outro (supondo ser única) para a entrada deste (supondo ser única)
+    private void updateInputInfo(QuartusCircuit circuit) {
+        forDirection:
+        for (Map.Entry<Direction, List<ComponentConnection>> entry: connections.entrySet()) {
+            Direction AtoBDirection = entry.getKey();
 
+            //FIXME: suporta apenas uma entrada e uma saída
+            List<ComponentConnection> possibleConnections = entry.getValue();
+            if (entry.getValue().size() == 0) continue; //nenhuma conexão nessa direção
+            ComponentConnection arbitrarilyChosenConnection = null;
+
+            //Pega a primeira conexão de input encontrada (ou desiste da direção se nenhuma for encontrada)
+            for (int i = 0; i < possibleConnections.size(); i++) {
+                arbitrarilyChosenConnection = entry.getValue().get(i);
+                if (arbitrarilyChosenConnection.getType() == ComponentConnection.ConnectionType.INPUT) break;
+                if (i == possibleConnections.size()-1) continue forDirection;
+            }
+
+            int BID = CircuitUtils.getComponentStrInfo(arbitrarilyChosenConnection.connectToCompStr).getRight();
+            QuartusCircuitComponent BComponent = circuit.getComponentByID(BID);
+
+            Direction BtoADirection = arbitrarilyChosenConnection.BtoADirection;
+
+            //Copia o output do B para o input do atual (A)
+            this.inputInfo.get(AtoBDirection).setValue(BComponent.getOutputInfo().get(BtoADirection));
+        }
     }
 
-    public void updateComponent() {
-        updateInputInfo();
-        if (logic != null) logic.updateLogic(inputInfo, outputInfo);
-        else {
-            //Por padrão a lógica é simplesmente replicar os inputs no output
-            QuartusBusInfo outputBus = getOutputInfo().get(Direction.NORTH);
-            QuartusBusInfo inputBus = getInputInfo().get(Direction.SOUTH);
-            outputBus.setValue(inputBus);
+    public void updateComponent(QuartusCircuit circuit) {
+        if (logic == QuartusLogics.AND_GATE) {
+            System.out.println("I AM AND GATE");
+            System.out.println(inputInfo);
         }
+        updateInputInfo(circuit);
+        if (logic != null) logic.updateLogic(inputInfo, outputInfo);
     }
 
     public Map<Direction, QuartusBusInfo> getOutputInfo() { return outputInfo; }
@@ -119,8 +172,12 @@ public class QuartusCircuitComponent {
         return inputConnections;
     }
 
-    public List<Direction> getPossibleInputDirections() { return Collections.emptyList(); }
-    public List<Direction> getPossibleOutputDirections() { return Collections.emptyList(); }
+    public Map<Direction, List<ComponentConnection>> getConnections() {
+        return connections;
+    }
+
+    public final ImmutableList<Direction> getPossibleInputDirections() { return possibleDirectionsInfo.possibleInputDirections; }
+    public final ImmutableList<Direction> getPossibleOutputDirections() { return possibleDirectionsInfo.possibleOutputDirections; }
 
     @Override
     public String toString() {

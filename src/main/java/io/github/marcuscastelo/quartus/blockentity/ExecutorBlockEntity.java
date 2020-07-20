@@ -10,6 +10,7 @@ import io.github.marcuscastelo.quartus.circuit.components.executor.WorldOutput;
 import io.github.marcuscastelo.quartus.registry.QuartusBlockEntities;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
+import jdk.internal.jline.internal.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -31,6 +32,8 @@ import java.util.List;
 
 //TODO: traduzir mensagens de erro no lang
 public class ExecutorBlockEntity extends BlockEntity implements ImplementedInventory {
+    public static final int EXECUTION_DELAY = 20; // cada tick equivale a 1/20 segundos
+
     boolean executing = false;
     QuartusCircuit currentCircuit = null;
     DefaultedList<ItemStack> inventoryItems;
@@ -74,7 +77,7 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
 
     private void scheduleTick() {
         assert world != null;
-        world.getBlockTickScheduler().schedule(pos, QuartusBlocks.EXECUTOR, 20);
+        world.getBlockTickScheduler().schedule(pos, QuartusBlocks.EXECUTOR, EXECUTION_DELAY);
     }
 
     private boolean isFloppyValid() {
@@ -127,6 +130,7 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
             IOBlockPos = IOBlockPos.offset(chainOutDirection);
         }
 
+        //Se houver menos portas I/O que o necessário, pare a execução
         if (inputsPos.size() != currentCircuit.getInputCount() || outputsPos.size() != currentCircuit.getOutputCount()) {
             stopExecution();
             errorMessage = "blockentity.quartus.executor.not_enough_io";
@@ -152,18 +156,19 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         int inputPosInd = 0;
         for (QuartusCircuitInput input: currentCircuit.getInputs()) {
             int inputID = input.getID();
-            WorldInput worldInput = new WorldInput(world, inputsPos.get(inputPosInd++), inputID);
+            WorldInput worldInput = new WorldInput(world, inputsPos.get(inputPosInd++), input);
             currentCircuit.setComponentAtID(inputID, worldInput);
         }
 
         int outputPosInd = 0;
         for (QuartusCircuitOutput output: currentCircuit.getOutputs()) {
             int outputID = output.getID();
-            WorldOutput worldOutput = new WorldOutput(world, outputsPos.get(outputPosInd++), outputID);
+            WorldOutput worldOutput = new WorldOutput(world, outputsPos.get(outputPosInd++), output);
             currentCircuit.setComponentAtID(outputID, worldOutput);
         }
     }
 
+    //Redefine o estado de todas as portas I/O conectadas ao executor de volta para void (e a última para void_end)
     private void resetIOStatesToVoid() {
         assert world != null;
         BlockState executorBs = world.getBlockState(pos);
@@ -182,37 +187,73 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
             world.setBlockState(IOBlockPos, QuartusBlocks.EXTENSOR_IO.getDefaultState().with(ExecutorIOBlock.EXTENSOR_STATE, ExecutorIOBlock.ExecutorIOState.VOID_END).with(Properties.HORIZONTAL_FACING, executorFacingDir));
     }
 
-    public void startExecution(PlayerEntity startIssuer) {
+    /**
+     *  Função que inicia o processo de execução do circuito.
+     *  Passos:
+     *      1) Lê o circuito do disquete inserido
+     *      2) Percorre a corrente de portas I/O e salva a posição delas
+     *      3) Substitui os inputs e outputs do circuito pelas portas I/O escaneadas
+     *      4) Inicia um loop de atualização (na função tick())
+     *
+     *  OBS: se houver algum erro nos passos acima, a flag executing se tornará false antes do fim dessa função.
+     *  @param startIssuer - player que solicitou a execução do circuito (às vezes nenhum player solicita)
+     */
+    public void startExecution(@Nullable PlayerEntity startIssuer) {
         executing = true;
         errorMessage = "blockentity.quartus.executor.unknown_error";
+        //Passos 1, 2 e 3
         loadCircuitFromInv();
         scanIOPorts();
         overwriteCircuitIO();
 
         if (executing) { //Se nenhuma etapa falhou, agende o tick
+            //Passo 4
             scheduleTick();
+            return;
         }
-        else if (startIssuer != null) //Se houver erros na execução, informe o jogador que a iniciou
-            startIssuer.sendMessage(new TranslatableText(errorMessage));
-        else
-            stopExecution();
+
+        if (startIssuer != null) { //Se houver erros na execução, informe o jogador que a iniciou
+            try {
+                startIssuer.sendMessage(new TranslatableText(errorMessage));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else //Se nenhum jogador houver iniciado o processo de execução, exiba o erro no log
+            Quartus.LOGGER.error("An error has occurred @ExecutorBlockEntity::startExecution(), but no issuer (player) has been found: " + errorMessage);
+
+        stopExecution();
     }
 
+    /* Parar a execução significa destruir o circuito interno (mantendo o disquete intacto),
+        parar o loop de atualização e redefinir o estado das portas I/O
+     */
     public void stopExecution() {
         executing = false;
         currentCircuit = null;
         resetIOStatesToVoid();
     }
 
-    //TODO: verificar integridade das portas IO (parar se forem quebradas)
     public void tick() {
+        /* Nesse momento, existem duas possibilidades de estado:
+            1) O executor está em execução normal
+            2) O mundo está sendo carregado e o executor tem que retomar as atividades
+         */
+
         if (!isFloppyValid()) stopExecution();
         if (!executing) return;
 
-        //TODO: definir inputs e outputs do circuito de acordo com os extensores IO
-        //TODO: mensagem de erro extensores insuficientes
+        //TODO: manter o estado do circuito através de reinicializações do servidor
+        //Para o caso 2, temos que nos certificar que o circuito não é nulo
+        if (!hasCircuit()) {
+            //Se o mundo tiver acabado de ser carregado (caso 2), o circuito é nulo, então solicite o recomeço da simulação
+            startExecution(null);
+            return;
+        }
+
         currentCircuit.updateCircuit();
 
+        //Chama a própria função tick após um intervalo
         scheduleTick();
     }
 

@@ -1,34 +1,24 @@
 package io.github.marcuscastelo.quartus.circuit.components;
 
-import io.github.marcuscastelo.quartus.Quartus;
-import io.github.marcuscastelo.quartus.circuit.QuartusBusInfo;
+import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
+import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import net.minecraft.util.math.Direction;
 
-import java.util.Collections;
-import java.util.List;
 
 public class QuartusCircuitOutput extends QuartusCircuitComponent {
     public static final String TYPE = "QuartusOutput";
+    public static final QuartusCircuitComponentDirectionInfo outputDirectionInfo = new QuartusCircuitComponentDirectionInfo(Direction.SOUTH, Direction.NORTH);
 
     public QuartusCircuitOutput(int ID) {
-        super(TYPE, ID);
+        super(TYPE, outputDirectionInfo, ID, QuartusLogics.OUTPUT);
     }
 
     public QuartusCircuitOutput() {
-        super(TYPE);
+        super(TYPE, outputDirectionInfo, QuartusLogics.OUTPUT);
     }
 
-    public void updateComponent() {
-        super.updateComponent();
+    public void updateComponent(QuartusCircuit circuit) {
+        super.updateComponent(circuit);
     }
 
-    @Override
-    public List<Direction> getPossibleInputDirections() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<Direction> getPossibleOutputDirections() {
-        return Collections.emptyList();
-    }
 }

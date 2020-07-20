@@ -4,7 +4,7 @@ import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.CompilerBlock;
 import io.github.marcuscastelo.quartus.block.ExecutorBlock;
 import io.github.marcuscastelo.quartus.block.ExecutorIOBlock;
-import io.github.marcuscastelo.quartus.block.circuit_components.*;
+import io.github.marcuscastelo.quartus.block.circuit_parts.*;
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
 
@@ -35,27 +35,33 @@ public class QuartusBlocks {
         return Registry.register(Registry.BLOCK, Quartus.id(block_name), block);
     }
 
+    private static Block registerComponent(String block_name, String componentName) {
+        QuartusCircuitComponents.QuartusComponentInfo componentInfo = QuartusCircuitComponents.getComponentInfoByName(componentName);
+        if (componentInfo == null) throw new IllegalArgumentException("Unknown componentName = " + componentName);
+        return register(block_name, new CircuitComponentBlock(componentInfo));
+    }
+
     static {
         WIRE = register("wire", new WireBlock());
-        EXTENSOR_GATE = register("extensor_gate", new ExtensorGateBlock());
-        DISTRIBUTOR_GATE = register("distributor_gate", new DistributorGateBlock());
+        EXTENSOR_GATE = registerComponent("extensor_gate", "ExtensorGate");
+        DISTRIBUTOR_GATE = registerComponent("distributor_gate", "DistributorGate");
 
-        AND_GATE = register("and_gate", new AndLogicGateBlock());
-        NAND_GATE = register("nand_gate", new NandLogicGateBlock());
-        OR_GATE = register("or_gate", new OrLogicGateBlock());
-        NOR_GATE = register("nor_gate", new NorLogicGateBlock());
-        XOR_GATE = register("xor_gate", new XorLogicGateBlock());
-        XNOR_GATE = register("xnor_gate", new XnorLogicGateBlock());
-        NOT_GATE = register("not_gate", new NotLogicGateBlock());
+        AND_GATE = registerComponent("and_gate", "AndGate");
+        NAND_GATE = registerComponent("nand_gate", "NandGate");
+        OR_GATE = registerComponent("or_gate", "OrGate");
+        NOR_GATE = registerComponent("nor_gate", "NorGate");
+        XOR_GATE = registerComponent("xor_gate", "XorGate");
+        XNOR_GATE = registerComponent("xnor_gate", "XnorGate");
+        NOT_GATE = registerComponent("not_gate", "NotGate");
 
-        MULTIPLEXER_GATE = register("multiplexer", new MultiplexerLogicGateBlock());
+        MULTIPLEXER_GATE = registerComponent("multiplexer", "MultiplexerGate");
 
         COMPILER = register("compiler", new CompilerBlock());
         EXECUTOR = register("executor", new ExecutorBlock());
 
         EXTENSOR_IO = register("extensor_io", new ExecutorIOBlock());
 
-        INPUT = register("input", new InputGateBlock());
-        OUTPUT = register("output", new OutputGateBlock());
+        INPUT = registerComponent("input", "QuartusInput");
+        OUTPUT = registerComponent("output", "QuartusOutput");
     }
 }
