@@ -32,7 +32,7 @@ import java.util.List;
 
 //TODO: traduzir mensagens de erro no lang
 public class ExecutorBlockEntity extends BlockEntity implements ImplementedInventory {
-    public static final int EXECUTION_DELAY = 20; // cada tick equivale a 1/20 segundos
+    public static final int EXECUTION_DELAY = 2; // cada tick equivale a 1/20 segundos
 
     boolean executing = false;
     QuartusCircuit currentCircuit = null;
@@ -251,7 +251,8 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
             return;
         }
 
-        currentCircuit.updateCircuit();
+        for (int i = 0; i < 20; i++)
+            currentCircuit.updateCircuit();
 
         //Chama a própria função tick após um intervalo
         scheduleTick();

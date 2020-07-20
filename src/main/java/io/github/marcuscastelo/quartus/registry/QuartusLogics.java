@@ -50,8 +50,21 @@ public class QuartusLogics {
         INPUT = register("QuartusInput", ((inputs, outputs) -> outputs.get(Direction.NORTH).setValue(inputs.get(Direction.SOUTH))));
         OUTPUT = register("QuartusOutput", ((inputs, outputs) -> outputs.get(Direction.NORTH).setValue(inputs.get(Direction.SOUTH))));
 
-        //TODO: implement
-        MULTIPLEXER = register("MultiplexerGate", ((inputs, outputs) -> { throw new UnsupportedOperationException("Multiplexer is not supported yet"); }));
+        //TODO: criar alguma medida para impedir que o multiplex receba um extensor em qualquer lado
+        MULTIPLEXER = register("MultiplexerGate", ((inputs, outputs) -> {
+            QuartusBusInfo selectorBusInfo = inputs.get(Direction.SOUTH);
+            if (selectorBusInfo.getBusSize() != 1) {
+                //TODO: support multibyte selector
+                Quartus.LOGGER.warn("Ignoring multiplexer with multibyte selector");
+                return;
+            }
+
+            QuartusBusInfo westBusInfo = inputs.get(Direction.WEST);
+            QuartusBusInfo eastBusInfo = inputs.get(Direction.EAST);
+            boolean pickEast = selectorBusInfo.equals(QuartusBusInfo.HIGH1b);
+
+            outputs.get(Direction.NORTH).setValue(pickEast? eastBusInfo: westBusInfo);
+        }));
         EXTENSOR = register("ExtensorGate", ((inputs, outputs) -> { throw new UnsupportedOperationException("Extensor is not supported yet");}));
 
         DISTRIBUTOR = register("DistributorGate", ((inputs, outputs) -> {

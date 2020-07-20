@@ -67,10 +67,10 @@ public class QuartusCircuitComponents {
         INPUT = register(QuartusCircuitInput.TYPE, QuartusCircuitInput::new, QuartusCircuitInput.inputDirectionInfo);
         OUTPUT = register(QuartusCircuitOutput.TYPE, QuartusCircuitOutput::new, QuartusCircuitOutput.outputDirectionInfo);
 
-        //TODO: dar implementação real ao multiplexer, dist e ext
         MULTIPLEXER = register("MultiplexerGate", () -> new QuartusCircuitComponent("MultiplexerGate", WES2NDirInfo, QuartusLogics.MULTIPLEXER), WES2NDirInfo);
-        EXTENSOR = register("ExtensorGate", () -> new QuartusCircuitComponent("ExtensorGate", WES2NDirInfo, QuartusLogics.EXTENSOR), WES2NDirInfo);
         DISTRIBUTOR = register("DistributorGate", () -> new QuartusCircuitComponent("DistributorGate", S2NEWDirInfo, QuartusLogics.DISTRIBUTOR), S2NEWDirInfo);
+        //TODO: dar implementação real ao extensor
+        EXTENSOR = register("ExtensorGate", () -> new QuartusCircuitComponent("ExtensorGate", WES2NDirInfo, QuartusLogics.EXTENSOR), WES2NDirInfo);
     }
 
 }

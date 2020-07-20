@@ -116,10 +116,6 @@ public class QuartusCircuitComponent {
     }
 
     public void updateComponent(QuartusCircuit circuit) {
-        if (logic == QuartusLogics.AND_GATE) {
-            System.out.println("I AM AND GATE");
-            System.out.println(inputInfo);
-        }
         updateInputInfo(circuit);
         if (logic != null) logic.updateLogic(inputInfo, outputInfo);
     }
