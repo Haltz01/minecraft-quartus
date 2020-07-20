@@ -1,7 +1,6 @@
 package io.github.marcuscastelo.quartus.network;
 
 import io.github.marcuscastelo.quartus.Quartus;
-import io.github.marcuscastelo.quartus.block.ExtensorIOBlock;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;

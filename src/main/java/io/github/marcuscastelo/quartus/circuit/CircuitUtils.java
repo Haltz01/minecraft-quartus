@@ -4,9 +4,13 @@ import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
 import io.github.marcuscastelo.quartus.block.QuartusTransportInfoProvider;
 import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
+import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitInput;
+import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitOutput;
+import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
@@ -22,38 +26,62 @@ import java.util.stream.Collectors;
 public class CircuitUtils {
     public static final List<Direction> HORIZONTAL_DIRECTIONS = Arrays.asList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
 
+    public static class ConnectedNodeInfo {
+        public final Direction AtoB, BtoA;
+        public final BlockPos bPos;
+
+        public ConnectedNodeInfo(Direction AtoB, Direction BtoA, BlockPos bPos) {
+            this.AtoB = AtoB;
+            this.BtoA = BtoA;
+            this.bPos = bPos;
+        }
+    }
+
     //Segue os fios até o próximo nó
-    public static List<BlockPos> getConnectedNodesPos(World world, QuartusCircuit circuit, QuartusCircuitComponent node, BlockPos nodePos) {
-        List<BlockPos> connectedNodesPos = new ArrayList<>();
-        for (Direction approachRelativeDirection: node.getPossibleOutputDirections()) {
-            BlockState blockState = world.getBlockState(nodePos);
-            if (!(blockState.getBlock() instanceof HorizontalFacingBlock)) continue;
+    public static List<ConnectedNodeInfo> getConnectedNodesPos(World world, QuartusCircuit circuit, QuartusCircuitComponent originNode, BlockPos originPos) {
+        List<ConnectedNodeInfo> connectedNodesPos = new ArrayList<>();
 
-            Direction facingDir = blockState.get(Properties.HORIZONTAL_FACING);
-            Direction approachDirection = CircuitUtils.getAbsoluteDirection(facingDir, approachRelativeDirection);
+        //Para cada direção de output do nó origen
+        for (Direction relativeDirectionOutOfOriginNode: originNode.getPossibleOutputDirections()) {
+            //Obtém o blockstate imediatamente adjacente e exclui os que não são blocos do mod
+            BlockState originBs = world.getBlockState(originPos);
+            if (!(originBs.getBlock() instanceof QuartusInGameComponent) && !(originBs instanceof QuartusTransportInfoProvider)) continue;
 
-            BlockPos neighborPos = nodePos.offset(approachDirection);
-            Block neighborBlock = world.getBlockState(neighborPos).getBlock();
-            BlockPos connectedNodePos = null;
-            if (neighborBlock instanceof QuartusInGameComponent){
-                connectedNodePos = neighborPos;
+            //Obtém as direções absolutas
+            Direction originFacingDir = originBs.get(Properties.HORIZONTAL_FACING);
+            Direction directionOutOfOriginNode = CircuitUtils.getAbsoluteDirection(originFacingDir, relativeDirectionOutOfOriginNode);
+            Direction directionOutOfTargetNode;
+
+            //Obtém informações dos vizinhos imediatos
+            BlockPos immediateNeighborPos = originPos.offset(directionOutOfOriginNode);
+            Block immediateNeighborBlock = world.getBlockState(immediateNeighborPos).getBlock();
+
+            //Variável a ser definida nos ifs a seguir (posição do próximo componente)
+            BlockPos finalConnectedPos = null;
+
+            if (immediateNeighborBlock instanceof QuartusInGameComponent){
+                //Se o vizinho for um componente, ele é o próprio componente
+                finalConnectedPos = immediateNeighborPos;
+                directionOutOfTargetNode = directionOutOfOriginNode.getOpposite();
             }
-            else if (neighborBlock instanceof QuartusTransportInfoProvider) {
-                Pair<BlockPos, Direction> throughWireNodeInfo = getTransportDestinationInfo(world, neighborPos, approachDirection);
+            else if (immediateNeighborBlock instanceof QuartusTransportInfoProvider) {
+                //Se o vizinho for um fio, siga o fio e obtenha a posição do nó em sua extremidade
+                Pair<BlockPos, Direction> throughWireNodeInfo = getTransportDestinationInfo(world, immediateNeighborPos, directionOutOfOriginNode);
 
+                //TODO: definir o que isso significa (esqueci :P)
                 if (throughWireNodeInfo == null) {
-                    System.out.println("Fios mal conectados foram encontrados na linha " + neighborPos.toShortString());
+                    System.out.println("Fios mal conectados foram encontrados na linha " + immediateNeighborPos.toShortString());
                     continue;
                 }
 
                 BlockPos foundBlockPos = throughWireNodeInfo.getLeft();
-                approachDirection = throughWireNodeInfo.getRight();
+                directionOutOfTargetNode = throughWireNodeInfo.getRight();
 
                 if (foundBlockPos != null) {
                     Block connectedNodeBlock = world.getBlockState(foundBlockPos).getBlock();
                     if (connectedNodeBlock instanceof QuartusInGameComponent) {
                         System.out.println("Após os fios, encontrado " + connectedNodeBlock);
-                        connectedNodePos = foundBlockPos;
+                        finalConnectedPos = foundBlockPos;
                     }
                     else {
                         System.out.println("O FIO ESTÁ DESCONECTADO NO FIM DELE");
@@ -62,24 +90,24 @@ public class CircuitUtils {
                     }
                 }
             } else {
-                Quartus.LOGGER.info(String.format("Node com porta desconectada em %s", neighborPos.toString()));
+                Quartus.LOGGER.info(String.format("Node com porta desconectada em %s", immediateNeighborPos.toString()));
                 continue;
             }
 
             //Nenhum nó nessa direção
-            if (connectedNodePos == null) continue;
-            BlockState connectedNodeBlockState = world.getBlockState(connectedNodePos);
+            if (finalConnectedPos == null) continue;
+            BlockState connectedNodeBlockState = world.getBlockState(finalConnectedPos);
             Block connectedNodeBlock = connectedNodeBlockState.getBlock();
             Direction connectedBlockFacingDir = connectedNodeBlockState.get(Properties.HORIZONTAL_FACING);
             if (connectedNodeBlock instanceof QuartusInGameComponent) {
                 List<Direction> relativePossibleInputDirections = ((QuartusInGameComponent) connectedNodeBlock).getPossibleInputDirections();
                 List<Direction> absolutePossibleInputDirections = relativePossibleInputDirections.stream().map(direction -> getAbsoluteDirection(connectedBlockFacingDir, direction)).collect(Collectors.toList());
-                if (absolutePossibleInputDirections.contains(approachDirection.getOpposite())) {
-                    connectedNodesPos.add(connectedNodePos);
+                if (absolutePossibleInputDirections.contains(directionOutOfOriginNode.getOpposite())) {
+                    connectedNodesPos.add(new ConnectedNodeInfo(directionOutOfOriginNode, directionOutOfTargetNode, finalConnectedPos));
                 } else {
-                    System.out.println("Aproximando virado para " + approachDirection);
+                    System.out.println("Aproximando virado para " + directionOutOfOriginNode);
                     System.out.println("Node olhando para " + connectedBlockFacingDir);
-                    System.out.println(connectedNodePos.toString() + " aproximado por direção ruim");
+                    System.out.println(finalConnectedPos.toString() + " aproximado por direção ruim");
                 }
             }
         }
@@ -149,5 +177,21 @@ public class CircuitUtils {
     public static Direction getAbsoluteDirection(Direction facingDir, Direction direction) {
         Function<Direction, Direction> rotationFunction = getRotationFunction(facingDir);
         return rotationFunction.apply(direction);
+    }
+
+    public static QuartusCircuitComponent createPolimorphicComponent(String gateType, int gateID) {
+        if (gateType.equals(QuartusCircuitInput.TYPE))
+            return new QuartusCircuitInput(gateID);
+        else if (gateType.equals(QuartusCircuitOutput.TYPE))
+            return new QuartusCircuitOutput(gateID);
+        else
+            return new QuartusCircuitComponent(gateType, gateID, QuartusLogics.getLogicByID(gateType));
+    }
+
+    public static Pair<String, Integer> getComponentStrInfo(String componentStr) {
+        String[] params = componentStr.split("_");
+        String gateType = params[0];
+        int gateID = Integer.parseInt(params[1]);
+        return new Pair<>(gateType, gateID);
     }
 }

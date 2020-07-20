@@ -1,17 +1,20 @@
 package io.github.marcuscastelo.quartus.circuit.components;
 
+import io.github.marcuscastelo.quartus.Quartus;
 import net.minecraft.util.math.Direction;
 
 import java.util.Collections;
 import java.util.List;
 
 public class QuartusCircuitInput extends QuartusCircuitComponent {
+    public static final String TYPE = "QuartusInput";
+
     public QuartusCircuitInput(int ID) {
-        super("QuartusInput", ID);
+        super(TYPE, ID);
     }
 
     public QuartusCircuitInput() {
-        super("QuartusInput");
+        super(TYPE);
     }
 
     @Override
@@ -25,6 +28,6 @@ public class QuartusCircuitInput extends QuartusCircuitComponent {
     }
 
     public void updateComponent() {
-        System.out.println("Trying to update input " + getID());
+        super.updateComponent();
     }
 }

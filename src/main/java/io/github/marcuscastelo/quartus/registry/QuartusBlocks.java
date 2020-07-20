@@ -3,7 +3,7 @@ package io.github.marcuscastelo.quartus.registry;
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.CompilerBlock;
 import io.github.marcuscastelo.quartus.block.ExecutorBlock;
-import io.github.marcuscastelo.quartus.block.ExtensorIOBlock;
+import io.github.marcuscastelo.quartus.block.ExecutorIOBlock;
 import io.github.marcuscastelo.quartus.block.circuit_components.*;
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
@@ -53,7 +53,7 @@ public class QuartusBlocks {
         COMPILER = register("compiler", new CompilerBlock());
         EXECUTOR = register("executor", new ExecutorBlock());
 
-        EXTENSOR_IO = register("extensor_io", new ExtensorIOBlock());
+        EXTENSOR_IO = register("extensor_io", new ExecutorIOBlock());
 
         INPUT = register("input", new InputGateBlock());
         OUTPUT = register("output", new OutputGateBlock());

@@ -2,6 +2,7 @@ package io.github.marcuscastelo.quartus.block;
 
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.blockentity.ExecutorBlockEntity;
+import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -38,7 +39,6 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        System.out.println("EAE SOU FODA");
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof ExecutorBlockEntity)
             ((ExecutorBlockEntity) be).tick();
@@ -71,5 +71,16 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
 
             super.onBlockRemoved(state, world, pos, newState, moved);
         }
+    }
+
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block previousBlock, BlockPos neighborPos, boolean moved) {
+        BlockEntity be = world.getBlockEntity(pos);
+        boolean IOChainHasChanged = previousBlock == QuartusBlocks.EXTENSOR_IO || previousBlock == Blocks.END_PORTAL;
+
+        if (!(be instanceof ExecutorBlockEntity)) return;
+        ExecutorBlockEntity executorBe = (ExecutorBlockEntity) be;
+
+        if (IOChainHasChanged) executorBe.chainChanged();
     }
 }
