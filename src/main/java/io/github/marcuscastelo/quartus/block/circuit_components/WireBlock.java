@@ -45,7 +45,6 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
         this.neighborUpdate(state,world,pos,state.getBlock(),null,false);
     }
 
-    //TODO: uncomment
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos, boolean moved) {
         List<Direction> foundDirs = new ArrayList<>();
@@ -57,9 +56,9 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
             }
             else if (aroundBlock instanceof QuartusInGameComponent){
                 Direction facingDir = aroundBlockState.get(Properties.HORIZONTAL_FACING);
-                List<Direction> a = ((QuartusInGameComponent) aroundBlock).getPossibleInputDirections().stream().map(direction1 -> CircuitUtils.getAbsoluteDirection(facingDir, direction1)).collect(Collectors.toList());
-                List<Direction> b = ((QuartusInGameComponent) aroundBlock).getPossibleOutputDirections().stream().map(direction1 -> CircuitUtils.getAbsoluteDirection(facingDir, direction1)).collect(Collectors.toList());
-                if (a.contains(direction.getOpposite()) || b.contains(direction.getOpposite()))
+                List<Direction> absoluteInputDirections = ((QuartusInGameComponent) aroundBlock).getPossibleInputDirections().stream().map(direction1 -> CircuitUtils.getAbsoluteDirection(facingDir, direction1)).collect(Collectors.toList());
+                List<Direction> absoluteOutputDirections = ((QuartusInGameComponent) aroundBlock).getPossibleOutputDirections().stream().map(direction1 -> CircuitUtils.getAbsoluteDirection(facingDir, direction1)).collect(Collectors.toList());
+                if (absoluteInputDirections.contains(direction.getOpposite()) || absoluteOutputDirections.contains(direction.getOpposite()))
                     foundDirs.add(direction);
             }
         }
@@ -67,7 +66,7 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
         boolean turned = state.get(TURN);
 
         if (foundDirs.size() == 1) {
-            world.setBlockState(pos, state.with(FACING, foundDirs.get(0)).with(TURN, false));
+            world.setBlockState(pos, state.with(FACING, foundDirs.get(0)).with(TURN, false)); //  FIXME: Valve code here (?) - last wire has wrong FACING (should be opposite)
             return;
         }
 
