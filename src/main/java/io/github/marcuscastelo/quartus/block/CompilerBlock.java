@@ -31,8 +31,9 @@ import net.minecraft.world.World;
  */
 public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityProvider {
 	/**
-	 * Construtor padrão da classe
-	 * As suas características são as mesmas da bigorna por padrão(settado no super)
+	 * Construtor padrão da classe.
+	 * Coloca como características do bloco as propriedades de uma bigorna
+	 * devido às semelhanças físicas que compartilham.
 	 * Estado de orientação padrão - 'olhar' para o norte do mundo (campo não pode ser vazio)
 	 */
     public CompilerBlock() {
@@ -75,7 +76,7 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
     }
 
 	/**
-	 * Método chamada quando o jogador tenta usar o bloco (clicar com o botão direito do mouse).
+	 * Método chamado quando o jogador tenta usar o bloco (clicar com o botão direito do mouse).
 	 * Pode ser um bloco presente no mundo ou que o jogador esté segurando.
 	 * @param state	->	Identifica o estado do bloco (energizado, dureza, etc)
 	 * @param world	->	Mundo em que está sendo jogado
