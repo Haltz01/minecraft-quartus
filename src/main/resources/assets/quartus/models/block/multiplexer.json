@@ -8,7 +8,7 @@
 		"7": "quartus:block/multiplexer/base",
 		"8": "quartus:block/multiplexer/topo3",
 		"9": "quartus:block/multiplexer/topo4",
-		"particle": "block/multiplexer/topo_maior"
+		"particle": "quartus:block/multiplexer/cima"
 	},
 	"elements": [
 		{
@@ -110,7 +110,8 @@
 			"scale": [0.3, 0.3, 0.3]
 		},
 		"gui": {
-			"rotation": [90, 0, 0]
+			"rotation": [90, 0, 0],
+			"scale": [0.8, 0.8, 0.8]
 		},
 		"head": {
 			"translation": [0, 14, 0]
@@ -119,12 +120,5 @@
 			"rotation": [-90, -180, 0],
 			"translation": [0, -0.25, -7.25]
 		}
-	},
-	"groups": [
-		{
-			"name": "multiplexer",
-			"origin": [8, 8, 8],
-			"children": [0, 1, 2, 3, 4, 5]
-		}
-	]
+	}
 }
