@@ -2,5 +2,25 @@
   "parent": "item/generated",
   "textures": {
     "layer0": "quartus:item/floppy_disk"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "thirdperson_lefthand": {
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "firstperson_righthand": {
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "firstperson_lefthand": {
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "gui": {
+      "scale": [0.8, 0.8, 0.8]
+    },
+    "ground": {
+      "scale": [0.3, 0.3, 0.3]
+    }
   }
 }
