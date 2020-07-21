@@ -49,9 +49,9 @@ public class QuartusCircuitComponents {
     public static final QuartusComponentInfo NOT_GATE;
     public static final QuartusComponentInfo INPUT;
     public static final QuartusComponentInfo OUTPUT;
-    public static final QuartusComponentInfo MULTIPLEXER;
-    public static final QuartusComponentInfo DISTRIBUTOR;
-    public static final QuartusComponentInfo EXTENSOR;
+    public static final QuartusComponentInfo MULTIPLEXER_GATE;
+    public static final QuartusComponentInfo DISTRIBUTOR_GATE;
+    public static final QuartusComponentInfo EXTENSOR_GATE;
 
 
     static {
@@ -63,14 +63,15 @@ public class QuartusCircuitComponents {
         XNOR_GATE = register("XnorGate", () -> new QuartusCircuitComponent("XnorGate", WE2NDirInfo, QuartusLogics.XNOR_GATE), WE2NDirInfo);
         NOT_GATE = register("NotGate", () -> new QuartusCircuitComponent("NotGate", WE2NDirInfo, QuartusLogics.NOT_GATE), WE2NDirInfo);
 
+        MULTIPLEXER_GATE = register("MultiplexerGate", () -> new QuartusCircuitComponent("MultiplexerGate", WES2NDirInfo, QuartusLogics.MULTIPLEXER), WES2NDirInfo);
+        DISTRIBUTOR_GATE = register("DistributorGate", () -> new QuartusCircuitComponent("DistributorGate", S2NEWDirInfo, QuartusLogics.DISTRIBUTOR), S2NEWDirInfo);
+
+        //TODO: dar implementação real ao extensor
+        EXTENSOR_GATE = register("ExtensorGate", () -> new QuartusCircuitComponent("ExtensorGate", WES2NDirInfo, QuartusLogics.EXTENSOR), WES2NDirInfo);
+
         //Os inputs e outputs são meros marcadores e por isso não possuem lógica interna (apenas repassam do sul para o norte relativos)
         INPUT = register(QuartusCircuitInput.TYPE, QuartusCircuitInput::new, QuartusCircuitInput.inputDirectionInfo);
         OUTPUT = register(QuartusCircuitOutput.TYPE, QuartusCircuitOutput::new, QuartusCircuitOutput.outputDirectionInfo);
-
-        MULTIPLEXER = register("MultiplexerGate", () -> new QuartusCircuitComponent("MultiplexerGate", WES2NDirInfo, QuartusLogics.MULTIPLEXER), WES2NDirInfo);
-        DISTRIBUTOR = register("DistributorGate", () -> new QuartusCircuitComponent("DistributorGate", S2NEWDirInfo, QuartusLogics.DISTRIBUTOR), S2NEWDirInfo);
-        //TODO: dar implementação real ao extensor
-        EXTENSOR = register("ExtensorGate", () -> new QuartusCircuitComponent("ExtensorGate", WES2NDirInfo, QuartusLogics.EXTENSOR), WES2NDirInfo);
     }
 
 }

@@ -28,8 +28,6 @@ public class ExecutorBlockController extends CottonCraftingController {
     BlockPos executorBlockPos;
 
     private void updateExtensorModels(QuartusCircuit circuit) {
-
-        //TODO: usar método mais eficiente com o QuartusCircuit.of
         int nInputs = circuit.getInputCount();
         int nOutputs = circuit.getOutputCount();
 
@@ -63,7 +61,6 @@ public class ExecutorBlockController extends CottonCraftingController {
         }
     }
 
-    //TODO: dar update no servidor
     private void onExecuteButtonClicked() {
         ItemStack stack = blockInventory.getInvStack(0);
         assert MinecraftClient.getInstance().player != null;

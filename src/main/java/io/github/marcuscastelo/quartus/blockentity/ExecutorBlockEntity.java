@@ -243,7 +243,7 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         if (!isFloppyValid()) stopExecution();
         if (!executing) return;
 
-        //TODO: manter o estado do circuito através de reinicializações do servidor
+        //TODO: manter o estado do circuito através de reinicializações do servidor (atualmente ele inicia do zero)
         //Para o caso 2, temos que nos certificar que o circuito não é nulo
         if (!hasCircuit()) {
             //Se o mundo tiver acabado de ser carregado (caso 2), o circuito é nulo, então solicite o recomeço da simulação

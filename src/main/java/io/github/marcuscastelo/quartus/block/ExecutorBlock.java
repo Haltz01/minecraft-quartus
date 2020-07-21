@@ -61,6 +61,7 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
 
     @Override
     public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        //Dropa o disquete dentro do executor em caso de este ser quebrado
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 

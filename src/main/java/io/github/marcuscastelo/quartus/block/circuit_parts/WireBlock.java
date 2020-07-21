@@ -5,6 +5,7 @@ import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
 import io.github.marcuscastelo.quartus.block.QuartusTransportInfoProvider;
 import io.github.marcuscastelo.quartus.circuit.CircuitUtils;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
+import jdk.internal.jline.internal.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -16,7 +17,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -32,12 +35,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class WireBlock extends HorizontalFacingBlock implements QuartusTransportInfoProvider {
-    public static final BooleanProperty TURN;
+    public enum UpValues implements StringIdentifiable {
+        NONE("none"), FACING("facing"), BOTH("both");
+
+        String identifier;
+
+        UpValues(String identifier) {
+            this.identifier = identifier;
+        }
+
+        @Override
+        public String asString() {
+            return identifier;
+        }
+    }
+
+    public static final BooleanProperty TURN, POSITIVE;
+    public static final EnumProperty<UpValues> UP;
 
     private static final List<Direction> HORIZONTAL_DIRECTIONS = Arrays.asList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
     public WireBlock() {
         super(Settings.copy(Blocks.REPEATER));
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH).with(TURN, false));
+        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH).with(TURN, false).with(POSITIVE, false).with(UP, UpValues.NONE));
     }
 
     @Override
@@ -45,89 +64,90 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
         this.neighborUpdate(state,world,pos,state.getBlock(),null,false);
     }
 
-    //TODO: uncomment
+    private Direction getAuxDirection(Direction facingDirection, boolean turned, boolean positive) {
+        if (!turned) return facingDirection.getOpposite();
+
+        if (positive) return facingDirection.rotateYCounterclockwise();
+        else return facingDirection.rotateYClockwise();
+    }
+
+    //Supõe-se que a direção informada é uma das direções do fio
+    //OBS: não garante que é um wire
+    //Retorna nulo se bloqueado por bloco
+    @Nullable
+    private BlockPos getNextWirePos(World world, BlockPos currPos, Direction directionToGo, boolean isFacingDirection, UpValues upValues) {
+        BlockPos nextWirePos = currPos.offset(directionToGo);
+        BlockPos currTopPos = currPos.offset(Direction.UP);
+
+        if ((isFacingDirection && upValues == UpValues.FACING) || upValues == UpValues.BOTH) {
+            if (world.getBlockState(currTopPos).isSimpleFullBlock(world, currTopPos)) return null;
+            nextWirePos = nextWirePos.offset(Direction.UP);
+            if (world.getBlockState(nextWirePos).getBlock() != this) return null;
+            return nextWirePos;
+        }
+
+        BlockState nextWireBlockState = world.getBlockState(nextWirePos);
+        if (nextWireBlockState.getBlock() == this) return nextWirePos;
+        if (nextWireBlockState.isSimpleFullBlock(world, nextWirePos)) return null;
+
+        nextWirePos = currPos.offset(Direction.DOWN);
+        nextWireBlockState = world.getBlockState(nextWirePos);
+        if (nextWireBlockState.getBlock() != this) return null;
+        return nextWirePos;
+
+    }
+
+    private boolean isWireNotFull(World world, BlockPos pos) {
+        BlockState wireBlockState = world.getBlockState(pos);
+        if (wireBlockState.getBlock() != this) return false;
+
+        boolean turned = wireBlockState.get(TURN);
+        boolean positive = wireBlockState.get(POSITIVE);
+        UpValues upValues = wireBlockState.get(UP);
+
+        Direction facingDir = wireBlockState.get(FACING);
+        Direction auxDir = getAuxDirection(facingDir, turned, positive);
+
+        BlockPos facingOtherWirePos = getNextWirePos(world, pos, facingDir, true, upValues);
+        BlockPos auxOtherWirePos = getNextWirePos(world, pos, auxDir, false, upValues);
+
+        return (facingOtherWirePos == null || auxOtherWirePos == null);
+    }
+
+    private void connectWireTo(World world, BlockPos mainWirePos, List<BlockPos> otherWiresPos) {
+        if (otherWiresPos.size() == 0) return; //Nada a fazer
+        if (otherWiresPos.size() > 2) throw new UnsupportedOperationException("Não é possível conectar um fio a mais de 2");
+
+        BlockState mainWireBs = world.getBlockState(mainWirePos);
+
+        for (BlockPos otherWirePos: otherWiresPos) {
+            //TODO: terminar de conectar os fios
+        }
+    }
+
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos, boolean moved) {
-        List<Direction> foundDirs = new ArrayList<>();
-        for (Direction direction : HORIZONTAL_DIRECTIONS) {
-            BlockState aroundBlockState = world.getBlockState(pos.offset(direction));
-            Block aroundBlock = aroundBlockState.getBlock();
-            if (aroundBlock == QuartusBlocks.WIRE ) {
-                foundDirs.add(direction);
+    public void neighborUpdate(BlockState state, World world, BlockPos currPos, Block block, BlockPos neighborPos, boolean moved) {
+        List<Direction> HORIZONTAL_DIRECTIONS = Arrays.asList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
+
+        List<BlockPos> connectableWiresPosition = new ArrayList<>();
+
+        for (Direction horizDir: HORIZONTAL_DIRECTIONS) {
+            //Sem subir (reto e para baixo)
+            BlockPos nextWirePos = getNextWirePos(world, currPos, horizDir, false, UpValues.NONE);
+            //Subindo
+            if (nextWirePos == null) {
+                nextWirePos = getNextWirePos(world, currPos, horizDir, true, UpValues.BOTH);
+                //Se não houver fio nessa direção (após as duas tentativas)
+                if (nextWirePos == null) continue;
             }
-            else if (aroundBlock instanceof QuartusInGameComponent){
-                Direction facingDir = aroundBlockState.get(Properties.HORIZONTAL_FACING);
-                List<Direction> a = ((QuartusInGameComponent) aroundBlock).getPossibleInputDirections().stream().map(direction1 -> CircuitUtils.getAbsoluteDirection(facingDir, direction1)).collect(Collectors.toList());
-                List<Direction> b = ((QuartusInGameComponent) aroundBlock).getPossibleOutputDirections().stream().map(direction1 -> CircuitUtils.getAbsoluteDirection(facingDir, direction1)).collect(Collectors.toList());
-                if (a.contains(direction.getOpposite()) || b.contains(direction.getOpposite()))
-                    foundDirs.add(direction);
-            }
+
+            boolean isNextWireConnectable = isWireNotFull(world, nextWirePos);
+            if (isNextWireConnectable) connectableWiresPosition.add(nextWirePos);
+            if (connectableWiresPosition.size() >= 2) break;
         }
 
-        boolean turned = state.get(TURN);
+        connectWireTo(world, currPos, connectableWiresPosition);
 
-        if (foundDirs.size() == 1) {
-            world.setBlockState(pos, state.with(FACING, foundDirs.get(0)).with(TURN, false));
-            return;
-        }
-
-        if (foundDirs.size() == 2 && foundDirs.get(0).getOpposite()==foundDirs.get(1)) {
-            Direction newDir = HORIZONTAL_DIRECTIONS.get(Math.min(HORIZONTAL_DIRECTIONS.indexOf(foundDirs.get(0)), HORIZONTAL_DIRECTIONS.indexOf(foundDirs.get(1))));
-            world.setBlockState(pos, state.with(FACING, newDir).with(TURN, false));
-            return;
-        }
-
-
-        if (foundDirs.size() != 2) {
-            if (turned)
-                world.setBlockState(pos, state.with(TURN, false));
-            return;
-        }
-
-
-        Direction facingDir = state.get(FACING);
-        int facingDirVal = HORIZONTAL_DIRECTIONS.indexOf(facingDir);
-
-        int foundDirVal1 = HORIZONTAL_DIRECTIONS.indexOf(foundDirs.get(0));
-        int foundDirVal2 = HORIZONTAL_DIRECTIONS.indexOf(foundDirs.get(1));
-
-        int targetDirVal;
-
-        if (foundDirVal1 * foundDirVal2 == 0) { //Special case with north
-            targetDirVal = (foundDirVal1 + foundDirVal2 == 1)?1:0;
-        } else {
-            targetDirVal = Math.max(foundDirVal1, foundDirVal2);
-        }
-
-        int rotationsNeeded = (facingDirVal - targetDirVal);
-
-        Quartus.LOGGER.info("Trying to rotate to " + HORIZONTAL_DIRECTIONS.get(targetDirVal));
-
-        Direction newDir;
-        switch (rotationsNeeded) {
-            case 1:
-            case -3:
-                newDir = facingDir.rotateYCounterclockwise();
-                break;
-            case 3:
-            case -1:
-                newDir = facingDir.rotateYClockwise();
-                break;
-            case 2:
-            case -2:
-                newDir = facingDir.rotateYClockwise().rotateYClockwise();
-                break;
-            case 4:
-            case -4:
-            case 0:
-                newDir = facingDir;
-                break;
-            default:
-                newDir = Direction.NORTH;
-        }
-
-        if (!turned)
-            world.setBlockState(pos, state.with(TURN, true).with(FACING, newDir));
     }
 
     @Override
@@ -188,7 +208,7 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, TURN);
+        builder.add(TURN, POSITIVE, UP, FACING);
     }
 
     @Override
@@ -198,10 +218,14 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 
     static {
         TURN = BooleanProperty.of("turn");
+        POSITIVE = BooleanProperty.of("positive");
+        UP = EnumProperty.of("up", UpValues.class);
     }
 
     @Override
     public Direction nextDirection(World world, BlockPos pos, Direction facingBefore) {
+        if (true)
+            throw new UnsupportedOperationException("USE A OUTRA FUNÇÃO AINDA INCOMPLETA");
         BlockState bs = world.getBlockState(pos);
         boolean turned = bs.get(TURN);
         Direction facingNow = bs.get(FACING);

@@ -37,6 +37,7 @@ public class CompilerBlockController extends CottonCraftingController {
         floppyDiskUpdateC2SPacket.send(buf);
     }
 
+    //TODO: support areas bigger than 10x10
     private QuartusCircuit compileCircuit() {
         Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
         BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), 5).offset(facingDir.getOpposite(),10);

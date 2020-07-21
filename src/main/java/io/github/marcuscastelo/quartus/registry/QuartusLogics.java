@@ -50,7 +50,7 @@ public class QuartusLogics {
         INPUT = register("QuartusInput", ((inputs, outputs) -> outputs.get(Direction.NORTH).setValue(inputs.get(Direction.SOUTH))));
         OUTPUT = register("QuartusOutput", ((inputs, outputs) -> outputs.get(Direction.NORTH).setValue(inputs.get(Direction.SOUTH))));
 
-        //TODO: criar alguma medida para impedir que o multiplex receba um extensor em qualquer lado
+        //TODO: criar alguma medida para impedir que o multiplexer receba um extensor em qualquer lado exceto na saida
         MULTIPLEXER = register("MultiplexerGate", ((inputs, outputs) -> {
             QuartusBusInfo selectorBusInfo = inputs.get(Direction.SOUTH);
             if (selectorBusInfo.getBusSize() != 1) {
@@ -65,6 +65,8 @@ public class QuartusLogics {
 
             outputs.get(Direction.NORTH).setValue(pickEast? eastBusInfo: westBusInfo);
         }));
+
+        //TODO: definir lógica (talvez uma classe com override no updateComponent)
         EXTENSOR = register("ExtensorGate", ((inputs, outputs) -> { throw new UnsupportedOperationException("Extensor is not supported yet");}));
 
         DISTRIBUTOR = register("DistributorGate", ((inputs, outputs) -> {

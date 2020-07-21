@@ -77,8 +77,7 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 
     @Override
     public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        //TODO: make it work
-//        CircuitUtils.outlineCompileRegionForClient(world, pos, 10, Blocks.COAL_BLOCK);
+        //Dropa o disquete dentro do compilador em caso de este ser quebrado
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 

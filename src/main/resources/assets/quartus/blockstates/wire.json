@@ -1,12 +1,43 @@
 {
   "variants": {
-    "turn=false,facing=north": { "model": "quartus:block/wire", "y": 0},
-    "turn=false,facing=east": { "model": "quartus:block/wire", "y": 90},
-    "turn=false,facing=south": { "model": "quartus:block/wire", "y": 180},
-    "turn=false,facing=west": { "model": "quartus:block/wire", "y": 270},
-    "turn=true,facing=north": { "model": "quartus:block/wire_turn", "y": 0},
-    "turn=true,facing=east": { "model": "quartus:block/wire_turn", "y": 90},
-    "turn=true,facing=south": { "model": "quartus:block/wire_turn", "y": 180},
-    "turn=true,facing=west": { "model": "quartus:block/wire_turn", "y": 270}
+    "turn=false,positive=false,up=none,facing=north": { "model": "quartus:block/wire", "y": 0},
+    "turn=false,positive=false,up=facing,facing=north": { "model": "quartus:block/wire_edge_1_up", "y": 0},
+    "turn=false,positive=false,up=both,facing=north": { "model": "quartus:block/wire_edge_2_up", "y": 0},
+    "turn=true,positive=false,up=none,facing=north": { "model": "quartus:block/wire_turn_neg", "y": 0},
+    "turn=true,positive=true,up=none,facing=north": { "model": "quartus:block/wire_turn_pos", "y": 0},
+    "turn=true,positive=false,up=facing,facing=north": { "model": "quartus:block/wire_turn_facing_up_neg", "y": 0},
+    "turn=true,positive=true,up=facing,facing=north": { "model": "quartus:block/wire_turn_facing_up_pos", "y": 0},
+    "turn=true,positive=false,up=both,facing=north": { "model": "quartus:block/wire_turn_both_up_neg", "y": 0},
+    "turn=true,positive=true,up=both,facing=north": { "model": "quartus:block/wire_turn_both_up_pos", "y": 0},
+
+    "turn=false,positive=false,up=none,facing=east": { "model": "quartus:block/wire", "y": 90},
+    "turn=false,positive=false,up=facing,facing=east": { "model": "quartus:block/wire_edge_1_up", "y": 90},
+    "turn=false,positive=false,up=both,facing=east": { "model": "quartus:block/wire_edge_2_up", "y": 90},
+    "turn=true,positive=false,up=none,facing=east": { "model": "quartus:block/wire_turn_neg", "y": 90},
+    "turn=true,positive=true,up=none,facing=east": { "model": "quartus:block/wire_turn_pos", "y": 90},
+    "turn=true,positive=false,up=facing,facing=east": { "model": "quartus:block/wire_turn_facing_up_neg", "y": 90},
+    "turn=true,positive=true,up=facing,facing=east": { "model": "quartus:block/wire_turn_facing_up_pos", "y": 90},
+    "turn=true,positive=false,up=both,facing=east": { "model": "quartus:block/wire_turn_both_up_neg", "y": 90},
+    "turn=true,positive=true,up=both,facing=east": { "model": "quartus:block/wire_turn_both_up_pos", "y": 90},
+
+    "turn=false,positive=false,up=none,facing=south": { "model": "quartus:block/wire", "y": 180},
+    "turn=false,positive=false,up=facing,facing=south": { "model": "quartus:block/wire_edge_1_up", "y": 180},
+    "turn=false,positive=false,up=both,facing=south": { "model": "quartus:block/wire_edge_2_up", "y": 180},
+    "turn=true,positive=false,up=none,facing=south": { "model": "quartus:block/wire_turn_neg", "y": 180},
+    "turn=true,positive=true,up=none,facing=south": { "model": "quartus:block/wire_turn_pos", "y": 180},
+    "turn=true,positive=false,up=facing,facing=south": { "model": "quartus:block/wire_turn_facing_up_neg", "y": 180},
+    "turn=true,positive=true,up=facing,facing=south": { "model": "quartus:block/wire_turn_facing_up_pos", "y": 180},
+    "turn=true,positive=false,up=both,facing=south": { "model": "quartus:block/wire_turn_both_up_neg", "y": 180},
+    "turn=true,positive=true,up=both,facing=south": { "model": "quartus:block/wire_turn_both_up_pos", "y": 180},
+
+    "turn=false,positive=false,up=none,facing=west": { "model": "quartus:block/wire", "y": 270},
+    "turn=false,positive=false,up=facing,facing=west": { "model": "quartus:block/wire_edge_1_up", "y": 270},
+    "turn=false,positive=false,up=both,facing=west": { "model": "quartus:block/wire_edge_2_up", "y": 270},
+    "turn=true,positive=false,up=none,facing=west": { "model": "quartus:block/wire_turn_neg", "y": 270},
+    "turn=true,positive=true,up=none,facing=west": { "model": "quartus:block/wire_turn_pos", "y": 270},
+    "turn=true,positive=false,up=facing,facing=west": { "model": "quartus:block/wire_turn_facing_up_neg", "y": 270},
+    "turn=true,positive=true,up=facing,facing=west": { "model": "quartus:block/wire_turn_facing_up_pos", "y": 270},
+    "turn=true,positive=false,up=both,facing=west": { "model": "quartus:block/wire_turn_both_up_neg", "y": 270},
+    "turn=true,positive=true,up=both,facing=west": { "model": "quartus:block/wire_turn_both_up_pos", "y": 270}
   }
 }
