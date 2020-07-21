@@ -1,6 +1,8 @@
-package io.github.marcuscastelo.quartus.block.circuit_components;
+package io.github.marcuscastelo.quartus.block.circuit_parts;
 
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
+import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
+import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -22,10 +24,18 @@ import net.minecraft.world.WorldView;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractCircuitComponentBlock extends HorizontalFacingBlock implements QuartusInGameComponent {
-    protected AbstractCircuitComponentBlock(Settings settings) {
-        super(settings);
+public class CircuitComponentBlock extends HorizontalFacingBlock implements QuartusInGameComponent {
+    private final QuartusCircuitComponents.QuartusComponentInfo componentInfo;
+
+    public CircuitComponentBlock(QuartusCircuitComponents.QuartusComponentInfo componentInfo) {
+        super(Settings.copy(Blocks.REPEATER));
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
+        this.componentInfo = componentInfo;
+    }
+
+    @Override
+    public QuartusCircuitComponent getCircuitComponent() {
+        return componentInfo.supplier.get();
     }
 
     @Override
@@ -62,5 +72,15 @@ public abstract class AbstractCircuitComponentBlock extends HorizontalFacingBloc
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
+    }
+
+    @Override
+    public List<Direction> getPossibleInputDirections() {
+        return componentInfo.directionInfo.possibleInputDirections;
+    }
+
+    @Override
+    public List<Direction> getPossibleOutputDirections() {
+        return componentInfo.directionInfo.possibleOutputDirections;
     }
 }

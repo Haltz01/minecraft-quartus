@@ -1,6 +1,6 @@
 package io.github.marcuscastelo.quartus.network.handlers;
 
-import io.github.marcuscastelo.quartus.block.ExtensorIOBlock;
+import io.github.marcuscastelo.quartus.block.ExecutorIOBlock;
 import io.github.marcuscastelo.quartus.network.QuartusExtensorIOUpdateC2SPacket;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.block.BlockState;
@@ -16,8 +16,8 @@ public class QuartusExtensorIOUpdateC2SPacketHandler {
 
             packetContext.getTaskQueue().execute(() -> {
                 BlockState currBs = world.getBlockState(packet.getExtensorIOPos());
-                if (currBs.getBlock() instanceof ExtensorIOBlock) {
-                    world.setBlockState(packet.getExtensorIOPos(), currBs.with(ExtensorIOBlock.EXTENSOR_STATE, packet.getExtensorIOState()));
+                if (currBs.getBlock() instanceof ExecutorIOBlock) {
+                    world.setBlockState(packet.getExtensorIOPos(), currBs.with(ExecutorIOBlock.EXTENSOR_STATE, packet.getExecutorIOState()));
                 }
             });
         });

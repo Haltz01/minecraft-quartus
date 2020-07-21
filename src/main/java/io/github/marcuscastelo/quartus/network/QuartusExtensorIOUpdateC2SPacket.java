@@ -1,7 +1,7 @@
 package io.github.marcuscastelo.quartus.network;
 
 import io.github.marcuscastelo.quartus.Quartus;
-import io.github.marcuscastelo.quartus.block.ExtensorIOBlock;
+import io.github.marcuscastelo.quartus.block.ExecutorIOBlock;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
@@ -14,30 +14,30 @@ public class QuartusExtensorIOUpdateC2SPacket implements QuartusPacket{
         return extensorIOPos;
     }
 
-    public ExtensorIOBlock.ExtensorIOState getExtensorIOState() {
-        return extensorIOState;
+    public ExecutorIOBlock.ExecutorIOState getExecutorIOState() {
+        return executorIOState;
     }
 
     private BlockPos extensorIOPos;
-    private ExtensorIOBlock.ExtensorIOState extensorIOState;
+    private ExecutorIOBlock.ExecutorIOState executorIOState;
 
     public QuartusExtensorIOUpdateC2SPacket() {}
 
-    public QuartusExtensorIOUpdateC2SPacket(BlockPos extensorIOPos, ExtensorIOBlock.ExtensorIOState newState) {
+    public QuartusExtensorIOUpdateC2SPacket(BlockPos extensorIOPos, ExecutorIOBlock.ExecutorIOState newState) {
         this.extensorIOPos = extensorIOPos;
-        this.extensorIOState = newState;
+        this.executorIOState = newState;
     }
 
     @Override
     public void read(PacketByteBuf buf) {
         extensorIOPos = buf.readBlockPos();
-        extensorIOState = buf.readEnumConstant(ExtensorIOBlock.ExtensorIOState.class);
+        executorIOState = buf.readEnumConstant(ExecutorIOBlock.ExecutorIOState.class);
     }
 
     @Override
     public void write(PacketByteBuf buf) {
         buf.writeBlockPos(extensorIOPos);
-        buf.writeEnumConstant(extensorIOState);
+        buf.writeEnumConstant(executorIOState);
     }
 
     @Override

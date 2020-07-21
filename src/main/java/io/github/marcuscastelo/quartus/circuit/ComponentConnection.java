@@ -1,20 +1,20 @@
 package io.github.marcuscastelo.quartus.circuit;
 
-public class ComponentConnection<T> {
+import net.minecraft.util.math.Direction;
+
+public class ComponentConnection {
     public enum ConnectionType {
-        INPUT, OUTPUT, SELECTOR
+        INPUT, OUTPUT
     }
 
-    private final ConnectionType type;
-    private final T A, B;
-    public ComponentConnection(ConnectionType type, T A, T B) {
-        this.A = A;
-        this.B = B;
+    public final ConnectionType type;
+    public final String connectToCompStr;
+    public final Direction BtoADirection;
+    public ComponentConnection(ConnectionType type, String connectToCompStr, Direction BtoADirection) {
         this.type = type;
+        this.connectToCompStr = connectToCompStr;
+        this.BtoADirection = BtoADirection;
     }
-
-    public T getA() { return A; }
-    public T getB() { return B; }
 
     public ConnectionType getType() {
         return type;

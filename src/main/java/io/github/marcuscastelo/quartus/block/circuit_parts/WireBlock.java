@@ -1,4 +1,4 @@
-package io.github.marcuscastelo.quartus.block.circuit_components;
+package io.github.marcuscastelo.quartus.block.circuit_parts;
 
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;

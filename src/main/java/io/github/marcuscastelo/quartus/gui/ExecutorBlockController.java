@@ -4,8 +4,7 @@ import io.github.cottonmc.cotton.gui.CottonCraftingController;
 import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
-import io.github.marcuscastelo.quartus.block.ExecutorBlock;
-import io.github.marcuscastelo.quartus.block.ExtensorIOBlock;
+import io.github.marcuscastelo.quartus.block.ExecutorIOBlock;
 import io.github.marcuscastelo.quartus.blockentity.ExecutorBlockEntity;
 import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.network.QuartusExecutorStartC2SPacket;
@@ -13,8 +12,6 @@ import io.github.marcuscastelo.quartus.network.QuartusExtensorIOUpdateC2SPacket;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.block.RepeaterBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
@@ -26,7 +23,6 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import org.apache.commons.lang3.StringUtils;
 
 public class ExecutorBlockController extends CottonCraftingController {
     BlockPos executorBlockPos;
@@ -42,17 +38,17 @@ public class ExecutorBlockController extends CottonCraftingController {
         BlockState extensorState = world.getBlockState(extensorPos);
         int distance = 1;
         while (extensorState.getBlock().equals(QuartusBlocks.EXTENSOR_IO)) {
-            ExtensorIOBlock.ExtensorIOState newExtensorState;
+            ExecutorIOBlock.ExecutorIOState newExtensorState;
             if (distance <= nInputs && distance <= nOutputs) {
-                newExtensorState =  ExtensorIOBlock.ExtensorIOState.IO;
+                newExtensorState =  ExecutorIOBlock.ExecutorIOState.IO;
             } else if (distance <= nInputs) {
-                newExtensorState = ExtensorIOBlock.ExtensorIOState.INPUT;
+                newExtensorState = ExecutorIOBlock.ExecutorIOState.INPUT;
             } else if (distance <= nOutputs) {
-                newExtensorState = ExtensorIOBlock.ExtensorIOState.OUPUT;
+                newExtensorState = ExecutorIOBlock.ExecutorIOState.OUPUT;
             } else break;
 
             //Define os blocos no cliente
-            world.setBlockState(extensorPos, extensorState.with(ExtensorIOBlock.EXTENSOR_STATE, newExtensorState));
+            world.setBlockState(extensorPos, extensorState.with(ExecutorIOBlock.EXTENSOR_STATE, newExtensorState));
 
             //Envia as alterações para o servidor
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
@@ -87,10 +83,6 @@ public class ExecutorBlockController extends CottonCraftingController {
         circuit.unserialize(circuitStr);
 
         updateExtensorModels(circuit);
-
-        BlockEntity be = world.getBlockEntity(executorBlockPos);
-        if (be instanceof ExecutorBlockEntity)
-            ((ExecutorBlockEntity) be).setCircuit(circuit);
 
         //Envia para o servidor o pedido de início da execução
         PacketByteBuf packetByteBuf = new PacketByteBuf(Unpooled.buffer());

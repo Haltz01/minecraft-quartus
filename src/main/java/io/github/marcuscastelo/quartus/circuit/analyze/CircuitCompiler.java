@@ -5,10 +5,11 @@ import io.github.marcuscastelo.quartus.circuit.CircuitUtils;
 import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
 import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitInput;
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitOutput;
 import net.minecraft.block.Block;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.util.math.Direction;
 
 import java.util.*;
 
@@ -84,12 +85,14 @@ public class CircuitCompiler {
             // Caso "especial": distribuidor -> a saída de um outro gate gera mais de um fio para vários inputs (de outros gates)
             // Caso "especial": extensores -> aumentam a quantidade de inputs de um gate
             //TODO: resolver parâmetros redundantes
-            List<BlockPos> nextNodePositions = CircuitUtils.getConnectedNodesPos(world, circuit, component, nodePos);
+            List<CircuitUtils.ConnectedNodeInfo> nextNodePositions = CircuitUtils.getConnectedNodesPos(world, circuit, component, nodePos);
 
-            for (BlockPos nextNodePos : nextNodePositions) {
+            for (CircuitUtils.ConnectedNodeInfo nextNodeInfo : nextNodePositions) {
+                BlockPos nextNodePos = nextNodeInfo.bPos;
+
                 System.out.println("Vizinho: " + nextNodePos);
 
-                circuit.addLink(component, componentInPos.get(nextNodePos));
+                circuit.addLink(nextNodeInfo.AtoB, nextNodeInfo.BtoA, component, componentInPos.get(nextNodePos));
 
                 if (componentInPos.get(nextNodePos).hasOutputConnections()) {
                     System.out.println("Vizinho já explorado... ignorando!");
