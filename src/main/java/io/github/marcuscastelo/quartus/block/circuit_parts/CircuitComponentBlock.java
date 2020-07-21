@@ -10,6 +10,7 @@ import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
@@ -38,6 +39,11 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
     }
 
     @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
+        return VoxelShapes.cuboid(0f, 0.0f, 0f, 1f, 2/16f, 1f);
+    }
+
+    @Override
     public Direction getFacingDirection(BlockState state) {
         return state.get(FACING);
     }
@@ -61,11 +67,6 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return getDefaultState().with(FACING, ctx.getPlayerFacing());
-    }
-
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
-        return VoxelShapes.cuboid(0f, 0.0f, 0f, 1f, 2/16f, 1f);
     }
 
     @Override
