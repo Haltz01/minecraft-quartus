@@ -27,11 +27,11 @@ public interface QuartusInGameComponent {
 	 * Assinatura do método que retorna uma lista com as direções de cada Input da sequência
 	 * @return	->	Lista com direções de cada Input
 	 */
-	List<Direction> getPossibleInputDirections();
+	List<Direction> getPossibleInputDirections(Direction facingDirection);
 	
 	/**
 	 * Assinatura do método que retorna uma lista com as direções de cada Output da sequência
 	 * @return	->	Lista com direções de cada Output
 	 */
-    List<Direction> getPossibleOutputDirections();
+    List<Direction> getPossibleOutputDirections(Direction facingDirection);
 }

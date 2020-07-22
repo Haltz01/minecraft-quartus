@@ -10,8 +10,6 @@ import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
@@ -19,14 +17,12 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+
+import static io.github.marcuscastelo.quartus.util.DirectionUtils.HORIZONTAL_DIRECTIONS;
 
 public class CircuitUtils {
-    public static final List<Direction> HORIZONTAL_DIRECTIONS = Arrays.asList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
-
     public static class ConnectedNodeInfo {
         public final Direction AtoB, BtoA;
         public final BlockPos bPos;
@@ -101,8 +97,7 @@ public class CircuitUtils {
             Block targetBlock = targetBlockState.getBlock();
             Direction targetFacingDir = targetBlockState.get(Properties.HORIZONTAL_FACING);
             if (targetBlock instanceof QuartusInGameComponent) {
-                List<Direction> relativePossibleInputDirections = ((QuartusInGameComponent) targetBlock).getPossibleInputDirections();
-                List<Direction> absolutePossibleInputDirections = relativePossibleInputDirections.stream().map(direction -> getAbsoluteDirection(targetFacingDir, direction)).collect(Collectors.toList());
+                List<Direction> absolutePossibleInputDirections = ((QuartusInGameComponent) targetBlock).getPossibleInputDirections(targetFacingDir);
                 if (absolutePossibleInputDirections.contains(absoluteDirectionOutOfOriginNode.getOpposite())) {
                     Direction relativeDirectionOutOfTargetNode = getRelativeDirection(targetFacingDir, absoluteDirectionOutOfTargetNode);
 

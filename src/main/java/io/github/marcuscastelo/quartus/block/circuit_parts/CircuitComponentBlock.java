@@ -1,6 +1,8 @@
 package io.github.marcuscastelo.quartus.block.circuit_parts;
 
+import com.google.common.collect.ImmutableList;
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
+import io.github.marcuscastelo.quartus.circuit.CircuitUtils;
 import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
 import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
 import net.minecraft.block.Block;
@@ -23,6 +25,7 @@ import net.minecraft.world.WorldView;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Classe que implementa as propriedades básicas dos blocos adicionados
@@ -133,15 +136,15 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 	 * Método que retorna uma lista com as direções dos Inputs de um componente
 	 */
     @Override
-    public List<Direction> getPossibleInputDirections() {
-        return componentInfo.directionInfo.possibleInputDirections;
+    public List<Direction> getPossibleInputDirections(Direction facingDirection) {
+		return componentInfo.directionInfo.possibleInputDirections.stream().map(direction -> CircuitUtils.getAbsoluteDirection(facingDirection, direction)).collect(Collectors.toList());
     }
 
 	/**
 	 * Método que retorna uma lista com as direções dos Outputs de um componente
 	 */
     @Override
-    public List<Direction> getPossibleOutputDirections() {
-        return componentInfo.directionInfo.possibleOutputDirections;
+    public List<Direction> getPossibleOutputDirections(Direction facingDirection) {
+		return componentInfo.directionInfo.possibleOutputDirections.stream().map(direction -> CircuitUtils.getAbsoluteDirection(facingDirection, direction)).collect(Collectors.toList());
     }
 }
