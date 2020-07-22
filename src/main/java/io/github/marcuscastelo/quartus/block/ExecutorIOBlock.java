@@ -14,7 +14,33 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
+/**
+ * Classe dos blocos de Input e Output (entrada e saída) do executor
+ * Por meio dele será possível colocar as entradas do circuito
+ * Do lado oposto das entradas estarão as saídas do circuito
+ */
 public class ExecutorIOBlock extends HorizontalFacingBlock {
+
+	/**
+	 * Construtor padrão da Classe ExecutorIOBlock
+	 * Setta as características do bloco para não opaco (evita bugs de visibilidade através do bloco)
+	 * Por padrão, o bloco é inicialmente não energizada (não apresenta saída igual a 1 - verdadeiro)
+	 */
+    public ExecutorIOBlock() {
+        super(Settings.of(Material.PART).nonOpaque());
+        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH).with(EXTENSOR_STATE, ExecutorIOState.VOID).with(POWERED, false));
+	}
+	
+	/**
+	 * Método que define qual tipo de bloco será o ExecutorIOBlock
+	 * O sprite (aparência) do bloco muda conforme seu tipo
+	 * Possibilidades:
+	 * 					- VOID - bloco vazio
+	 * 					- VOID_END - bloco vazio e final da sequência
+	 * 					- INPUT - Contém somente entrada
+	 * 					- OUTPUT - Contém somente saída
+	 * 					- IO - Contém entrada e saída
+	 */
     public enum ExecutorIOState implements StringIdentifiable {
         VOID("void"), VOID_END("void_end"), INPUT("input"), OUPUT("output"), IO("io");
 
@@ -29,14 +55,18 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
         }
     }
 
+	//Variáveis auxiliares para definição dos estados dos blocos IO (Input Output)
     public static final EnumProperty<ExecutorIOState> EXTENSOR_STATE = EnumProperty.of("extensor_state", ExecutorIOState.class);
     public static final BooleanProperty POWERED = Properties.POWERED;
 
-    public ExecutorIOBlock() {
-        super(Settings.of(Material.PART).nonOpaque());
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH).with(EXTENSOR_STATE, ExecutorIOState.VOID).with(POWERED, false));
-    }
 
+	/**
+	 * Método que configura o tipo de saída (tipo de informação no jogo) do bloco
+	 * No jogo, redstone é utilizado como mecânica para simulação de presença de corrente (1 ou verdadeiro)
+	 * Se a saída do bloco for verdadeiro/1, a redstone na saída acenderá
+	 * @param state
+	 * @return
+	 */
     @Override
     public boolean emitsRedstonePower(BlockState state) {
         return true;
@@ -56,11 +86,24 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
         return state.get(POWERED)? 15: 0;
     }
 
+	/**
+	 * Método que define as propriedades que o bloco designado terá.
+	 * @param builder	->	Especifica que o bloco em questão terá as propriedades
+	 * 						de FACING (orientação), EXTENSOR_STATE (void, input, input/output, etc)
+	 * 						e se está POWERED (energizado)
+	 */
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING, EXTENSOR_STATE, POWERED);
     }
 
+	/**
+	 * Método que retorna o estado do bloco (blockState) quando posicionado no mundo.
+	 * No caso do ExecutorIOBlock, ele se encontrará sempre à direita do bloco Executor
+	 * A verificação é feita verificando o bloco da esquerda (deve ser um Executor ou outro ExecutorIOBlock)
+	 * @param ctx	->	Contexto do bloco posicionado
+	 * @return	->	Retorna o BlockState 
+	 */
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         Direction futureFacing = ctx.getPlayerFacing().getOpposite();
@@ -75,7 +118,18 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
         return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(EXTENSOR_STATE, ExecutorIOState.VOID_END);
     }
 
-    //Define o comportamento de mudança de estado e propagação de informação pela corrente de ExecutorIO
+
+	/**
+	 * Define o comportamento de mudança de estado e propagação de informação pela corrente de ExecutorIO
+	 * Faz a verificação dos blocos vizinho e determina o estado de cada bloco da sequência
+	 * Caso a sequência seja desfeita (ExecutorIOBlock ou Executor destruído ou movido), todos blocos à direita serão destruídos
+	 * @param state
+	 * @param world
+	 * @param pos
+	 * @param previousBlock
+	 * @param neighborPos
+	 * @param moved
+	 */
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block previousBlock, BlockPos neighborPos, boolean moved) {
         //Obtém informações do blockstate atual
