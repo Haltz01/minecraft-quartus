@@ -9,6 +9,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
@@ -20,6 +22,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 /**
  * Classe ExecutorBlock, que define o bloco que simula a execução do circuito montado
@@ -130,6 +134,17 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
             super.onBlockRemoved(state, world, pos, newState, moved);
         }
     }
+
+	/**
+	 * Método que retorna uma lista de itens que foram derrubados
+	 * @param state	->	Estado do bloco
+	 * @param builder	->	Builder que configura as propriedades dos blocos
+	 * @return	->	Lista com os itens a serem derrubados
+	 */
+	@Override
+	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+		return Arrays.asList(new ItemStack(state.getBlock().asItem()));
+	}
 
 	/**
 	 * Método chamado quando um outro bloco é posicionado/alterado nas posições vizinhas do ExecutorBlock

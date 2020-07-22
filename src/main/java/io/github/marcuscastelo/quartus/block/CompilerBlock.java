@@ -13,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
@@ -23,6 +24,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Classe que implementa o bloco Compilador.
@@ -149,7 +153,7 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
-			//Se houve um FloppyDisk, derruba-o no mundo
+			//Se houver um FloppyDisk, derruba-o no mundo
             if (blockEntity != null)
                 ItemScatterer.spawn(world, pos, (Inventory)blockEntity);
 
@@ -160,33 +164,13 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
     }
 
 	/**
-	 * Método auxiliar para copiar um bloco CompilerBlock já posicionado no mundo.
-	 * Caso o bloco já contenha um FloppyDisk (disquete) dentro,
-	 * copia o disquete e seu circuito para a BlockEntity
-	 * do compilador presente no inventário do jogador.
-	 * Quando posicionar o compilador copiado no mundo, já conterá o disquete
-	 * e o circuito do bloco original (copiado).
-	 * @param world	->	Mundo em que está sendo jogado
-	 * @param pos	->	Posição do bloco no mundo
-	 * @param state	->	Identifica o estado do bloco (energizado, dureza, etc)
-	 * @return	->	ItemStack copiado do mundo
+	 * Método que retorna uma lista de itens que foram derrubados
+	 * @param state	->	Estado do bloco
+	 * @param builder	->	Builder que configura as propriedades dos blocos
+	 * @return	->	Lista com os itens a serem derrubados
 	 */
-    @Override
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        if (!(world instanceof World)) {
-            return new ItemStack(this);
-        }
-        Inventory inv = QuartusCottonGUIs.getBlockInventory((World)world, pos);
-        ItemStack floppyIS = inv.getInvStack(0);
-
-        if (floppyIS.isEmpty()) return new ItemStack(this);
-
-        ItemStack compilerIS = new ItemStack(this, 1);
-        CompoundTag floppyTag = floppyIS.getTag();
-        compilerIS.getOrCreateTag().putBoolean("hasFloppy", true);
-        if (floppyTag == null) return compilerIS;
-
-        compilerIS.getOrCreateTag().put("floppyTag", floppyTag);
-        return compilerIS;
-    }
+	@Override
+	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+		return Arrays.asList(new ItemStack(state.getBlock().asItem()));
+	}
 }

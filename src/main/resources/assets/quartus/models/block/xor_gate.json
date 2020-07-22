@@ -11,7 +11,8 @@
 		"20": "quartus:block/xor_gate/orsymbolfrombottom6",
 		"21": "quartus:block/xor_gate/orsymbolfrombottom7",
 		"22": "quartus:block/xor_gate/sides",
-		"23": "quartus:block/xor_gate/upperbase"
+		"23": "quartus:block/xor_gate/upperbase",
+		"particle": "quartus:block/xor_gate/upperbase"
 	},
 	"elements": [
 		{
