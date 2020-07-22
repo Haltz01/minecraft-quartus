@@ -29,6 +29,7 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.explosion.Explosion;
 import org.apache.http.impl.conn.Wire;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -71,15 +72,19 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
         String message = "Atualizando " + currPos.toShortString() + ": ";
 
         //Se o fio atual já possui duas conexões, não precisa atualizar
-        if (WireConnector.getWireEstabilishedConnections(world, currPos).size() == 2) {
-            System.out.println(message + "FULL");
-            return;
-        }
 
-        List<BlockPos> connectableQuartusBlocksPosition = WireConnector.findConnectableQuartusBlocks(world, currPos, 2);
 
-        System.out.println(message + "Connections: " + connectableQuartusBlocksPosition);
-        WireConnector.connectTo(world, currPos, connectableQuartusBlocksPosition);
+        List<BlockPos> alreadyEstabilishedConnections = WireConnector.getWireEstabilishedConnections(world, currPos);
+        if (alreadyEstabilishedConnections.size() == 2) return;
+
+        int freeConnectionSlotsCount = 2 - alreadyEstabilishedConnections.size();
+
+        List<BlockPos> newConnectionList = new ArrayList<>();
+        newConnectionList.addAll(alreadyEstabilishedConnections);
+        newConnectionList.addAll(WireConnector.findConnectableQuartusBlocks(world, currPos, alreadyEstabilishedConnections, freeConnectionSlotsCount));
+
+        System.out.println(message + "Connections: " + newConnectionList);
+        WireConnector.connectTo(world, currPos, newConnectionList);
 
         //Atualiza os fios que podem estar em baixo ou em cima para detectar a existência desse novo fio (a não ser que isso já tenha acontecido: flag END_PORTAL)
         if (block != Blocks.END_PORTAL){
@@ -103,6 +108,8 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
         return Arrays.asList(new ItemStack(state.getBlock().asItem()));
     }
 
+
+    //TODO: arrumar de acordo com as novas mudanças
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
         if (state.get(TURN)) {
@@ -153,6 +160,7 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
         List<BlockPos> oldConnections = WireConnector.getWireEstabilishedConnections(world, pos);
         world.setBlockState(pos, newState, flagToAvoidEndlessLoop);
         WireConnector.updateUnnaturalNeighborsIfWires(world, pos, oldConnections);
+        System.out.println(oldConnections);
     }
 
 

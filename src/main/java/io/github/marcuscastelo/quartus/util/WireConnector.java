@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class WireConnector {
@@ -224,12 +225,9 @@ public class WireConnector {
     }
 
     public static void updateUnnaturalNeighborsIfWires(World world, BlockPos mainWirePos, List<BlockPos> otherWiresPos) {
-        Pair<Direction, Direction> verticalDirections = getConnectionVerticalDirections(mainWirePos, otherWiresPos);
-
-        //Se o wire não estiver no mesmo nível, atualize
-        if (verticalDirections.getLeft() != null)
+        if (otherWiresPos.size() > 0)
             world.updateNeighbor(otherWiresPos.get(0), Blocks.END_PORTAL, mainWirePos);
-        if (verticalDirections.getRight() != null)
+        if (otherWiresPos.size() > 1)
             world.updateNeighbor(otherWiresPos.get(1), Blocks.END_PORTAL, mainWirePos);
     }
 
@@ -291,11 +289,15 @@ public class WireConnector {
         return findFirstQuartusBlockFromWireInDirection(world, mainWirePos, directionToGo, canGoUp);
     }
 
-    public static List<BlockPos> findConnectableQuartusBlocks(World world, BlockPos mainWirePos, int maxCount) {
+    public static List<BlockPos> findConnectableQuartusBlocks(World world, BlockPos mainWirePos, List<BlockPos> existentConnectionsPos, int maxCount) {
         List<BlockPos> connectionsPos = new ArrayList<>();
 
         for (Direction horizontalDir: DirectionUtils.HORIZONTAL_DIRECTIONS) {
             BlockPos foundBlockPos = findFirstQuartusBlockFromWireInDirection(world, mainWirePos, horizontalDir);
+
+            //Se bloco encontrado já for uma conexão existente, procure outra
+            if (existentConnectionsPos.contains(foundBlockPos)) continue;
+
             if (foundBlockPos == null) continue;
 
             BlockState foundBlockState = world.getBlockState(foundBlockPos);
