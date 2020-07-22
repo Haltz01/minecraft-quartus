@@ -31,9 +31,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 //TODO: traduzir mensagens de erro no lang
+/**
+ * Classe que define o BlockEntity do Executor
+ */
 public class ExecutorBlockEntity extends BlockEntity implements ImplementedInventory {
+	//Variável que define o tick/clock do executor
     public static final int EXECUTION_DELAY = 2; // cada tick equivale a 1/20 segundos
 
+	//Variáveis auxiliares
     boolean executing = false;
     QuartusCircuit currentCircuit = null;
     DefaultedList<ItemStack> inventoryItems;
@@ -42,21 +47,37 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
     List<BlockPos> inputsPos = new ArrayList<>();
     List<BlockPos> outputsPos = new ArrayList<>();
 
+	/**
+	 * Construtor padrão da classe ExecutorBlockEntity
+	 */
     public ExecutorBlockEntity() {
         super(QuartusBlockEntities.EXECUTOR_BLOCK_ENTITY_TYPE);
         this.inventoryItems = DefaultedList.ofSize(1, ItemStack.EMPTY);
     }
 
+	/**
+	 * Método que setta a localização do blockEntity a uma posição no mundo
+	 * @param world
+	 * @param pos
+	 */
     @Override
     public void setLocation(World world, BlockPos pos) {
         super.setLocation(world, pos);
     }
 
+	/**
+	 * Método que setta itens ao BlockEntity
+	 */
     @Override
     public DefaultedList<ItemStack> getItems() {
         return inventoryItems;
     }
 
+	/**
+	 * Método que atribui itens a uma tag e retorna os dados
+	 * @param tag	->	Tag a ser atribuída
+	 * @return	->	Tag/dados armazenados
+	 */
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         tag.putBoolean("executing", executing);
@@ -64,6 +85,10 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         return super.toTag(tag);
     }
 
+	/**
+	 * Método que retorna dados a partir de uma dada tag
+	 * @param tag	->	Tag que recuperará os dados
+	 */
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
