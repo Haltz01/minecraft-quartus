@@ -4,6 +4,7 @@ import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -13,6 +14,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Classe dos blocos de Input e Output (entrada e saída) do executor
@@ -119,6 +123,16 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
         return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(EXTENSOR_STATE, ExecutorIOState.VOID_END);
     }
 
+    /**
+     * Método que retorna uma lista de itens que foram derrubados
+     * @param state	->	Estado do bloco
+     * @param builder	->	Builder que configura as propriedades dos blocos
+     * @return	->	Lista com os itens a serem derrubados
+     */
+    @Override
+    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+        return Arrays.asList(new ItemStack(state.getBlock().asItem()));
+    }
 
 	/**
 	 * Define o comportamento de mudança de estado e propagação de informação pela corrente de ExecutorIO
