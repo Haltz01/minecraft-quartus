@@ -72,6 +72,7 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
         return true;
     }
 
+	//TODO: verificar as duas funcoes abaixo
     @Override
     public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
         Direction outputDir = state.get(FACING);
@@ -123,12 +124,12 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
 	 * Define o comportamento de mudança de estado e propagação de informação pela corrente de ExecutorIO
 	 * Faz a verificação dos blocos vizinho e determina o estado de cada bloco da sequência
 	 * Caso a sequência seja desfeita (ExecutorIOBlock ou Executor destruído ou movido), todos blocos à direita serão destruídos
-	 * @param state
-	 * @param world
-	 * @param pos
-	 * @param previousBlock
-	 * @param neighborPos
-	 * @param moved
+	 * @param state	->	Identifica o estado do bloco (energizado, dureza, etc)
+	 * @param world	->	Mundo em que está sendo jogado
+	 * @param pos	->	Posição do bloco no mundo
+	 * @param previousBlock	->	Bloco anterior ao analisado
+	 * @param neighborPos	->	Posição do bloco vizinho
+	 * @param moved	->	Boolean que verifica se o bloco foi movido ou de fato destruído
 	 */
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block previousBlock, BlockPos neighborPos, boolean moved) {
