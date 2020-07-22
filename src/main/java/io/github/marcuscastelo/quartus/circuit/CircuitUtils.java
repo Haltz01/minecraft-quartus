@@ -8,6 +8,7 @@ import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitInput;
 import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitOutput;
 import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
+import io.github.marcuscastelo.quartus.util.WireConnector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.Properties;
@@ -15,6 +16,7 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.apache.http.impl.conn.Wire;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +37,8 @@ public class CircuitUtils {
     }
 
     //Segue os fios até o próximo nó
-    public static List<ConnectedNodeInfo> getConnectedNodesPos(World world, QuartusCircuit circuit, QuartusCircuitComponent originNode, BlockPos originPos) {
-        List<ConnectedNodeInfo> connectedNodesPos = new ArrayList<>();
+    public static List<ConnectedNodeInfo> getConnectedNodesInfo(World world, QuartusCircuit circuit, QuartusCircuitComponent originNode, BlockPos originPos) {
+        List<ConnectedNodeInfo> connectedNodesInfo = new ArrayList<>();
 
         //Para cada direção de output do nó origen
         for (Direction relativeDirectionOutOfOriginNode: originNode.getPossibleOutputDirections()) {
@@ -65,12 +67,6 @@ public class CircuitUtils {
                 //Se o vizinho for um fio, siga o fio e obtenha a posição do nó em sua extremidade
                 Pair<BlockPos, Direction> throughWireNodeInfo = getTransportDestinationInfo(world, immediateNeighborPos, absoluteDirectionOutOfOriginNode);
 
-                //TODO: definir o que isso significa (esqueci :P)
-                if (throughWireNodeInfo == null) {
-                    System.out.println("Fios mal conectados foram encontrados na linha " + immediateNeighborPos.toShortString());
-                    continue;
-                }
-
                 BlockPos foundBlockPos = throughWireNodeInfo.getLeft();
                 absoluteDirectionOutOfTargetNode = throughWireNodeInfo.getRight();
 
@@ -93,49 +89,51 @@ public class CircuitUtils {
 
             //Nenhum nó nessa direção
             if (targetPos == null) continue;
+
             BlockState targetBlockState = world.getBlockState(targetPos);
             Block targetBlock = targetBlockState.getBlock();
             Direction targetFacingDir = targetBlockState.get(Properties.HORIZONTAL_FACING);
             if (targetBlock instanceof QuartusInGameComponent) {
-                List<Direction> absolutePossibleInputDirections = ((QuartusInGameComponent) targetBlock).getPossibleInputDirections(targetFacingDir);
-                if (absolutePossibleInputDirections.contains(absoluteDirectionOutOfOriginNode.getOpposite())) {
+                List<Direction> absolutePossibleInputDirectionsForTarget = ((QuartusInGameComponent) targetBlock).getPossibleInputDirections(targetFacingDir);
+                if (absolutePossibleInputDirectionsForTarget.contains(absoluteDirectionOutOfTargetNode)) {
                     Direction relativeDirectionOutOfTargetNode = getRelativeDirection(targetFacingDir, absoluteDirectionOutOfTargetNode);
 
-                    connectedNodesPos.add(new ConnectedNodeInfo(relativeDirectionOutOfOriginNode, relativeDirectionOutOfTargetNode, targetPos));
+                    System.out.println(relativeDirectionOutOfOriginNode + " --- " + relativeDirectionOutOfTargetNode + " --- " + targetPos);
+                    connectedNodesInfo.add(new ConnectedNodeInfo(relativeDirectionOutOfOriginNode, relativeDirectionOutOfTargetNode, targetPos));
                 } else {
-                    System.out.println("Aproximando virado para " + absoluteDirectionOutOfOriginNode);
+                    System.out.println("Saindo do node, conectei em " + absoluteDirectionOutOfTargetNode);
                     System.out.println("Node olhando para " + targetFacingDir);
                     System.out.println(targetPos.toString() + " aproximado por direção ruim");
                 }
             }
         }
-        return connectedNodesPos;
+        return connectedNodesInfo;
     }
 
-    private static Pair<BlockPos, Direction> getTransportDestinationInfo(World world, BlockPos initialPos, Direction initialApproach) {
-        Block currBlock = world.getBlockState(initialPos).getBlock();
+    private static Pair<BlockPos, Direction> getTransportDestinationInfo(World world, BlockPos initialPos, Direction initialDirection) {
         BlockPos currPos = initialPos;
-        Direction lastApproachDir = initialApproach;
-        while (currBlock instanceof QuartusTransportInfoProvider) {
-            try {
-                lastApproachDir = ((QuartusTransportInfoProvider) currBlock).nextDirection(world, currPos, lastApproachDir);
-            } catch (Exception e) {
-                System.out.println("Exception em: " + currPos);
-                e.printStackTrace();
-                return new Pair<>(currPos, initialApproach);
+        Direction lastDirection;
+        Direction currDirection = WireConnector.getNextDirection(world, currPos, initialDirection);;
+
+        while (true) {
+            System.out.println(currPos.toShortString());
+            lastDirection = currDirection;
+
+            //Se chegar num fio não recíproco ou em um beco sem saída
+            currPos = WireConnector.navigateWire(world, currPos, currDirection);
+            if (currPos == null) break;
+
+            //Se o bloco atual não for mais um fio, encerrar
+            if (!(world.getBlockState(currPos).getBlock() instanceof QuartusTransportInfoProvider)) break;
+
+            //Se estiver em um fio que não reconhece a direção informada (não deveria acontecer, pois o if acima checa)
+            currDirection = WireConnector.getNextDirection(world, currPos, currDirection);
+            if (currDirection == null) {
+                throw new RuntimeException("There is something wrong that is causing navigateWire to allow perpendicular navigation");
             }
-            if (lastApproachDir == null) return null;
-
-            currPos = currPos.offset(lastApproachDir);
-
-            currBlock = world.getBlockState(currPos).getBlock();
         }
 
-        return new Pair<>(currPos, lastApproachDir);
-    }
-
-    public static List<Direction> getHorizontalDirections() {
-        return HORIZONTAL_DIRECTIONS;
+        return new Pair<>(currPos, lastDirection.getOpposite());
     }
 
     ///TEMP TODO: REMOVE

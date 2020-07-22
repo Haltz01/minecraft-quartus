@@ -6,10 +6,8 @@ import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
 import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitInput;
 import net.minecraft.block.Block;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.util.math.Direction;
 
 import java.util.*;
 
@@ -44,8 +42,6 @@ public class CircuitCompiler {
         endY = Math.max(startPos.getY(), endPos.getY());
         endZ = Math.max(startPos.getZ(), endPos.getZ());
 
-        if (startY != endY) throw new UnsupportedOperationException("Só se trabalha com y's iguais por enquanto");
-
         for (int x = startX; x <= endX; x++) {
             for (int z = startZ; z <= endZ; z++) {
                 for (int y = startY; y <= endY; y++) {
@@ -63,6 +59,7 @@ public class CircuitCompiler {
         }
     }
 
+    //TODO: tratar quando o circuito sai pra fora do tamanho máximo (dá NullPointerException agora -> circuit.addLink(nextNodeInfo.AtoB, nextNodeInfo.BtoA, component, componentInPos.get(nextNodePos)) );
     private void exploreCircuit() {
         while (explorePoll.peek() != null) {
             BlockPos nodePos = explorePoll.poll();
@@ -85,13 +82,14 @@ public class CircuitCompiler {
             // Caso "especial": distribuidor -> a saída de um outro gate gera mais de um fio para vários inputs (de outros gates)
             // Caso "especial": extensores -> aumentam a quantidade de inputs de um gate
             //TODO: resolver parâmetros redundantes
-            List<CircuitUtils.ConnectedNodeInfo> nextNodePositions = CircuitUtils.getConnectedNodesPos(world, circuit, component, nodePos);
+            List<CircuitUtils.ConnectedNodeInfo> nextNodePositions = CircuitUtils.getConnectedNodesInfo(world, circuit, component, nodePos);
 
             for (CircuitUtils.ConnectedNodeInfo nextNodeInfo : nextNodePositions) {
                 BlockPos nextNodePos = nextNodeInfo.bPos;
 
                 System.out.println("Vizinho: " + nextNodePos);
 
+                System.out.println(nextNodeInfo.AtoB + " --- " + nextNodeInfo.BtoA + " ::: " + component + " --- " + componentInPos.get(nextNodePos));
                 circuit.addLink(nextNodeInfo.AtoB, nextNodeInfo.BtoA, component, componentInPos.get(nextNodePos));
 
                 if (componentInPos.get(nextNodePos).hasOutputConnections()) {

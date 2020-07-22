@@ -8,6 +8,7 @@ import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.circuit.analyze.CircuitCompiler;
 import io.github.marcuscastelo.quartus.network.QuartusFloppyDiskUpdateC2SPacket;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
+import io.github.marcuscastelo.quartus.util.DirectionUtils;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
@@ -40,8 +41,8 @@ public class CompilerBlockController extends CottonCraftingController {
     //TODO: support areas bigger than 10x10
     private QuartusCircuit compileCircuit() {
         Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
-        BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), 5).offset(facingDir.getOpposite(),10);
-        BlockPos endPos = compilerBlockPosition.offset(facingDir.rotateYCounterclockwise(), 5);
+        BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), 5).offset(facingDir.getOpposite(),10).offset(Direction.DOWN,5);
+        BlockPos endPos = compilerBlockPosition.offset(facingDir.rotateYCounterclockwise(), 5).offset(Direction.UP, 5);
 
         System.out.println("Compiling from " + startPos + " to " + endPos);
         CircuitCompiler compiler = new CircuitCompiler(world, startPos, endPos);

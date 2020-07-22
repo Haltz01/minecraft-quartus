@@ -272,8 +272,8 @@ public class WireConnector {
         Direction facingDirection = mainWireBs.get(Properties.HORIZONTAL_FACING);
         Direction auxDirection = getAuxDirection(mainWireBs);
 
-        if (lastDirection == facingDirection) return auxDirection;
-        else if (lastDirection == auxDirection) return facingDirection;
+        if (lastDirection.getOpposite() == facingDirection) return auxDirection;
+        else if (lastDirection.getOpposite() == auxDirection) return facingDirection;
         else return null;
     }
 
