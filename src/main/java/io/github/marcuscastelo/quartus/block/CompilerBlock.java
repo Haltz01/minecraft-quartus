@@ -89,8 +89,9 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient) return ActionResult.SUCCESS;
+		//TODO: verificar se não foi sobreposto peo cliente por outro bloco (causa crash)
 
-        ContainerProviderRegistry.INSTANCE.openContainer(Quartus.id("compiler"), player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
+		ContainerProviderRegistry.INSTANCE.openContainer(Quartus.id("compiler"), player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
 
         return ActionResult.SUCCESS;
     }
