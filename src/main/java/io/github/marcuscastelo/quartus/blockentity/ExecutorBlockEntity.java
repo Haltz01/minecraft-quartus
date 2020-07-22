@@ -30,7 +30,6 @@ import net.minecraft.util.math.Direction;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: traduzir mensagens de erro no lang
 /**
  * Classe que define o BlockEntity do Executor
  */
