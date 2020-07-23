@@ -11,7 +11,11 @@ import net.minecraft.world.World;
 
 import java.util.*;
 
+/**
+ * Classe que define o CircuitCompiler - Compilador do circuito
+ */
 public class CircuitCompiler {
+	//Variáveis que auxiliam no mapeamento do circuito
     BlockPos startPos, endPos;
     QuartusCircuit circuit;
     World world;
@@ -19,6 +23,12 @@ public class CircuitCompiler {
     Queue<BlockPos> explorePoll;
     Map<BlockPos, QuartusCircuitComponent> componentInPos;
 
+	/**
+	 * Construtor padrão da classe CircuitCompiler
+	 * @param world	->	Mundo em que está sendo jogado
+	 * @param startPos	->	Posição inicial para fazer o escaneamento
+	 * @param endPos	->	Posição final para fazer o escaneamento
+	 */
     public CircuitCompiler(World world, BlockPos startPos, BlockPos endPos) {
         this.startPos = startPos;
         this.endPos = endPos;
@@ -28,20 +38,26 @@ public class CircuitCompiler {
         this.componentInPos = new HashMap<>();
     }
 
+	/**
+	 * Método auxiliar que escaneia o circuito, mapeando os componentes encontrados
+	 * e adicionando-os em uma fila
+	 */
     private void scanCircuitNodes() {
         System.out.println("[Compile] Começando compilação");
-
+		//Define o começo do escaneamento
         int startX, startY, startZ;
         // TODO: Mudar valores iniciais e finais de X, Y e Z -> devem sempre começar da mesma posição (canto "superior" esquerdo do circuito - olhando para o circuito)
         startX = Math.min(startPos.getX(), endPos.getX());
         startY = Math.min(startPos.getY(), endPos.getY());
         startZ = Math.min(startPos.getZ(), endPos.getZ());
-
+		
+		//Define as coordenadas finais para o escaneamento
         int endX, endY, endZ;
         endX = Math.max(startPos.getX(), endPos.getX());
         endY = Math.max(startPos.getY(), endPos.getY());
         endZ = Math.max(startPos.getZ(), endPos.getZ());
 
+		//Faz o escaneamento de acordo com o início e o fim calculados
         for (int x = startX; x <= endX; x++) {
             for (int z = startZ; z <= endZ; z++) {
                 for (int y = startY; y <= endY; y++) {
@@ -60,7 +76,10 @@ public class CircuitCompiler {
     }
 
     //TODO: tratar quando o circuito sai pra fora do tamanho máximo (dá NullPointerException agora -> circuit.addLink(nextNodeInfo.AtoB, nextNodeInfo.BtoA, component, componentInPos.get(nextNodePos)) );
-    private void exploreCircuit() {
+	/**
+	 * Método auxiliar que explora o circuito mapeado pelo scanCircuitNodes
+	 */
+	private void exploreCircuit() {
         while (explorePoll.peek() != null) {
             BlockPos nodePos = explorePoll.poll();
             System.out.println("Explorando a pos " + nodePos.toString());
@@ -103,6 +122,11 @@ public class CircuitCompiler {
         System.out.println("[Explore] Exploracão completa!");
     }
 
+	/**
+	 * Método que faz a compilação do circuito, escaneando-o, mapeando seus componentes
+	 * e retornando o circuito já estudado
+	 * @return	->	Circuito compilado
+	 */
     public QuartusCircuit compile() {
         scanCircuitNodes();
         exploreCircuit();
