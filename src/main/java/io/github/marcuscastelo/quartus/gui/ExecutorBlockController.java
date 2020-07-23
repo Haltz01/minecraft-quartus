@@ -24,9 +24,20 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
+/**
+ * Classe que controla o GUI (Graphical User Interface - Interface Gráfico de Usuário)
+ * do bloco Executor
+ */
 public class ExecutorBlockController extends CottonCraftingController {
+	//Variável que armazena a posição do bloco Executor
     BlockPos executorBlockPos;
 
+	/**
+	 * Método que atualiza os extensores I/O do Executor
+	 * Recebe um pacote de dados, referente ao circuito
+	 * e atribui a quantidade correta de inputs e outputs
+	 * para a sequência de blocos à direita do Executor
+	 */
     private void updateExtensorModels(QuartusCircuit circuit) {
         int nInputs = circuit.getInputCount();
         int nOutputs = circuit.getOutputCount();
@@ -61,6 +72,10 @@ public class ExecutorBlockController extends CottonCraftingController {
         }
     }
 
+	/**
+	 * Método que faz a execução do circuito fornecido ao executor,
+	 * mediante ao clique no botão da interface do executor
+	 */
     private void onExecuteButtonClicked() {
         ItemStack stack = blockInventory.getInvStack(0);
         assert MinecraftClient.getInstance().player != null;
@@ -89,6 +104,11 @@ public class ExecutorBlockController extends CottonCraftingController {
 
     }
 
+	/**
+	 * Construtor padrão da classe ExecutorBlockController
+	 * Adiciona uma interface ao compilador para facilitar o uso
+	 * e deixa mais intuitivo seu uso
+	 */
     public ExecutorBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos executorBlockPos) {
         super(RecipeType.CRAFTING, syncId, playerInventory, blockInventory, null);
         this.executorBlockPos = executorBlockPos;
