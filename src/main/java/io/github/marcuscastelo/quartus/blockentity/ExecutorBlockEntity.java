@@ -3,8 +3,8 @@ package io.github.marcuscastelo.quartus.blockentity;
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.ExecutorIOBlock;
 import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitInput;
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitOutput;
+import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
+import io.github.marcuscastelo.quartus.circuit.components.CircuitOutput;
 import io.github.marcuscastelo.quartus.circuit.components.executor.WorldInput;
 import io.github.marcuscastelo.quartus.circuit.components.executor.WorldOutput;
 import io.github.marcuscastelo.quartus.registry.QuartusBlockEntities;
@@ -12,20 +12,17 @@ import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import jdk.internal.jline.internal.Nullable;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,14 +175,14 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         }
 
         int inputPosInd = 0;
-        for (QuartusCircuitInput input: currentCircuit.getInputs()) {
+        for (CircuitInput input: currentCircuit.getInputs()) {
             int inputID = input.getID();
             WorldInput worldInput = new WorldInput(world, inputsPos.get(inputPosInd++), input);
             currentCircuit.setComponentAtID(inputID, worldInput);
         }
 
         int outputPosInd = 0;
-        for (QuartusCircuitOutput output: currentCircuit.getOutputs()) {
+        for (CircuitOutput output: currentCircuit.getOutputs()) {
             int outputID = output.getID();
             WorldOutput worldOutput = new WorldOutput(world, outputsPos.get(outputPosInd++), output);
             currentCircuit.setComponentAtID(outputID, worldOutput);

@@ -1,6 +1,6 @@
 package io.github.marcuscastelo.quartus.block;
 
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
+import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.Direction;
 
@@ -21,7 +21,7 @@ public interface QuartusInGameComponent {
 	 * Assinarura de método que retorna o componente do circuito
 	 * @return	->	Componente do circuito
 	 */
-	QuartusCircuitComponent getCircuitComponent();
+	CircuitComponent getCircuitComponent();
 	
 	/**
 	 * Assinatura do método que retorna uma lista com as direções de cada Input da sequência
