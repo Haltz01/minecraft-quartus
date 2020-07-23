@@ -17,10 +17,22 @@ import net.minecraft.util.math.Direction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe que permite a mapeação dos Outputs no circuito,
+ * possibilitando diferenciá-los pela posição e atribuir
+ * corretamente as mudanças e ordem de execução
+ */
 public class WorldOutput extends QuartusCircuitOutput {
+	//Variáveis auxiliares para mapear os Outputs
     public final World world;
     public final BlockPos pos;
 
+	/**
+	 * Construtor padrão, que liga o Output no circuito ao WorldOutput
+	 * @param world	->	Mundo que está sendo jogado
+	 * @param pos	->	Posição do bloco no mundo
+	 * @param inputImport	->	Input que está sendo enviado ao bloco do Input no mundo 'real'
+	 */
     public WorldOutput(World world, BlockPos pos, QuartusCircuitOutput outputImport) {
         super(outputImport.getID());
         this.world = world;
@@ -34,6 +46,9 @@ public class WorldOutput extends QuartusCircuitOutput {
         }
     }
 
+	/**
+	 * Método que faz o update do WorldOutput
+	 */
     @Override
     public void updateComponent(QuartusCircuit circuit) {
         //Propagate input -> output

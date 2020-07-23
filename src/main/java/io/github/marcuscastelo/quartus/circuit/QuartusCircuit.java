@@ -11,23 +11,36 @@ import net.minecraft.util.math.Direction;
 
 import java.util.*;
 
+/**
+ * Classe que implementa o circuito, serializando-o (tranformar em bytes para interpretar)
+ */
 public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, String> {
 
+	//Varáveis que mapeiam os Inputs(entradas), Outputs(saídas) e outros componentes
     private final Map<Integer, QuartusCircuitInput> circuitInputs;
     private final Map<Integer, QuartusCircuitOutput> circuitOutputs;
     private final Map<Integer, QuartusCircuitComponent> otherComponents;
 
+	//Construtor padrão da classe QuartusCircuit, adicionando os componentes ao circuito
     public QuartusCircuit(List<QuartusCircuitComponent> components) {
         this();
         for (QuartusCircuitComponent component: components) addComponent(component);
     }
 
+	//Construtor da classe QuartusCircuit, que cria HashMap's para Inputs, Outputs e componentes
     public QuartusCircuit() {
         circuitInputs = new HashMap<>();
         circuitOutputs = new HashMap<>();
         otherComponents = new HashMap<>();
     }
 
+	/**
+	 * Método que adiciona um componente ao circuito, de acordo com sua classificação:
+	 * - Input
+	 * - Output
+	 * - Componentes gerais
+	 * @param component	->	Componente a ser adicionado
+	 */
     public void addComponent(QuartusCircuitComponent component) {
         if (component instanceof QuartusCircuitInput)
             circuitInputs.putIfAbsent(component.getID(), (QuartusCircuitInput) component);
@@ -37,6 +50,11 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
             otherComponents.putIfAbsent(component.getID(), component);
     }
 
+	/**
+	 * Método que atrela um componente a um identificador ID
+	 * @param ID	->	identificador
+	 * @param component	->	Componente a ser atrelado
+	 */
     public void setComponentAtID(int ID, QuartusCircuitComponent component) {
         if (component == null) throw new IllegalArgumentException("Component shall not be null");
 
@@ -67,17 +85,25 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
         otherComponents.put(ID, component);
     }
 
+	//Métodos que retornam a quantidade de Inputs e Outputs identificados no circuito
     public int getInputCount() { return circuitInputs.size(); }
     public int getOutputCount() { return circuitOutputs.size(); }
 
+	//Métodos que armazenam em uma lista os Inputs e Outputs
     public List<QuartusCircuitInput> getInputs() { return new ArrayList<>(this.circuitInputs.values()); }
     public List<QuartusCircuitOutput> getOutputs() { return new ArrayList<>(this.circuitOutputs.values()); }
 
+	//Método que cria uma ligação entre dois componentes, de acordo com suas entradas e saídas
     public void addLink(Direction AtoBDirection, Direction BtoADirection, QuartusCircuitComponent compA, QuartusCircuitComponent compB) {
         compA.addConnection(AtoBDirection, new ComponentConnection(ComponentConnection.ConnectionType.OUTPUT, compB.toString(), BtoADirection));
         compB.addConnection(BtoADirection, new ComponentConnection(ComponentConnection.ConnectionType.INPUT, compA.toString(), AtoBDirection));
     }
 
+	/**
+	 * Método que retorna um componente de acordo com seu Identificador ID
+	 * @param ID	->	Identificador de referência
+	 * @return	->	Componente retornado de acordo com o parâmetro ID
+	 */
     @Nullable
     public QuartusCircuitComponent getComponentByID(int ID) {
         QuartusCircuitComponent component = otherComponents.getOrDefault(ID, null);
@@ -86,32 +112,44 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
         return component;
     }
 
+	//Método que atualiza a saída dos Inputs
+	//A saída do Input é a mesma que a sua entrada do mundo "real"
     private void updateInputs() {
         for (QuartusCircuitInput input: circuitInputs.values()) {
             input.updateComponent(this);
         }
     }
 
+	//Método que atualiza as saídas dos componentes
+	//De acordo com cada entrada e tipo de componente
+	//a saída calculada
     private void updateComponents() {
         for (QuartusCircuitComponent component: otherComponents.values()) {
             component.updateComponent(this);
         }
     }
 
+	//Método que atualiza a saída dos Outputs
+	//A saída para o mundo "real" é a mesma que a entrada
     private void updateOutputs() {
         for (QuartusCircuitOutput output: circuitOutputs.values()) {
             output.updateComponent(this);
         }
     }
 
+	//Método que faz a chamada de atualização para os componentes do circuito
     public void updateCircuit() {
         updateInputs();
         updateComponents();
         updateOutputs();
     }
 
+	/**
+	 * Método que serializa o circuito com base nos seus circuitos.
+	 * Retorna uma string, o circuito serializado, que indica
+	 * quais componentes ligam entre si
+	 */
     @Override
-    //TODO: change to match N->S format
     public String serialize() {
         StringBuilder str = new StringBuilder();
         Queue<QuartusCircuitComponent> componentsToPrint = new LinkedList<>(circuitInputs.values());
@@ -131,9 +169,13 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
     }
 
 
-
+	/**
+	 * Método reverso da Unserialize.
+	 * A partir de uma string serializada, faz os splits
+	 * e de acordo com as strings resultantes identifica
+	 * os componentes e os liga
+	 */
     @Override
-    //TODO: change to match N->S format
     public void unserialize(String serial) {
         Map<Integer, QuartusCircuitComponent> initializedGates = new HashMap<>();
         String[] lines = serial.split("\n");
@@ -179,6 +221,9 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
         }
     }
 
+	/**
+	 * Método que retorna a string serializada do circuito
+	 */
     @Override
     public String toString() {
         return serialize();
