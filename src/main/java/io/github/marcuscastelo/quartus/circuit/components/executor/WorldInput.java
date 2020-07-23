@@ -1,12 +1,9 @@
 package io.github.marcuscastelo.quartus.circuit.components.executor;
 
-import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.circuit.ComponentConnection;
-import io.github.marcuscastelo.quartus.circuit.QuartusBusInfo;
+import io.github.marcuscastelo.quartus.circuit.QuartusBus;
 import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitInput;
-import net.minecraft.block.BlockState;
-import net.minecraft.state.property.Properties;
+import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -14,11 +11,23 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Map;
 
-public class WorldInput extends QuartusCircuitInput {
+/**
+ * Classe que permite a mapeação dos Inputs no circuito,
+ * possibilitando diferenciá-los pela posição e atribuir
+ * corretamente as mudanças e ordem de execução
+ */
+public class WorldInput extends CircuitInput {
+	//Variáveis auxiliares para mapear os Inputs
     public final World world;
     public final BlockPos pos;
 
-    public WorldInput(World world, BlockPos pos, QuartusCircuitInput inputImport) {
+	/**
+	 * Construtor padrão, que liga o Input no circuito ao WorldInput
+	 * @param world	->	Mundo que está sendo jogado
+	 * @param pos	->	Posição do bloco no mundo
+	 * @param inputImport	->	Input que está sendo enviado ao bloco do Input no mundo 'real'
+	 */
+    public WorldInput(World world, BlockPos pos, CircuitInput inputImport) {
         super(inputImport.getID());
         this.world = world;
         this.pos = pos;
@@ -31,9 +40,12 @@ public class WorldInput extends QuartusCircuitInput {
         }
     }
 
+	/**
+	 * Método que faz o update do WorldInput
+	 */
     @Override
     public void updateComponent(QuartusCircuit circuit) {
-        QuartusBusInfo inputBus = getInputInfo().get(Direction.SOUTH);
+        QuartusBus inputBus = getExecutionInfo().getInput(Direction.SOUTH).get(0);
 
         try {
             boolean powered = world.isReceivingRedstonePower(pos);

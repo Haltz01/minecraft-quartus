@@ -1,77 +1,70 @@
 package io.github.marcuscastelo.quartus.registry;
 
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
+import io.github.marcuscastelo.quartus.circuit.QuartusLogic;
+import io.github.marcuscastelo.quartus.circuit.components.*;
+import jdk.internal.jline.internal.Nullable;
+import net.minecraft.util.math.Direction;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitInput;
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitOutput;
-import jdk.internal.jline.internal.Nullable;
-import net.minecraft.util.math.Direction;
-
 public class QuartusCircuitComponents {
-    public static class QuartusComponentInfo {
-        public final Supplier<QuartusCircuitComponent> supplier;
-        public final QuartusCircuitComponent.QuartusCircuitComponentDirectionInfo directionInfo;
+    public static final ComponentDirectionInfo WE2NDirInfo = new ComponentDirectionInfo(Arrays.asList(Direction.EAST, Direction.WEST), Direction.NORTH);
+    public static final ComponentDirectionInfo WES2NDirInfo = new ComponentDirectionInfo(Arrays.asList(Direction.EAST, Direction.WEST, Direction.SOUTH), Direction.NORTH);
+    public static final ComponentDirectionInfo S2NEWDirInfo = new ComponentDirectionInfo(Direction.SOUTH, Arrays.asList(Direction.NORTH, Direction.EAST, Direction.WEST));
 
-        public QuartusComponentInfo(Supplier<QuartusCircuitComponent> supplier, QuartusCircuitComponent.QuartusCircuitComponentDirectionInfo directionInfo) {
-            this.supplier = supplier;
-            this.directionInfo = directionInfo;
-        }
+    public static final Map<String, ComponentInfo> componentInfoPerComponentName = new HashMap<>();
+
+    public static ComponentInfo registerComponent(String componentName, ComponentDirectionInfo directionInfo, QuartusLogic componentLogic) {
+        Supplier<CircuitComponent> componentSupplier = () -> new CircuitComponent(componentName, directionInfo, componentLogic);
+        return registerSpecialComponent(componentName, directionInfo, componentLogic, componentSupplier);
     }
 
-    public static final QuartusCircuitComponent.QuartusCircuitComponentDirectionInfo WE2NDirInfo = new QuartusCircuitComponent.QuartusCircuitComponentDirectionInfo(Arrays.asList(Direction.EAST, Direction.WEST), Direction.NORTH);
-    public static final QuartusCircuitComponent.QuartusCircuitComponentDirectionInfo WES2NDirInfo = new QuartusCircuitComponent.QuartusCircuitComponentDirectionInfo(Arrays.asList(Direction.EAST, Direction.WEST, Direction.SOUTH), Direction.NORTH);
-    public static final QuartusCircuitComponent.QuartusCircuitComponentDirectionInfo S2NEWDirInfo = new QuartusCircuitComponent.QuartusCircuitComponentDirectionInfo(Direction.SOUTH, Arrays.asList(Direction.NORTH, Direction.EAST, Direction.WEST));
-
-    public static final Map<String, QuartusComponentInfo> supplierMap = new HashMap<>();
-
-    public static QuartusComponentInfo register(String componentName, Supplier<QuartusCircuitComponent> componentSupplier, QuartusCircuitComponent.QuartusCircuitComponentDirectionInfo directionInfo) {
-        QuartusComponentInfo info = new QuartusComponentInfo(componentSupplier, directionInfo);
-        supplierMap.putIfAbsent(componentName, info);
+    public static ComponentInfo registerSpecialComponent(String componentName, ComponentDirectionInfo directionInfo, QuartusLogic componentLogic, Supplier<CircuitComponent> componentSupplier) {
+        ComponentInfo info = new ComponentInfo(componentSupplier, directionInfo, componentLogic);
+        componentInfoPerComponentName.putIfAbsent(componentName, info);
         return info;
     }
 
     @Nullable
-    public static QuartusComponentInfo getComponentInfoByName(String componentName) {
-        return supplierMap.getOrDefault(componentName, null);
+    public static ComponentInfo getComponentInfoByName(String componentName) {
+        return componentInfoPerComponentName.getOrDefault(componentName, null);
     }
 
-    public static final QuartusComponentInfo AND_GATE;
-    public static final QuartusComponentInfo NAND_GATE;
-    public static final QuartusComponentInfo OR_GATE;
-    public static final QuartusComponentInfo NOR_GATE;
-    public static final QuartusComponentInfo XOR_GATE;
-    public static final QuartusComponentInfo XNOR_GATE;
-    public static final QuartusComponentInfo NOT_GATE;
-    public static final QuartusComponentInfo INPUT;
-    public static final QuartusComponentInfo OUTPUT;
-    public static final QuartusComponentInfo MULTIPLEXER_GATE;
-    public static final QuartusComponentInfo DISTRIBUTOR_GATE;
-    public static final QuartusComponentInfo EXTENSOR_GATE;
+    public static final ComponentInfo AND_GATE;
+    public static final ComponentInfo NAND_GATE;
+    public static final ComponentInfo OR_GATE;
+    public static final ComponentInfo NOR_GATE;
+    public static final ComponentInfo XOR_GATE;
+    public static final ComponentInfo XNOR_GATE;
+    public static final ComponentInfo NOT_GATE;
+    public static final ComponentInfo INPUT;
+    public static final ComponentInfo OUTPUT;
+    public static final ComponentInfo MULTIPLEXER_GATE;
+    public static final ComponentInfo DISTRIBUTOR_GATE;
+    public static final ComponentInfo EXTENSOR_GATE;
 
 
     static {
-        AND_GATE = register("AndGate", () -> new QuartusCircuitComponent("AndGate", WE2NDirInfo, QuartusLogics.AND_GATE), WE2NDirInfo);
-        NAND_GATE = register("NandGate", () -> new QuartusCircuitComponent("NandGate", WE2NDirInfo, QuartusLogics.NAND_GATE), WE2NDirInfo);
-        OR_GATE = register("OrGate", () -> new QuartusCircuitComponent("OrGate", WE2NDirInfo, QuartusLogics.OR_GATE), WE2NDirInfo);
-        NOR_GATE = register("NorGate", () -> new QuartusCircuitComponent("NorGate", WE2NDirInfo, QuartusLogics.NOR_GATE), WE2NDirInfo);
-        XOR_GATE = register("XorGate", () -> new QuartusCircuitComponent("XorGate", WE2NDirInfo, QuartusLogics.XOR_GATE), WE2NDirInfo);
-        XNOR_GATE = register("XnorGate", () -> new QuartusCircuitComponent("XnorGate", WE2NDirInfo, QuartusLogics.XNOR_GATE), WE2NDirInfo);
-        NOT_GATE = register("NotGate", () -> new QuartusCircuitComponent("NotGate", WE2NDirInfo, QuartusLogics.NOT_GATE), WE2NDirInfo);
+        AND_GATE = registerComponent("AndGate", WE2NDirInfo, QuartusLogics.AND_GATE);
+        NAND_GATE = registerComponent("NandGate", WE2NDirInfo, QuartusLogics.NAND_GATE);
+        OR_GATE = registerComponent("OrGate", WE2NDirInfo, QuartusLogics.OR_GATE);
+        NOR_GATE = registerComponent("NorGate", WE2NDirInfo, QuartusLogics.NOR_GATE);
+        XOR_GATE = registerComponent("XorGate", WE2NDirInfo, QuartusLogics.XOR_GATE);
+        XNOR_GATE = registerComponent("XnorGate", WE2NDirInfo, QuartusLogics.XNOR_GATE);
+        NOT_GATE = registerComponent("NotGate", WE2NDirInfo, QuartusLogics.NOT_GATE);
 
-        MULTIPLEXER_GATE = register("MultiplexerGate", () -> new QuartusCircuitComponent("MultiplexerGate", WES2NDirInfo, QuartusLogics.MULTIPLEXER), WES2NDirInfo);
-        DISTRIBUTOR_GATE = register("DistributorGate", () -> new QuartusCircuitComponent("DistributorGate", S2NEWDirInfo, QuartusLogics.DISTRIBUTOR), S2NEWDirInfo);
+        MULTIPLEXER_GATE = registerComponent("MultiplexerGate", WES2NDirInfo,  QuartusLogics.MULTIPLEXER);
+        DISTRIBUTOR_GATE = registerComponent("DistributorGate", S2NEWDirInfo, QuartusLogics.DISTRIBUTOR);
 
         //TODO: dar implementação real ao extensor
-        EXTENSOR_GATE = register("ExtensorGate", () -> new QuartusCircuitComponent("ExtensorGate", WES2NDirInfo, QuartusLogics.EXTENSOR), WES2NDirInfo);
+        EXTENSOR_GATE = registerComponent("ExtensorGate", WES2NDirInfo, QuartusLogics.EXTENSOR);
 
         //Os inputs e outputs são meros marcadores e por isso não possuem lógica interna (apenas repassam do sul para o norte relativos)
-        INPUT = register(QuartusCircuitInput.TYPE, QuartusCircuitInput::new, QuartusCircuitInput.inputDirectionInfo);
-        OUTPUT = register(QuartusCircuitOutput.TYPE, QuartusCircuitOutput::new, QuartusCircuitOutput.outputDirectionInfo);
+        INPUT = registerSpecialComponent(CircuitInput.COMP_NAME, CircuitInput.inputDirectionInfo, QuartusLogics.INPUT, CircuitInput::new);
+        OUTPUT = registerSpecialComponent(CircuitOutput.COMP_NAME, CircuitOutput.outputDirectionInfo, QuartusLogics.OUTPUT, CircuitOutput::new);
     }
 
 }

@@ -1,10 +1,15 @@
 package io.github.marcuscastelo.quartus.circuit;
 
+import io.github.marcuscastelo.quartus.circuit.components.ComponentExecutionInfo;
 import net.minecraft.util.math.Direction;
 
 import java.util.Map;
 
+/**
+ * Interface que possui a assinatura do método updateLogic
+ * Facilita a escrita do código e modulariza a lógica
+ */
 @FunctionalInterface
 public interface QuartusLogic {
-    void updateLogic(Map<Direction, QuartusBusInfo> inputs, Map<Direction, QuartusBusInfo> outputs);
+    void updateLogic(ComponentExecutionInfo executionInfo);
 }

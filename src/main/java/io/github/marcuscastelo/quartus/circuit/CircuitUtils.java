@@ -3,9 +3,10 @@ package io.github.marcuscastelo.quartus.circuit;
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
 import io.github.marcuscastelo.quartus.block.QuartusTransportInfoProvider;
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitInput;
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitOutput;
+import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
+import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
+import io.github.marcuscastelo.quartus.circuit.components.CircuitOutput;
+import io.github.marcuscastelo.quartus.circuit.components.ComponentInfo;
 import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import io.github.marcuscastelo.quartus.util.WireConnector;
@@ -16,7 +17,6 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import org.apache.http.impl.conn.Wire;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +24,22 @@ import java.util.function.Function;
 
 import static io.github.marcuscastelo.quartus.util.DirectionUtils.HORIZONTAL_DIRECTIONS;
 
+/**
+ * Classe que auxilia na conexão dos componentes do jogo que formam um circuito
+ */
 public class CircuitUtils {
+	/**
+	 * Sub-Classe para auxiliar na organização da lógica
+	 */
     public static class ConnectedNodeInfo {
         public final Direction AtoB, BtoA;
         public final BlockPos bPos;
 
+		/**
+		 * Construtor padrão da Sub-Classe
+		 * As variáveis são atribuídas adequadamente,
+		 * especificando o caminho/direção a ser seguido
+		 */
         public ConnectedNodeInfo(Direction AtoB, Direction BtoA, BlockPos bPos) {
             this.AtoB = AtoB;
             this.BtoA = BtoA;
@@ -36,8 +47,17 @@ public class CircuitUtils {
         }
     }
 
-    //Segue os fios até o próximo nó
-    public static List<ConnectedNodeInfo> getConnectedNodesInfo(World world, QuartusCircuit circuit, QuartusCircuitComponent originNode, BlockPos originPos) {
+	/**
+	 * Método que analisa o circuito a partir de um dado componente do Mod,
+	 * identificando o caminho a ser seguido com os componentes e 
+	 * retornando uma lista com os dados adquiridos
+	 * @param world		->	Mundo que está sendo jogado
+	 * @param circuit	->	Circuito a ser analisado
+	 * @param originNode->	Nó/Componente de origem no circuito
+	 * @param originPos	->	Posição do nó/componente de origem
+	 * @return	->	Lista com os nós mapeados
+	 */
+    public static List<ConnectedNodeInfo> getConnectedNodesInfo(World world, QuartusCircuit circuit, CircuitComponent originNode, BlockPos originPos) {
         List<ConnectedNodeInfo> connectedNodesInfo = new ArrayList<>();
 
         //Para cada direção de output do nó origen
@@ -58,6 +78,7 @@ public class CircuitUtils {
             //Variável a ser definida nos ifs a seguir (posição do próximo componente)
             BlockPos targetPos = null;
 
+			//Segue os fios até o próximo nó
             if (immediateNeighborBlock instanceof QuartusInGameComponent){
                 //Se o vizinho for um componente, ele é o próprio componente
                 targetPos = immediateNeighborPos;
@@ -90,6 +111,9 @@ public class CircuitUtils {
             //Nenhum nó nessa direção
             if (targetPos == null) continue;
 
+			/**
+			 * Pega o nó na posição alvo e analisa suas entradas e saídas, conectando-os
+			 */
             BlockState targetBlockState = world.getBlockState(targetPos);
             Block targetBlock = targetBlockState.getBlock();
             Direction targetFacingDir = targetBlockState.get(Properties.HORIZONTAL_FACING);
@@ -110,13 +134,19 @@ public class CircuitUtils {
         return connectedNodesInfo;
     }
 
+	/**
+	 * Método auxiliar que analisa um fio/wire do circuito e identifica qual direção para seguir
+	 * @param world
+	 * @param initialPos
+	 * @param initialDirection
+	 * @return
+	 */
     private static Pair<BlockPos, Direction> getTransportDestinationInfo(World world, BlockPos initialPos, Direction initialDirection) {
         BlockPos currPos = initialPos;
         Direction lastDirection;
         Direction currDirection = WireConnector.getNextDirection(world, currPos, initialDirection);;
 
         while (true) {
-            System.out.println(currPos.toShortString());
             lastDirection = currDirection;
 
             //Se chegar num fio não recíproco ou em um beco sem saída
@@ -162,6 +192,12 @@ public class CircuitUtils {
         }
     }
 
+	/**
+	 * Método auxiliar que retorna uma função com a direção a seguida,
+	 * traduzindo para o jogo entender qual a direção desejada
+	 * @param facingDir	->	Direção de referência
+	 * @return	->	Função que diz qual direção seguir
+	 */
     private static Function<Direction, Direction> getRotationFunction(Direction facingDir) {
         if (facingDir == Direction.NORTH) return direction -> direction;
         else if (facingDir == Direction.EAST) return Direction::rotateYClockwise;
@@ -170,11 +206,24 @@ public class CircuitUtils {
         else throw new IllegalArgumentException("Unknown direction: " + facingDir);
     }
 
+	/**
+	 * Método chamado para receber a direção para o qual um bloco está olhando
+	 * em relação ao jogo
+	 * @param facingDir	->	Direção que o bloco 'mira'
+	 * @param relativeDirection	->	Direção relativa à direção do bloco
+	 * @return	->	Direção absoluta (em relação ao norte do mundo)
+	 */
     public static Direction getAbsoluteDirection(Direction facingDir, Direction relativeDirection) {
         Function<Direction, Direction> rotationFunction = getRotationFunction(facingDir);
         return rotationFunction.apply(relativeDirection);
     }
 
+	/**
+	 * Método chamado para receber a direção que um bloco olha no jogo
+	 * @param facingDir	->	Direção que o bloco 'mira'
+	 * @param absoluteDireciton	->	Direção absoluta (em relação ao norte do mundo)
+	 * @return	->	Direção relativa (em relação ao norte do bloco)
+	 */
     public static Direction getRelativeDirection(Direction facingDir, Direction absoluteDireciton) {
         Function<Direction, Direction> rotationFunction = getRotationFunction(facingDir);
 
@@ -184,17 +233,33 @@ public class CircuitUtils {
             relativeDirection = rotationFunction.apply(relativeDirection);
         return relativeDirection;
     }
-
-    public static QuartusCircuitComponent createPolimorphicComponent(String gateType, int gateID) {
-        QuartusCircuitComponents.QuartusComponentInfo info = QuartusCircuitComponents.getComponentInfoByName(gateType);
-        if (gateType.equals(QuartusCircuitInput.TYPE))
-            return new QuartusCircuitInput(gateID);
-        else if (gateType.equals(QuartusCircuitOutput.TYPE))
-            return new QuartusCircuitOutput(gateID);
+    
+    /**
+	 * Método que retorna um objeto de classe genérica pertencente aos componentes do circuito
+	 * Podem ser -	Input
+	 * 			 -	Output
+	 * 			 -	Porta Lógica
+	 * @param gateType	->	String com o tipo de porta
+	 * @param gateID	->	Int com o ID da porta
+	 * @return	->	Objeto genérico de acordo com os parâmetros passados
+	 */
+    public static CircuitComponent createPolimorphicComponent(String gateType, int gateID) {
+        ComponentInfo info = QuartusCircuitComponents.getComponentInfoByName(gateType);
+        if (gateType.equals(CircuitInput.COMP_NAME))
+            return new CircuitInput(gateID);
+        else if (gateType.equals(CircuitOutput.COMP_NAME))
+            return new CircuitOutput(gateID);
         else
-            return new QuartusCircuitComponent(gateType, info.directionInfo, gateID, QuartusLogics.getLogicByID(gateType));
+            return new CircuitComponent(gateType, info.directionInfo, gateID, QuartusLogics.getLogicByID(gateType));
     }
 
+	/**
+	 * Método auxiliar que retorna um par,
+	 * relacionando a String que identifica um componente
+	 * com seu ID identificador
+	 * @param componentStr	->	String que identifica um componente
+	 * @return	->	Par de String e Int, que identificam um tipo de componente
+	 */
     public static Pair<String, Integer> getComponentStrInfo(String componentStr) {
         String[] params = componentStr.split("_");
         String gateType = params[0];

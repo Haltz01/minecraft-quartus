@@ -1,11 +1,8 @@
 package io.github.marcuscastelo.quartus.network.handlers;
 
-import io.github.marcuscastelo.quartus.block.ExecutorBlock;
 import io.github.marcuscastelo.quartus.blockentity.ExecutorBlockEntity;
 import io.github.marcuscastelo.quartus.network.QuartusExecutorStartC2SPacket;
-import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

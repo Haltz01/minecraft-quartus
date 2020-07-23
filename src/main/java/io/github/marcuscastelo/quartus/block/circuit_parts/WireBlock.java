@@ -9,11 +9,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -26,8 +24,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
-import net.minecraft.world.explosion.Explosion;
-import org.apache.http.impl.conn.Wire;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,11 +65,7 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
         //O processamento é feito apenas no servidor
         if (world.isClient) return;
 
-        String message = "Atualizando " + currPos.toShortString() + ": ";
-
         //Se o fio atual já possui duas conexões, não precisa atualizar
-
-
         List<BlockPos> alreadyEstabilishedConnections = WireConnector.getWireEstabilishedConnections(world, currPos);
         if (alreadyEstabilishedConnections.size() == 2) return;
 
@@ -83,7 +75,6 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
         newConnectionList.addAll(alreadyEstabilishedConnections);
         newConnectionList.addAll(WireConnector.findConnectableQuartusBlocks(world, currPos, alreadyEstabilishedConnections, freeConnectionSlotsCount));
 
-        System.out.println(message + "Connections: " + newConnectionList);
         WireConnector.connectTo(world, currPos, newConnectionList);
 
         //Atualiza os fios que podem estar em baixo ou em cima para detectar a existência desse novo fio (a não ser que isso já tenha acontecido: flag END_PORTAL)

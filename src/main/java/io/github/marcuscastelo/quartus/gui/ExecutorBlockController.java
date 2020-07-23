@@ -5,14 +5,12 @@ import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.marcuscastelo.quartus.block.ExecutorIOBlock;
-import io.github.marcuscastelo.quartus.blockentity.ExecutorBlockEntity;
 import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.network.QuartusExecutorStartC2SPacket;
 import io.github.marcuscastelo.quartus.network.QuartusExtensorIOUpdateC2SPacket;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -24,9 +22,21 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
+/**
+ * Classe que controla o GUI (Graphical User Interface - Interface Gráfico de Usuário)
+ * do bloco Executor
+ */
 public class ExecutorBlockController extends CottonCraftingController {
+	//Variável que armazena a posição do bloco Executor
     BlockPos executorBlockPos;
 
+	/**
+	 * Método que atualiza os extensores I/O do Executor
+	 * Recebe um pacote de dados, referente ao circuito
+	 * e atribui a quantidade correta de inputs e outputs
+	 * para a sequência de blocos à direita do Executor
+	 * @param circuit	->	Circuito desenvolvido com blocos do Mod
+	 */
     private void updateExtensorModels(QuartusCircuit circuit) {
         int nInputs = circuit.getInputCount();
         int nOutputs = circuit.getOutputCount();
@@ -61,6 +71,10 @@ public class ExecutorBlockController extends CottonCraftingController {
         }
     }
 
+	/**
+	 * Método que faz a execução do circuito fornecido ao executor,
+	 * mediante ao clique no botão da interface do executor
+	 */
     private void onExecuteButtonClicked() {
         ItemStack stack = blockInventory.getInvStack(0);
         assert MinecraftClient.getInstance().player != null;
@@ -89,6 +103,15 @@ public class ExecutorBlockController extends CottonCraftingController {
 
     }
 
+	/**
+	 * Construtor padrão da classe ExecutorBlockController
+	 * Adiciona uma interface ao compilador para facilitar o uso
+	 * e deixa mais intuitivo seu uso
+	 * @param syncId	->	Identificador ID do bloco
+	 * @param playerInventory	->	Inventário do jogador
+	 * @param blockInventory	->	Inventário do bloco
+	 * @param compilerBlockPosition	->	Posição do bloco Executor
+	 */
     public ExecutorBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos executorBlockPos) {
         super(RecipeType.CRAFTING, syncId, playerInventory, blockInventory, null);
         this.executorBlockPos = executorBlockPos;
