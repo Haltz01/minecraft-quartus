@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " I ",
+    " G ",
+    "   "
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_nugget"
+    },
+    "G": {
+      "item": "quartus:and_gate"
+    }
+  },
+  "result": {
+    "item": "quartus:nand_gate",
+    "count": 1
+  }
+}
