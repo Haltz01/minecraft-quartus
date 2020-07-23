@@ -32,6 +32,8 @@ public class CompilerBlockController extends CottonCraftingController {
 	/**
 	 * Método que recebe um pacote de informações e atualiza o Disquete
 	 * dentro do compilador para todos os jogadores
+	 * @param floppyItemStack	->	Pilha de item no inventário do blcoo
+	 * @param circuit	->	Circuito analisado
 	 */
     private void updateFloppyDisk(ItemStack floppyItemStack, QuartusCircuit circuit) {
         System.out.println(circuit.serialize());
@@ -87,6 +89,10 @@ public class CompilerBlockController extends CottonCraftingController {
 	 * Construtor padrão da classe CompilerBlockController
 	 * Adiciona uma interface ao compilador para facilitar o uso
 	 * e deixa mais intuitivo seu uso
+	 * @param syncId	->	Identificador ID
+	 * @param playerInventory	->	Inventário do jogador
+	 * @param blockInventory	->	Inventário do bloco
+	 * @param compilerBlockPosition	->	Posição do bloco Compiler
 	 */
     public CompilerBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos compilerBlockPosition) {
         super(RecipeType.CRAFTING, syncId, playerInventory, blockInventory, null);
