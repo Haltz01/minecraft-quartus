@@ -3,9 +3,10 @@ package io.github.marcuscastelo.quartus.circuit;
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
 import io.github.marcuscastelo.quartus.block.QuartusTransportInfoProvider;
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitInput;
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitOutput;
+import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
+import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
+import io.github.marcuscastelo.quartus.circuit.components.CircuitOutput;
+import io.github.marcuscastelo.quartus.circuit.components.ComponentInfo;
 import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import io.github.marcuscastelo.quartus.util.WireConnector;
@@ -16,13 +17,10 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import org.apache.http.impl.conn.Wire;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-
-import static io.github.marcuscastelo.quartus.util.DirectionUtils.HORIZONTAL_DIRECTIONS;
 
 public class CircuitUtils {
     public static class ConnectedNodeInfo {
@@ -37,7 +35,7 @@ public class CircuitUtils {
     }
 
     //Segue os fios até o próximo nó
-    public static List<ConnectedNodeInfo> getConnectedNodesInfo(World world, QuartusCircuit circuit, QuartusCircuitComponent originNode, BlockPos originPos) {
+    public static List<ConnectedNodeInfo> getConnectedNodesInfo(World world, QuartusCircuit circuit, CircuitComponent originNode, BlockPos originPos) {
         List<ConnectedNodeInfo> connectedNodesInfo = new ArrayList<>();
 
         //Para cada direção de output do nó origen
@@ -116,7 +114,6 @@ public class CircuitUtils {
         Direction currDirection = WireConnector.getNextDirection(world, currPos, initialDirection);;
 
         while (true) {
-            System.out.println(currPos.toShortString());
             lastDirection = currDirection;
 
             //Se chegar num fio não recíproco ou em um beco sem saída
@@ -185,14 +182,14 @@ public class CircuitUtils {
         return relativeDirection;
     }
 
-    public static QuartusCircuitComponent createPolimorphicComponent(String gateType, int gateID) {
-        QuartusCircuitComponents.QuartusComponentInfo info = QuartusCircuitComponents.getComponentInfoByName(gateType);
-        if (gateType.equals(QuartusCircuitInput.TYPE))
-            return new QuartusCircuitInput(gateID);
-        else if (gateType.equals(QuartusCircuitOutput.TYPE))
-            return new QuartusCircuitOutput(gateID);
+    public static CircuitComponent createPolimorphicComponent(String gateType, int gateID) {
+        ComponentInfo info = QuartusCircuitComponents.getComponentInfoByName(gateType);
+        if (gateType.equals(CircuitInput.COMP_NAME))
+            return new CircuitInput(gateID);
+        else if (gateType.equals(CircuitOutput.COMP_NAME))
+            return new CircuitOutput(gateID);
         else
-            return new QuartusCircuitComponent(gateType, info.directionInfo, gateID, QuartusLogics.getLogicByID(gateType));
+            return new CircuitComponent(gateType, info.directionInfo, gateID, QuartusLogics.getLogicByID(gateType));
     }
 
     public static Pair<String, Integer> getComponentStrInfo(String componentStr) {

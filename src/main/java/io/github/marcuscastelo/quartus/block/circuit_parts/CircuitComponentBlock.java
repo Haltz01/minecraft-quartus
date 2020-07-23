@@ -1,9 +1,9 @@
 package io.github.marcuscastelo.quartus.block.circuit_parts;
 
-import com.google.common.collect.ImmutableList;
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
 import io.github.marcuscastelo.quartus.circuit.CircuitUtils;
-import io.github.marcuscastelo.quartus.circuit.components.QuartusCircuitComponent;
+import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
+import io.github.marcuscastelo.quartus.circuit.components.ComponentInfo;
 import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -12,7 +12,6 @@ import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
@@ -33,13 +32,13 @@ import java.util.stream.Collectors;
 public class CircuitComponentBlock extends HorizontalFacingBlock implements QuartusInGameComponent {
 	//Variável que armazena qual tipo de bloco está sendo analisado
 	//Define qual tipo de bloco implementado será
-    private final QuartusCircuitComponents.QuartusComponentInfo componentInfo;
+    private final ComponentInfo componentInfo;
 
 	/**
 	 * Construtor padrão da classe CircuitComponentBlock
 	 * @param componentInfo	->	Informação do bloco que está sendo feito
 	 */
-    public CircuitComponentBlock(QuartusCircuitComponents.QuartusComponentInfo componentInfo) {
+    public CircuitComponentBlock(ComponentInfo componentInfo) {
         super(Settings.copy(Blocks.REPEATER));
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
         this.componentInfo = componentInfo;
@@ -49,8 +48,8 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 	 * Método auxiliar que cria um objeto por meio de um ponteiro para a função
 	 */
     @Override
-    public QuartusCircuitComponent getCircuitComponent() {
-        return componentInfo.supplier.get();
+    public CircuitComponent getCircuitComponent() {
+        return componentInfo.componentSupplier.get();
     }
 
 	/**

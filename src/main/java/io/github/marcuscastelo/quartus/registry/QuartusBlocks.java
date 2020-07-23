@@ -4,7 +4,9 @@ import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.CompilerBlock;
 import io.github.marcuscastelo.quartus.block.ExecutorBlock;
 import io.github.marcuscastelo.quartus.block.ExecutorIOBlock;
-import io.github.marcuscastelo.quartus.block.circuit_parts.*;
+import io.github.marcuscastelo.quartus.block.circuit_parts.CircuitComponentBlock;
+import io.github.marcuscastelo.quartus.block.circuit_parts.WireBlock;
+import io.github.marcuscastelo.quartus.circuit.components.ComponentInfo;
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
 
@@ -36,7 +38,7 @@ public class QuartusBlocks {
     }
 
     private static Block registerComponent(String block_name, String componentName) {
-        QuartusCircuitComponents.QuartusComponentInfo componentInfo = QuartusCircuitComponents.getComponentInfoByName(componentName);
+        ComponentInfo componentInfo = QuartusCircuitComponents.getComponentInfoByName(componentName);
         if (componentInfo == null) throw new IllegalArgumentException("Unknown componentName = " + componentName);
         return register(block_name, new CircuitComponentBlock(componentInfo));
     }

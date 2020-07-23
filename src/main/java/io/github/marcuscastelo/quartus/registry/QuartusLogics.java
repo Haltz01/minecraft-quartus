@@ -1,14 +1,15 @@
 package io.github.marcuscastelo.quartus.registry;
 
+import com.google.common.collect.ImmutableList;
 import io.github.marcuscastelo.quartus.Quartus;
-import io.github.marcuscastelo.quartus.circuit.QuartusBusInfo;
+import io.github.marcuscastelo.quartus.circuit.QuartusBus;
 import io.github.marcuscastelo.quartus.circuit.QuartusLogic;
 import jdk.internal.jline.internal.Nullable;
 import net.minecraft.util.math.Direction;
-import net.minecraft.block.Blocks;
-import sun.jvm.hotspot.opto.Block;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class QuartusLogics {
@@ -38,42 +39,47 @@ public class QuartusLogics {
     public static final QuartusLogic DISTRIBUTOR;
 
     static {
-        AND_GATE = register("AndGate", (inputs, outputs) -> outputs.get(Direction.NORTH).setValue(inputs.values().stream().allMatch(busInfo -> busInfo.equals(QuartusBusInfo.HIGH1b))));
-        NAND_GATE = register("NandGate", (inputs, outputs) -> outputs.get(Direction.NORTH).setValue(inputs.values().stream().anyMatch(busInfo -> busInfo.equals(QuartusBusInfo.LOW1b))));
-        OR_GATE = register("OrGate", (inputs, outputs) -> outputs.get(Direction.NORTH).setValue(inputs.values().stream().anyMatch(busInfo -> busInfo.equals(QuartusBusInfo.HIGH1b))));
-        NOR_GATE = register("NorGate", (inputs, outputs) -> outputs.get(Direction.NORTH).setValue(inputs.values().stream().allMatch(busInfo -> busInfo.equals(QuartusBusInfo.LOW1b))));
-        XOR_GATE = register("XorGate", (inputs, outputs) -> outputs.get(Direction.NORTH).setValue(inputs.values().stream().filter(busInfo -> busInfo.equals(QuartusBusInfo.HIGH1b)).count() % 2 == 1));
-        XNOR_GATE = register("XnorGate", (inputs, outputs) -> outputs.get(Direction.NORTH).setValue(inputs.values().stream().filter(busInfo -> busInfo.equals(QuartusBusInfo.HIGH1b)).count() % 2 == 0));
-        NOT_GATE = register("NotGate", (inputs, outputs) -> outputs.get(Direction.NORTH).setValue(inputs.get(Direction.SOUTH).equals(QuartusBusInfo.LOW1b)));
+        AND_GATE = register("AndGate", (executionInfo) -> executionInfo.setOutput(Direction.NORTH, executionInfo.getAllInputs().stream().reduce(QuartusBus::bitwiseAnd)));
+        NAND_GATE = register("NandGate", (executionInfo) -> executionInfo.setOutput(Direction.NORTH, executionInfo.getAllInputs().stream().reduce(QuartusBus::bitwiseNand)));
+        OR_GATE = register("OrGate", (executionInfo) -> executionInfo.setOutput(Direction.NORTH, executionInfo.getAllInputs().stream().reduce(QuartusBus::bitwiseOr)));
+        NOR_GATE = register("NorGate", (executionInfo) -> executionInfo.setOutput(Direction.NORTH, executionInfo.getAllInputs().stream().reduce(QuartusBus::bitwiseNor)));
+        XOR_GATE = register("XorGate", (executionInfo) -> executionInfo.setOutput(Direction.NORTH, executionInfo.getAllInputs().stream().reduce(QuartusBus::bitwiseXor)));
+        XNOR_GATE = register("XnorGate", (executionInfo) -> executionInfo.setOutput(Direction.NORTH, executionInfo.getAllInputs().stream().reduce(QuartusBus::bitwiseXnor)));
+        NOT_GATE = register("NotGate", (executionInfo) -> executionInfo.setOutput(Direction.NORTH, executionInfo.getInput(Direction.SOUTH).get(0).bitwiseNot()));
 
         //Os inputs e outputs são meros marcadores e por isso não possuem lógica interna (apenas repassam do sul para o norte relativos)
-        INPUT = register("QuartusInput", ((inputs, outputs) -> outputs.get(Direction.NORTH).setValue(inputs.get(Direction.SOUTH))));
-        OUTPUT = register("QuartusOutput", ((inputs, outputs) -> outputs.get(Direction.NORTH).setValue(inputs.get(Direction.SOUTH))));
+        QuartusLogic copyInputToOutput = ((executionInfo) -> executionInfo.setOutput(Direction.NORTH, executionInfo.getInput(Direction.SOUTH)));
+        INPUT = register("QuartusInput", copyInputToOutput);
+        OUTPUT = register("QuartusOutput", copyInputToOutput);
 
         //TODO: criar alguma medida para impedir que o multiplexer receba um extensor em qualquer lado exceto na saida
-        MULTIPLEXER = register("MultiplexerGate", ((inputs, outputs) -> {
-            QuartusBusInfo selectorBusInfo = inputs.get(Direction.SOUTH);
+        MULTIPLEXER = register("MultiplexerGate", ((executionInfo) -> {
+            QuartusBus selectorBusInfo = executionInfo.getInput(Direction.SOUTH).get(0);
             if (selectorBusInfo.getBusSize() != 1) {
                 //TODO: support multibyte selector
                 Quartus.LOGGER.warn("Ignoring multiplexer with multibyte selector");
                 return;
             }
 
-            QuartusBusInfo westBusInfo = inputs.get(Direction.WEST);
-            QuartusBusInfo eastBusInfo = inputs.get(Direction.EAST);
-            boolean pickEast = selectorBusInfo.equals(QuartusBusInfo.HIGH1b);
+            QuartusBus westBusInfo = executionInfo.getInput(Direction.WEST).get(0);
+            QuartusBus eastBusInfo = executionInfo.getInput(Direction.EAST).get(0);
+            boolean pickEast = selectorBusInfo.equals(QuartusBus.HIGH1b);
 
-            outputs.get(Direction.NORTH).setValue(pickEast? eastBusInfo: westBusInfo);
+            executionInfo.setOutput(Direction.NORTH, pickEast? eastBusInfo: westBusInfo);
         }));
 
         //TODO: definir lógica (talvez uma classe com override no updateComponent)
-        EXTENSOR = register("ExtensorGate", ((inputs, outputs) -> { throw new UnsupportedOperationException("Extensor is not supported yet");}));
+        EXTENSOR = register("ExtensorGate", ((executionInfo) -> {
+            List<QuartusBus> inputBuses = new ArrayList<>(3);
+            inputBuses.addAll(executionInfo.getAllInputs());
+//            executionInfo.setOutput(Direction.NORTH, );
+        }));
 
-        DISTRIBUTOR = register("DistributorGate", ((inputs, outputs) -> {
-            QuartusBusInfo inputInfo = inputs.get(Direction.SOUTH);
-            outputs.get(Direction.NORTH).setValue(inputInfo);
-            outputs.get(Direction.WEST).setValue(inputInfo);
-            outputs.get(Direction.EAST).setValue(inputInfo);
+        DISTRIBUTOR = register("DistributorGate", ((executionInfo) -> {
+            ImmutableList<QuartusBus> inputInfo = executionInfo.getInput(Direction.SOUTH);
+            executionInfo.setOutput(Direction.NORTH, inputInfo);
+            executionInfo.setOutput(Direction.WEST, inputInfo);
+            executionInfo.setOutput(Direction.EAST, inputInfo);
         }));
     }
 }
