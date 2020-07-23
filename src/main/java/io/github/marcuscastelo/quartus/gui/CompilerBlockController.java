@@ -52,6 +52,7 @@ public class CompilerBlockController extends CottonCraftingController {
 	//TODO: support areas bigger than 10x10
 	/**
 	 * Método que compila um circuito dentro de uma área
+	 * @return	->	Circuito compilado
 	 */
     private QuartusCircuit compileCircuit() {
         Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
@@ -89,7 +90,7 @@ public class CompilerBlockController extends CottonCraftingController {
 	 * Construtor padrão da classe CompilerBlockController
 	 * Adiciona uma interface ao compilador para facilitar o uso
 	 * e deixa mais intuitivo seu uso
-	 * @param syncId	->	Identificador ID
+	 * @param syncId	->	Identificador ID do bloco
 	 * @param playerInventory	->	Inventário do jogador
 	 * @param blockInventory	->	Inventário do bloco
 	 * @param compilerBlockPosition	->	Posição do bloco Compiler

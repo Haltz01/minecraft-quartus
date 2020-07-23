@@ -37,6 +37,7 @@ public class ExecutorBlockController extends CottonCraftingController {
 	 * Recebe um pacote de dados, referente ao circuito
 	 * e atribui a quantidade correta de inputs e outputs
 	 * para a sequência de blocos à direita do Executor
+	 * @param circuit	->	Circuito desenvolvido com blocos do Mod
 	 */
     private void updateExtensorModels(QuartusCircuit circuit) {
         int nInputs = circuit.getInputCount();
@@ -108,6 +109,10 @@ public class ExecutorBlockController extends CottonCraftingController {
 	 * Construtor padrão da classe ExecutorBlockController
 	 * Adiciona uma interface ao compilador para facilitar o uso
 	 * e deixa mais intuitivo seu uso
+	 * @param syncId	->	Identificador ID do bloco
+	 * @param playerInventory	->	Inventário do jogador
+	 * @param blockInventory	->	Inventário do bloco
+	 * @param compilerBlockPosition	->	Posição do bloco Executor
 	 */
     public ExecutorBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos executorBlockPos) {
         super(RecipeType.CRAFTING, syncId, playerInventory, blockInventory, null);
