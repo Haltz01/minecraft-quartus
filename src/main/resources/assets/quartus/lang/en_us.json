@@ -21,5 +21,7 @@
   "block.quartus.extensor_io": "Executor I/O",
   "gui.quartus.executor.empty": "There are no floppy disks to execute",
   "gui.quartus.executor.no_circuit": "The floppy disk provided doesn't have a circuit",
-  "gui.quartus.executor.execute_btn": "Execute"
+  "gui.quartus.executor.execute_btn": "Execute",
+  "blockentity.quartus.executor.unknown_error": "Ops! Something went wrong when trying to execute the circuit",
+  "blockentity.quartus.executor.not_enough_io": "There are not enough inputs and/or outputs for the circuit"
 }

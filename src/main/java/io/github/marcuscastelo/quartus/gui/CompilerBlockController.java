@@ -20,9 +20,20 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
+/**
+ * Classe que controla o GUI (Graphical User Interface - Interface Gráfico de Usuário)
+ * do bloco Compiler
+ */
 public class CompilerBlockController extends CottonCraftingController {
+	//Variável que armazena a posição do bloco Compiler
     final BlockPos compilerBlockPosition;
 
+	/**
+	 * Método que recebe um pacote de informações e atualiza o Disquete
+	 * dentro do compilador para todos os jogadores
+	 * @param floppyItemStack	->	Pilha de item no inventário do blcoo
+	 * @param circuit	->	Circuito analisado
+	 */
     private void updateFloppyDisk(ItemStack floppyItemStack, QuartusCircuit circuit) {
         System.out.println(circuit.serialize());
 
@@ -37,7 +48,11 @@ public class CompilerBlockController extends CottonCraftingController {
         floppyDiskUpdateC2SPacket.send(buf);
     }
 
-    //TODO: support areas bigger than 10x10
+	//TODO: support areas bigger than 10x10
+	/**
+	 * Método que compila um circuito dentro de uma área
+	 * @return	->	Circuito compilado
+	 */
     private QuartusCircuit compileCircuit() {
         Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
         BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), 5).offset(facingDir.getOpposite(),10).offset(Direction.DOWN,5);
@@ -49,6 +64,10 @@ public class CompilerBlockController extends CottonCraftingController {
         return compiler.compile();
     }
 
+	/**
+	 * Método que faz a compilação mediante ao clique no botão
+	 * do compilador
+	 */
     private void onCompilerButtonClick() {
         ItemStack floppyItemStack = blockInventory.getInvStack(0);
         if (floppyItemStack.isEmpty() || !floppyItemStack.getItem().equals(QuartusItems.FLOPPY_DISK)) {
@@ -66,6 +85,15 @@ public class CompilerBlockController extends CottonCraftingController {
         }
     }
 
+	/**
+	 * Construtor padrão da classe CompilerBlockController
+	 * Adiciona uma interface ao compilador para facilitar o uso
+	 * e deixa mais intuitivo seu uso
+	 * @param syncId	->	Identificador ID do bloco
+	 * @param playerInventory	->	Inventário do jogador
+	 * @param blockInventory	->	Inventário do bloco
+	 * @param compilerBlockPosition	->	Posição do bloco Compiler
+	 */
     public CompilerBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos compilerBlockPosition) {
         super(RecipeType.CRAFTING, syncId, playerInventory, blockInventory, null);
         this.compilerBlockPosition = compilerBlockPosition;

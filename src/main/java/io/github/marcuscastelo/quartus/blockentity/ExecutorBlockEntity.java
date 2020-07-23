@@ -27,7 +27,6 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: traduzir mensagens de erro no lang
 /**
  * Classe que define o BlockEntity do Executor
  */

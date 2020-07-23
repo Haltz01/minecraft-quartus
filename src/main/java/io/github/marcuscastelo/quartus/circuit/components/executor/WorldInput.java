@@ -11,10 +11,22 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe que permite a mapeação dos Inputs no circuito,
+ * possibilitando diferenciá-los pela posição e atribuir
+ * corretamente as mudanças e ordem de execução
+ */
 public class WorldInput extends CircuitInput {
+	//Variáveis auxiliares para mapear os Inputs
     public final World world;
     public final BlockPos pos;
 
+	/**
+	 * Construtor padrão, que liga o Input no circuito ao WorldInput
+	 * @param world	->	Mundo que está sendo jogado
+	 * @param pos	->	Posição do bloco no mundo
+	 * @param inputImport	->	Input que está sendo enviado ao bloco do Input no mundo 'real'
+	 */
     public WorldInput(World world, BlockPos pos, CircuitInput inputImport) {
         super(inputImport.getID());
         this.world = world;
@@ -28,6 +40,9 @@ public class WorldInput extends CircuitInput {
         }
     }
 
+	/**
+	 * Método que faz o update do WorldInput
+	 */
     @Override
     public void updateComponent(QuartusCircuit circuit) {
         QuartusBus inputBus = getExecutionInfo().getInput(Direction.SOUTH).get(0);

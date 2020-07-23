@@ -10,7 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
+/**
+ * Classe que define genericamente um componente do circuito, utilizado no Mod
+ */
 
+    //TODO: arrumar comentáirio (não deu no merge)
+	/**
+	 * Sub-Classe que define a direção que a informação que passa
+	 * por um componente deve seguir, de acordo com seus inputs e outputs
+	 */
 public class CircuitComponent {
     private final ComponentDirectionInfo componentDirectionInfo;
     private final ComponentExecutionInfo executionInfo;
@@ -26,6 +34,12 @@ public class CircuitComponent {
     private final int ID;
     private final String componentName;
 
+    /**
+	 * Contrutor padrão da classe QuartusCircuitComponent
+	 * @param componentName	->	Nome do componente
+	 * @param possibleDirectionsInfo	->	Possíveis direções que a informação pode seguir
+	 * @param ID	->	Identificador do componente
+	 */
     public CircuitComponent(String componentName, ComponentDirectionInfo componentDirectionInfo, int ID) {
         this.componentName = componentName;
         this.connections = new HashMap<>();
@@ -55,6 +69,7 @@ public class CircuitComponent {
         this.logic = logic;
     }
 
+	//Método que retorna o ID de um componente
     public int getID() { return ID; }
 
     //TODO: tornar mais genérica: atualmente foca apenas em trazer a saída do outro (supondo ser única) para a entrada deste (supondo ser única)
@@ -86,13 +101,26 @@ public class CircuitComponent {
         }
     }
 
+	/**
+	 * Método que faz a chamada do updateInputInfo de um circuito,
+	 * atualizando seus valores de entrada e saída
+	 * @param circuit	->	Circuito a ser atualizado
+	 */
     public void updateComponent(QuartusCircuit circuit) {
         updateInputInfo(circuit);
         if (logic != null) logic.updateLogic(executionInfo);
     }
 
+    /**
+	 * Método que retorna as informações que estão nos inputs e outputs de um componente
+	 * @return	->	Mapeamento dos Bus's com suas respectivas informações
+	 */    
     public ComponentExecutionInfo getExecutionInfo() { return executionInfo; }
-
+	
+	/**
+	 * Método que verifica se um dado componente possui conexões nas suas saídas
+	 * @return	->	Boolean que verifica se há conexões nas saídas
+	 */
     public boolean hasOutputConnections() {
         for (List<ComponentConnection> connectionsPerDir: connections.values()) {
             for (ComponentConnection connection: connectionsPerDir) {
@@ -102,10 +130,19 @@ public class CircuitComponent {
         return false;
     }
 
+	/**
+	 * Método que adiciona uma conexão a um componente de acordo com a direção dada
+	 * @param direction	->	Direção dada para adicionar conexão
+	 * @param connection	->	Conexão a ser adicionada
+	 */
     public void addConnection(Direction direction, ComponentConnection connection) {
         connections.get(direction).add(connection);
     }
 
+	/**
+	 * Método que retorna como String as conexões nos outputs de um componente
+	 * @return	->	String com as conexões das saídas do componente
+	 */
     public String getOutputConnectionsString() {
         StringBuilder str = new StringBuilder();
 
@@ -121,6 +158,10 @@ public class CircuitComponent {
         return str.toString();
     }
 
+	/**
+	 * Método que retorna uma lista com as conexões das saídas de um componente
+	 * @return	->	Lista com as conexões
+	 */
     public List<ComponentConnection> getOutputConnections() {
         List<ComponentConnection> outputConnections = new ArrayList<>();
         for (List<ComponentConnection> connectionsPerDir: connections.values())
@@ -130,6 +171,10 @@ public class CircuitComponent {
         return outputConnections;
     }
 
+	/**
+	 * Método que retorna uma lista com as conexões nos inputs de um componente
+	 * @return
+	 */
     public List<ComponentConnection> getInputConnections() {
         List<ComponentConnection> inputConnections = new ArrayList<>();
         for (List<ComponentConnection> connectionsPerDir: connections.values())
@@ -139,13 +184,24 @@ public class CircuitComponent {
         return inputConnections;
     }
 
+	/**
+	 * Método que retorna um mapeamento das conexões dos componentes
+	 * e suas direções
+	 * @return	->	Mapeamento das conexões e direções
+	 */
     public Map<Direction, List<ComponentConnection>> getConnections() {
         return connections;
     }
 
+	//Métodos que retornam uma lista com as possíveis direções de inputs e outputs, respectivamente
     public final ImmutableList<Direction> getPossibleInputDirections() { return componentDirectionInfo.possibleInputDirections; }
     public final ImmutableList<Direction> getPossibleOutputDirections() { return componentDirectionInfo.possibleOutputDirections; }
 
+	/**
+	 * Método que retorna a toString de um componente, adicionando seu ID
+	 * no final da String, facilitando identificação dos componentes
+	 * durante compilição e execução
+	 */
     @Override
     public String toString() {
         return componentName+"_"+getID();
