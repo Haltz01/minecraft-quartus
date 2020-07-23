@@ -63,7 +63,7 @@ public class QuartusBlocks {
 
         EXTENSOR_IO = register("extensor_io", new ExecutorIOBlock());
 
-        INPUT = registerComponent("input", "QuartusInput");
-        OUTPUT = registerComponent("output", "QuartusOutput");
+        INPUT = registerComponent("input", "Input");
+        OUTPUT = registerComponent("output", "Output");
     }
 }

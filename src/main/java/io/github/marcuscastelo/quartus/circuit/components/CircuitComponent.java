@@ -14,11 +14,7 @@ import java.util.ArrayList;
  * Classe que define genericamente um componente do circuito, utilizado no Mod
  */
 
-    //TODO: arrumar comentáirio (não deu no merge)
-	/**
-	 * Sub-Classe que define a direção que a informação que passa
-	 * por um componente deve seguir, de acordo com seus inputs e outputs
-	 */
+
 public class CircuitComponent {
     private final ComponentDirectionInfo componentDirectionInfo;
     private final ComponentExecutionInfo executionInfo;

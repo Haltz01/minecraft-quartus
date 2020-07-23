@@ -49,8 +49,8 @@ public class QuartusLogics {
 
         //Os inputs e outputs são meros marcadores e por isso não possuem lógica interna (apenas repassam do sul para o norte relativos)
         QuartusLogic copyInputToOutput = ((executionInfo) -> executionInfo.setOutput(Direction.NORTH, executionInfo.getInput(Direction.SOUTH)));
-        INPUT = register("QuartusInput", copyInputToOutput);
-        OUTPUT = register("QuartusOutput", copyInputToOutput);
+        INPUT = register("Input", copyInputToOutput);
+        OUTPUT = register("Output", copyInputToOutput);
 
         //TODO: criar alguma medida para impedir que o multiplexer receba um extensor em qualquer lado exceto na saida
         MULTIPLEXER = register("MultiplexerGate", ((executionInfo) -> {

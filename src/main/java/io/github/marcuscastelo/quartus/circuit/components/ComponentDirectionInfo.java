@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe que define a direção que a informação que passa
+ * por um componente deve seguir, de acordo com seus inputs e outputs
+ */
 public class ComponentDirectionInfo {
     public final ImmutableList<Direction> possibleInputDirections, possibleOutputDirections;
     public final ImmutableMap<Direction, Integer> numberOfBusesInDirectionMap;

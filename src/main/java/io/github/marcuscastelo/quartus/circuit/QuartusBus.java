@@ -13,14 +13,22 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Classe que define um Bus no circuito.
+ * Faz a conexão com os demais componentes do circuito,
+ * transmitindo os bits de informações entre eles.
+ */
 public class QuartusBus {
+    //Variáveis que definem o true(1) e o false(0) no Bus
     public static final QuartusBus HIGH1b;
     public static final QuartusBus LOW1b;
 
+    //Método que copia o Bus, retornando-o
     public QuartusBus copy() {
         return new QuartusBus(this);
     }
 
+    //Método que copia os valores de um Bus, retornando-os
     public QuartusBus(QuartusBus cloneFrom) {
         this.values = cloneFrom.values;
     }
@@ -33,6 +41,7 @@ public class QuartusBus {
         list.addAll(Arrays.asList(moreValues));
         return list;
     }
+
     public QuartusBus(Boolean value, Boolean ...moreValues) {
         this(convertParams(value, moreValues));
     }
@@ -42,8 +51,10 @@ public class QuartusBus {
         this.values = ImmutableList.copyOf(values);
     }
 
+    //Método que retorna o tamanho/capacidade de um Bus
     public int getBusSize() { return values.size(); }
 
+    //Método que Setta os valores de um Bus por meio de uma lista de booleans
     public void setValue(QuartusBus copyFrom) {
         if (copyFrom.getBusSize() != this.getBusSize()) {
             throw new IllegalArgumentException("Different bus sizes, unable to setValue");
@@ -53,7 +64,12 @@ public class QuartusBus {
     }
     public void setValue(Boolean value, Boolean ...values) { setValue(new QuartusBus(value, values)); }
 
-
+    /**
+     * Método auxiliar que compara se um Bus é igual a outro objeto
+     * Se ambos forem do tipo Bus, compara seus conteúdos
+     * Retorna true se forem o mesmo objeto com mesmo conteúdo
+     * False se há qualquer diferença
+     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof QuartusBus)) return false;
@@ -67,6 +83,9 @@ public class QuartusBus {
         return true;
     }
 
+    /**
+     * Método que faz o toString de um Bus, printando seus dados/bits
+     */
     @Override
     public String toString() {
         StringBuilder valuesStr = new StringBuilder("{ ");
@@ -119,6 +138,7 @@ public class QuartusBus {
         return new QuartusBus(newBusValues);
     }
 
+    //Define o que significa true e false num Bus
     static {
         HIGH1b = new QuartusBus(true);
         LOW1b = new QuartusBus(false);
