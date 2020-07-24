@@ -6,6 +6,12 @@ import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.world.World;
 
+/**
+ * Classe que recebe e gerencia pacote de bytes do servidor
+ * Atualiza os blocos de extensão do Executor, os Inputs e
+ * Outputs para todos no servidor quando executados no
+ * bloco Executor
+ */
 public class QuartusExtensorIOUpdateC2SPacketHandler {
     public static void register() {
         ServerSidePacketRegistry.INSTANCE.register(QuartusExtensorIOUpdateC2SPacket.ID, (packetContext, packetByteBuf) -> {

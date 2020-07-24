@@ -33,37 +33,49 @@ public class QuartusBlocks {
 
     public static void init() {}
 
-    private static Block register(String block_name, Block block) {
+    /**
+     * Método responsável por registrar os blocos no jogo
+     * @param block_name    Nome do bloco que será registrado
+     * @param block         Bloco a ser registrado (pode-se entender como sendo o "tipo" do bloco que existe no mundo)
+     * @return              Bloco que foi registrado
+     */
+    private static Block registerBlock(String block_name, Block block) {
         return Registry.register(Registry.BLOCK, Quartus.id(block_name), block);
     }
 
-    private static Block registerComponent(String block_name, String componentName) {
+    /**
+     * Método responsável por registrar um bloco de componente (CircuitComponentBlock)
+     * @param block_name    Nome do bloco de componente a ser registrado
+     * @param componentName Nome do componente associado ao bloco
+     * @return              Bloco registrado
+     */
+    private static Block registerComponentBlock(String block_name, String componentName) {
         ComponentInfo componentInfo = QuartusCircuitComponents.getComponentInfoByName(componentName);
         if (componentInfo == null) throw new IllegalArgumentException("Unknown componentName = " + componentName);
-        return register(block_name, new CircuitComponentBlock(componentInfo));
+        return registerBlock(block_name, new CircuitComponentBlock(componentInfo));
     }
 
     static {
-        WIRE = register("wire", new WireBlock());
-        EXTENSOR_GATE = registerComponent("extensor_gate", "ExtensorGate");
-        DISTRIBUTOR_GATE = registerComponent("distributor_gate", "DistributorGate");
+        WIRE = registerBlock("wire", new WireBlock());
+        EXTENSOR_GATE = registerComponentBlock("extensor_gate", "ExtensorGate");
+        DISTRIBUTOR_GATE = registerComponentBlock("distributor_gate", "DistributorGate");
 
-        AND_GATE = registerComponent("and_gate", "AndGate");
-        NAND_GATE = registerComponent("nand_gate", "NandGate");
-        OR_GATE = registerComponent("or_gate", "OrGate");
-        NOR_GATE = registerComponent("nor_gate", "NorGate");
-        XOR_GATE = registerComponent("xor_gate", "XorGate");
-        XNOR_GATE = registerComponent("xnor_gate", "XnorGate");
-        NOT_GATE = registerComponent("not_gate", "NotGate");
+        AND_GATE = registerComponentBlock("and_gate", "AndGate");
+        NAND_GATE = registerComponentBlock("nand_gate", "NandGate");
+        OR_GATE = registerComponentBlock("or_gate", "OrGate");
+        NOR_GATE = registerComponentBlock("nor_gate", "NorGate");
+        XOR_GATE = registerComponentBlock("xor_gate", "XorGate");
+        XNOR_GATE = registerComponentBlock("xnor_gate", "XnorGate");
+        NOT_GATE = registerComponentBlock("not_gate", "NotGate");
 
-        MULTIPLEXER_GATE = registerComponent("multiplexer", "MultiplexerGate");
+        MULTIPLEXER_GATE = registerComponentBlock("multiplexer", "MultiplexerGate");
 
-        COMPILER = register("compiler", new CompilerBlock());
-        EXECUTOR = register("executor", new ExecutorBlock());
+        COMPILER = registerBlock("compiler", new CompilerBlock());
+        EXECUTOR = registerBlock("executor", new ExecutorBlock());
 
-        EXTENSOR_IO = register("extensor_io", new ExecutorIOBlock());
+        EXTENSOR_IO = registerBlock("extensor_io", new ExecutorIOBlock());
 
-        INPUT = registerComponent("input", "Input");
-        OUTPUT = registerComponent("output", "Output");
+        INPUT = registerComponentBlock("input", "Input");
+        OUTPUT = registerComponentBlock("output", "Output");
     }
 }

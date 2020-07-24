@@ -33,9 +33,9 @@ public class FloppyDiskItem extends Item {
 	 * Caso o FloppyDisk esteja corrompido, vazio, não faz nada
 	 * Caso esteja com um circuito dentro, o jogador faz a ação de
 	 * mecher a mão e printa o cirtuito serializado
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param user	->	Entitade do usuário (jogador)
-	 * @param hand	->	Mão utlizada pelo jogador
+	 * @param world		Mundo que está sendo jogado
+	 * @param user		Entitade do usuário (jogador)
+	 * @param hand		Mão utlizada pelo jogador
 	 */
     @Override
     @Environment(EnvType.CLIENT)
@@ -51,10 +51,10 @@ public class FloppyDiskItem extends Item {
 
 	/**
 	 * Método que cria e/ou atribui uma tag "circuit" ao item
-	 * @param stack	->	Pilha que contém uma lista de items guardados no inventario de um bloco
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param tooltip	->	Dica flutuante
-	 * @param context	->	Contexto da tooltip
+	 * @param stack		Pilha que contém uma lista de items guardados no inventario de um bloco
+	 * @param world		Mundo que está sendo jogado
+	 * @param tooltip		Dica flutuante
+	 * @param context		Contexto da tooltip
 	 */
 	//TODO: TESTAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11!ONZE
     @Override
@@ -66,7 +66,7 @@ public class FloppyDiskItem extends Item {
 	 * Método que retorna um boolean caso o FloppyDiskItem tenha
 	 * a propriedade de brilho (glint), indicando que possui
 	 * um circuito dentro
-	 * @param stack	->	Pilha que contém uma lista de items guardados no inventario de um bloco
+	 * @param stack		Pilha que contém uma lista de items guardados no inventario de um bloco
 	 */
     @Override
     public boolean hasEnchantmentGlint(ItemStack stack) {

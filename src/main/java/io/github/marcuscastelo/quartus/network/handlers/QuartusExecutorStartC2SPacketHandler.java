@@ -7,6 +7,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * Classe que gerencia os pacotes de dados do servidor com o client
+ */
 public class QuartusExecutorStartC2SPacketHandler {
     public static void register() {
         ServerSidePacketRegistry.INSTANCE.register(QuartusExecutorStartC2SPacket.ID, (packetContext, packetByteBuf) -> {

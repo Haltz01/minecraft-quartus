@@ -15,10 +15,10 @@ public class ComponentUtils {
 	/**
 	 * Método que verifica se há componentes do Mod e,
 	 * em seguida, se há entradas ou saídas disponíveis
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param pos	->	Posição do bloco no mundo
-	 * @param inToOutDirection	->	Direção do Input ao Output
-	 * @return	->	Boolean que confirma se há direções a seguir
+	 * @param world		Mundo que está sendo jogado
+	 * @param pos		Posição do bloco no mundo
+	 * @param inToOutDirection		Direção do Input ao Output
+	 * @return		Boolean que confirma se há direções a seguir
 	 */
     public static boolean isComponentConnectableAtDirection(World world, BlockPos pos, Direction inToOutDirection) {
         BlockState componentBs = world.getBlockState(pos);

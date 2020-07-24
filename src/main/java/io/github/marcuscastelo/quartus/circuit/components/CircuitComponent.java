@@ -31,9 +31,9 @@ public class CircuitComponent {
 
     /**
 	 * Contrutor padrão da classe QuartusCircuitComponent
-	 * @param componentName	->	Nome do componente
-	 * @param possibleDirectionsInfo	->	Possíveis direções que a informação pode seguir
-	 * @param ID	->	Identificador do componente
+	 * @param componentName		Nome do componente
+	 * @param possibleDirectionsInfo		Possíveis direções que a informação pode seguir
+	 * @param ID		Identificador do componente
 	 */
     public CircuitComponent(String componentName, ComponentDirectionInfo componentDirectionInfo, int ID) {
         this.componentName = componentName;
@@ -99,7 +99,7 @@ public class CircuitComponent {
 	/**
 	 * Método que faz a chamada do updateInputInfo de um circuito,
 	 * atualizando seus valores de entrada e saída
-	 * @param circuit	->	Circuito a ser atualizado
+	 * @param circuit		Circuito a ser atualizado
 	 */
     public void updateComponent(QuartusCircuit circuit) {
         updateInputInfo(circuit);
@@ -108,13 +108,13 @@ public class CircuitComponent {
 
     /**
 	 * Método que retorna as informações que estão nos inputs e outputs de um componente
-	 * @return	->	Mapeamento dos Bus's com suas respectivas informações
+	 * @return		Mapeamento dos Bus's com suas respectivas informações
 	 */    
     public ComponentExecutionInfo getExecutionInfo() { return executionInfo; }
 	
 	/**
 	 * Método que verifica se um dado componente possui conexões nas suas saídas
-	 * @return	->	Boolean que verifica se há conexões nas saídas
+	 * @return		Boolean que verifica se há conexões nas saídas
 	 */
     public boolean hasOutputConnections() {
         for (List<ComponentConnection> connectionsPerDir: connections.values()) {
@@ -127,8 +127,8 @@ public class CircuitComponent {
 
 	/**
 	 * Método que adiciona uma conexão a um componente de acordo com a direção dada
-	 * @param direction	->	Direção dada para adicionar conexão
-	 * @param connection	->	Conexão a ser adicionada
+	 * @param direction		Direção dada para adicionar conexão
+	 * @param connection		Conexão a ser adicionada
 	 */
     public void addConnection(Direction direction, ComponentConnection connection) {
         connections.get(direction).add(connection);
@@ -136,7 +136,7 @@ public class CircuitComponent {
 
 	/**
 	 * Método que retorna como String as conexões nos outputs de um componente
-	 * @return	->	String com as conexões das saídas do componente
+	 * @return		String com as conexões das saídas do componente
 	 */
     public String getOutputConnectionsString() {
         StringBuilder str = new StringBuilder();
@@ -155,7 +155,7 @@ public class CircuitComponent {
 
 	/**
 	 * Método que retorna uma lista com as conexões das saídas de um componente
-	 * @return	->	Lista com as conexões
+	 * @return		Lista com as conexões
 	 */
     public List<ComponentConnection> getOutputConnections() {
         List<ComponentConnection> outputConnections = new ArrayList<>();
@@ -182,7 +182,7 @@ public class CircuitComponent {
 	/**
 	 * Método que retorna um mapeamento das conexões dos componentes
 	 * e suas direções
-	 * @return	->	Mapeamento das conexões e direções
+	 * @return		Mapeamento das conexões e direções
 	 */
     public Map<Direction, List<ComponentConnection>> getConnections() {
         return connections;

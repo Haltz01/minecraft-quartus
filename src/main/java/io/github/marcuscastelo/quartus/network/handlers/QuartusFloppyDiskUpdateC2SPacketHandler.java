@@ -8,6 +8,11 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+/**
+ * Classe que recebe e gerencia pacote de bytes do servidor
+ * Atualiza os FLOPPY_DISK para todos os jogadores no servidor
+ * quando compilado no bloco Compiler
+ */
 public class QuartusFloppyDiskUpdateC2SPacketHandler {
     public static void register() {
         ServerSidePacketRegistry.INSTANCE.register(QuartusFloppyDiskUpdateC2SPacket.ID, (packetContext, packetByteBuf) -> {

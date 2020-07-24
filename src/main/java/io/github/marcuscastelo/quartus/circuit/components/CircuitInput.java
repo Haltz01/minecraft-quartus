@@ -15,7 +15,7 @@ public class CircuitInput extends CircuitComponent {
 
     /**
      * Construtor da Classe Input
-     * @param ID	->	Identificador do componente
+     * @param ID		Identificador do componente
      */
     public CircuitInput(int ID) {
         super(COMP_NAME, inputDirectionInfo, ID, QuartusLogics.INPUT);

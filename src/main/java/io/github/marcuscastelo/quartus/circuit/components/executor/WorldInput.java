@@ -23,9 +23,9 @@ public class WorldInput extends CircuitInput {
 
 	/**
 	 * Construtor padrão, que liga o Input no circuito ao WorldInput
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param pos	->	Posição do bloco no mundo
-	 * @param inputImport	->	Input que está sendo enviado ao bloco do Input no mundo 'real'
+	 * @param world		Mundo que está sendo jogado
+	 * @param pos		Posição do bloco no mundo
+	 * @param inputImport		Input que está sendo enviado ao bloco do Input no mundo 'real'
 	 */
     public WorldInput(World world, BlockPos pos, CircuitInput inputImport) {
         super(inputImport.getID());

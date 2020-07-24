@@ -25,7 +25,7 @@ public class Quartus implements ModInitializer {
     public static ItemGroup ITEMGROUP =
             FabricItemGroupBuilder.create(id("item_group"))
                     .icon(()->new ItemStack(QuartusItems.FLOPPY_DISK))
-                    .appendItems(QuartusItems::appendItemGroupStacksInorder)
+                    .appendItems(QuartusItems::appendItemGroupStacksInOrder)
                     .build();
 	/**
 	 * Método principal de inicialização do Mod, iniciando blocos, entidades de blocos, itens, etc
@@ -46,8 +46,8 @@ public class Quartus implements ModInitializer {
 
 	/**
 	 * Método que auxilia na criação de um identificador id para os blocos desenvolvidos
-	 * @param name	->	nome passado como sufixo para identificador de um bloco
-	 * @return	->	retorna o identificador gerado a partir do sufixo passado (name) e MOD_ID
+	 * @param name		nome passado como sufixo para identificador de um bloco
+	 * @return		retorna o identificador gerado a partir do sufixo passado (name) e MOD_ID
 	 */
     public static Identifier id(String name) {
         return new Identifier(MOD_ID, name);

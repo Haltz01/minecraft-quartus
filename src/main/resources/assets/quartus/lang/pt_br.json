@@ -22,5 +22,8 @@
   "gui.quartus.executor.no_circuit": "O disquete provido não contém um circuito",
   "gui.quartus.executor.execute_btn": "Executar",
   "blockentity.quartus.executor.unknown_error": "Opa! Houve um problema ao tentar executar o circuito",
-  "blockentity.quartus.executor.not_enough_io": "Não há entradas e/ou saídas suficientes para o circuito"
+  "blockentity.quartus.executor.not_enough_io": "Não há entradas e/ou saídas suficientes para o circuito",
+  "circuitcompiler.unknown_error": "Erro desconhecido ao executar o circuito",
+  "circuitcompiler.out_of_bounds": "Algum componente está fora dos limites permitidos. O circuito deve estar dentro de um espaço 10x10x10",
+  "circuitcompiler.disconnected_component": "Hm... Parece que algum componente está desconectado do circuito"
 }

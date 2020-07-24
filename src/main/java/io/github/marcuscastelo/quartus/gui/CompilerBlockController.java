@@ -33,8 +33,8 @@ public class CompilerBlockController extends CottonCraftingController {
 	/**
 	 * Método que recebe um pacote de informações e atualiza o Disquete
 	 * dentro do compilador para todos os jogadores
-	 * @param floppyItemStack	->	Pilha de item no inventário do blcoo
-	 * @param circuit	->	Circuito analisado
+	 * @param floppyItemStack		Pilha de item no inventário do blcoo
+	 * @param circuit		Circuito analisado
 	 */
     private void updateFloppyDisk(ItemStack floppyItemStack, QuartusCircuit circuit) {
         System.out.println(circuit.serialize());
@@ -53,7 +53,7 @@ public class CompilerBlockController extends CottonCraftingController {
 	//TODO: support areas bigger than 10x10
 	/**
 	 * Método que compila um circuito dentro de uma área
-	 * @return	->	Circuito compilado
+	 * @return		Circuito compilado
 	 */
     private Optional<QuartusCircuit> compileCircuit() {
         Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
@@ -92,10 +92,10 @@ public class CompilerBlockController extends CottonCraftingController {
 	 * Construtor padrão da classe CompilerBlockController
 	 * Adiciona uma interface ao compilador para facilitar o uso
 	 * e deixa mais intuitivo seu uso
-	 * @param syncId	->	Identificador ID do bloco
-	 * @param playerInventory	->	Inventário do jogador
-	 * @param blockInventory	->	Inventário do bloco
-	 * @param compilerBlockPosition	->	Posição do bloco Compiler
+	 * @param syncId		Identificador ID do bloco
+	 * @param playerInventory		Inventário do jogador
+	 * @param blockInventory		Inventário do bloco
+	 * @param compilerBlockPosition		Posição do bloco Compiler
 	 */
     public CompilerBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos compilerBlockPosition) {
         super(RecipeType.CRAFTING, syncId, playerInventory, blockInventory, null);

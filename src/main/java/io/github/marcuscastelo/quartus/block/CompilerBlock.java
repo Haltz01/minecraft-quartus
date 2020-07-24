@@ -47,7 +47,7 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 
 	/**
 	 * Método que define as propriedades que o bloco designado terá.
-	 * @param builder -> Especifica que o bloco criado terá
+	 * @param builder  Especifica que o bloco criado terá
 	 * 					como propriedade FACING -> orientação no mundo
 	 */
     @Override
@@ -58,10 +58,10 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 	/**
 	 * Método que retorna o estado do bloco (blockState) quando posicionado no mundo.
 	 * Quando posicionar, o bloco deve estar virado para o jogador que o colocou.
-	 * @param ctx -> contexto em que o bloco é posicionado
+	 * @param ctx  contexto em que o bloco é posicionado
 	 * 					Identifica a direção do jogador,
 	 * 					posicionando-o para 'encará-lo'
-	 * @return	->	retorna o blockState
+	 * @return		retorna o blockState
 	 */
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -71,8 +71,8 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 	/**
 	 * Método que cria o BlockEntity do bloco, que define suas características
 	 * e funções, armazenando os dados dentro do bloco.
-	 * @param view	->	'Mundo' que cria a BlockEntity
-	 * @return	->	Retorna a BlockEntity criada
+	 * @param view		'Mundo' que cria a BlockEntity
+	 * @return		Retorna a BlockEntity criada
 	 */
     @Override
     public BlockEntity createBlockEntity(BlockView view) {
@@ -82,13 +82,13 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 	/**
 	 * Método chamado quando o jogador tenta usar o bloco (clicar com o botão direito do mouse).
 	 * Pode ser um bloco presente no mundo ou que o jogador esté segurando.
-	 * @param state	->	Identifica o estado do bloco (energizado, dureza, etc)
-	 * @param world	->	Mundo em que está sendo jogado
-	 * @param pos	->	Posição do bloco no mundo
-	 * @param player->	Jogador que tentou usar o bloco
-	 * @param hand	->	Mão que o jogador usou para ativar o bloco
-	 * @param hit	->	Resultado de acertar um bloco
-	 * @return	->	Retorna o efeito da ação de tentar usar um bloco, na mão ou no mundo
+	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * @param world		Mundo em que está sendo jogado
+	 * @param pos		Posição do bloco no mundo
+	 * @param player	Jogador que tentou usar o bloco
+	 * @param hand		Mão que o jogador usou para ativar o bloco
+	 * @param hit		Resultado de acertar um bloco
+	 * @return		Retorna o efeito da ação de tentar usar um bloco, na mão ou no mundo
 	 */
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -104,9 +104,9 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 	 * Método auxiliar posicionar o bloco no mundo.
 	 * Caso o bloco já contenha um FloppyDisk (disquete) dentro,
 	 * posiciona o compilador com o disquete e seu circuito.
-	 * @param world	->	Mundo em que está sendo jogado
-	 * @param pos	->	Posição do bloco no mundo
-	 * @param compilerIS	->	Item/bloco Compiler presente no inventário do jogador
+	 * @param world		Mundo em que está sendo jogado
+	 * @param pos		Posição do bloco no mundo
+	 * @param compilerIS		Item/bloco Compiler presente no inventário do jogador
 	 */
     private void handleBlockTagOnPlace(World world, BlockPos pos, ItemStack compilerIS) {
         if (compilerIS.getTag() == null) return;
@@ -114,6 +114,7 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 
         if (!compilerIS.getTag().getBoolean("hasFloppy")) return;
 
+        // TODO: parar de utilizar essa função (usar world.getBlockEntity)
 		//'Cria' o disquete e atrela ao BlockEntity do novo Compiler no inventário do jogador
         Inventory inv = QuartusCottonGUIs.getBlockInventory(world, pos);
         ItemStack floppyIS = new ItemStack(QuartusItems.FLOPPY_DISK, 1);
@@ -126,11 +127,11 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 
 	/**
 	 * Método chamado quando um bloco Compiler é posicionado no mundo.
-	 * @param world	->	Mundo em que está sendo jogado
-	 * @param pos	->	Posição do bloco no mundo
-	 * @param state	->	Identifica o estado do bloco (energizado, dureza, etc)
-	 * @param placer->	Identifica quem está colocando o bloco (próprio jogador, um monstro do jogo)
-	 * @param compilerIS	->	Item Compiler presente no inventário da entidade que posiciona o bloco
+	 * @param world		Mundo em que está sendo jogado
+	 * @param pos		Posição do bloco no mundo
+	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * @param placer	Identifica quem está colocando o bloco (próprio jogador, um monstro do jogo)
+	 * @param compilerIS		Item Compiler presente no inventário da entidade que posiciona o bloco
 	 */
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack compilerIS) {
@@ -141,11 +142,11 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 	/**
 	 * Método que define o que ocorre quando o Compilador é removido/destruído.
 	 * Caso tenha um FloppyDisk dentro do Compiler, o item será derrubado integralmente
-	 * @param state	->	Identifica o estado do bloco (energizado, dureza, etc)
-	 * @param world	->	Mundo em que está sendo jogado
-	 * @param pos	->	Posição do bloco no mundo
-	 * @param newState	->	Novo estado do bloco após a ação
-	 * @param moved	->	Boolean que identifica se o bloco foi simplesmente movido ou de fato apagado
+	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * @param world		Mundo em que está sendo jogado
+	 * @param pos		Posição do bloco no mundo
+	 * @param newState		Novo estado do bloco após a ação
+	 * @param moved		Boolean que identifica se o bloco foi simplesmente movido ou de fato apagado
 	 */
     @Override
     public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
@@ -165,9 +166,9 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 
 	/**
 	 * Método que retorna uma lista de itens que foram derrubados
-	 * @param state	->	Estado do bloco
-	 * @param builder	->	Builder que configura as propriedades dos blocos
-	 * @return	->	Lista com os itens a serem derrubados
+	 * @param state		Estado do bloco
+	 * @param builder		Builder que configura as propriedades dos blocos
+	 * @return		Lista com os itens a serem derrubados
 	 */
 	@Override
 	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {

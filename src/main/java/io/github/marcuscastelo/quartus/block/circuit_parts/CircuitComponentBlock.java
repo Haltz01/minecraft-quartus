@@ -37,7 +37,7 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 
 	/**
 	 * Construtor padrão da classe CircuitComponentBlock
-	 * @param componentInfo	->	Informação do bloco que está sendo feito
+	 * @param componentInfo		Informação do bloco que está sendo feito
 	 */
     public CircuitComponentBlock(ComponentInfo componentInfo) {
         super(Settings.copy(Blocks.REPEATER));
@@ -55,11 +55,11 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 
 	/**
 	 * Método que retorna o contorno do bloco que está 'na mira' do jogador
-	 * @param state	->	Identifica o estado do bloco (energizado, dureza, etc)
-	 * @param view	->	'Mundo' em que está o bloco
-	 * @param pos	->	Posição do bloco 'mirado'
-	 * @param context	->	Contexto em que o bloco se encontra (ambiente ao redor)
-	 * @return	->	Retorna o contorno do bloco (hitbox)
+	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * @param view		'Mundo' em que está o bloco
+	 * @param pos		Posição do bloco 'mirado'
+	 * @param context		Contexto em que o bloco se encontra (ambiente ao redor)
+	 * @return		Retorna o contorno do bloco (hitbox)
 	 */
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
@@ -76,10 +76,10 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 
 	/**
 	 * Método auxiliar que define em quais tipos de lugares o bloco pode ser posicionado
-	 * @param state	->	Identifica o estado do bloco (energizado, dureza, etc)
-	 * @param world	->	Mundo em que está sendo jogado
-	 * @param pos	->	Posição do bloco no mundo
-	 * @return	->	Retorna boolean que diz se é possível posicionar o bloco
+	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * @param world		Mundo em que está sendo jogado
+	 * @param pos		Posição do bloco no mundo
+	 * @return		Retorna boolean que diz se é possível posicionar o bloco
 	 */
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
@@ -89,13 +89,13 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 
 	/**
 	 * Método que retorna o BlockState para utilizar no método de atualizar os blocos de acordo com seus vizinhos
-	 * @param state	->	Identifica o estado do bloco (energizado, dureza, etc)
-	 * @param facing	->	Direção para o qual o bloco 'olha'
-	 * @param neighborState	->	Estado do bloco vizinho
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param pos	->	Posição do bloco no mundo
-	 * @param neighborPos	->	Posição do bloco vizinho
-	 * @return	->	BlockState do bloco em questão
+	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * @param facing		Direção para o qual o bloco 'olha'
+	 * @param neighborState		Estado do bloco vizinho
+	 * @param world		Mundo que está sendo jogado
+	 * @param pos		Posição do bloco no mundo
+	 * @param neighborPos		Posição do bloco vizinho
+	 * @return		BlockState do bloco em questão
 	 */
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
@@ -104,9 +104,9 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 
 	/**
 	 * Método que retorna uma lista de itens que foram derrubados
-	 * @param state	->	Estado do bloco
-	 * @param builder	->	Builder que configura as propriedades dos blocos
-	 * @return	->	Lista com os itens a serem derrubados
+	 * @param state		Estado do bloco
+	 * @param builder		Builder que configura as propriedades dos blocos
+	 * @return		Lista com os itens a serem derrubados
 	 */
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
@@ -115,8 +115,8 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 
 	/**
 	 * Método que retorna o BlockState de um bloco recém posicionado
-	 * @param ctx	->	Contexto em que o bloco se encontra
-	 * @return	->	BlockState do bloco após posicionar (virado para o jogador)
+	 * @param ctx		Contexto em que o bloco se encontra
+	 * @return		BlockState do bloco após posicionar (virado para o jogador)
 	 */
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -125,7 +125,7 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 
 	/**
 	 * Método auxiliar que adiciona ao bloco a propriedade de FACING (direção que 'olha')
-	 * @param builder	->	Builder que adiciona FACING às propriedades do bloco
+	 * @param builder		Builder que adiciona FACING às propriedades do bloco
 	 */
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {

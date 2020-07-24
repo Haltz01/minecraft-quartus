@@ -11,23 +11,47 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class QuartusCircuitComponents {
+    // Descreve as direções de um componenete cujos inputs são oeste, leste e outputs são norte (direções relativas a direção para que o componente olha) [West, East to North Direction Info]
     public static final ComponentDirectionInfo WE2NDirInfo = new ComponentDirectionInfo(Arrays.asList(Direction.EAST, Direction.WEST), Direction.NORTH);
+    // Descreve as direções de um componenete cujos inputs são oeste, leste, sul e outputs são norte (direções relativas a direção para que o componente olha) [West, East, South to North Direction Info]
     public static final ComponentDirectionInfo WES2NDirInfo = new ComponentDirectionInfo(Arrays.asList(Direction.EAST, Direction.WEST, Direction.SOUTH), Direction.NORTH);
+    // Descreve as direções de um componenete cujos inputs são sul e outputs são norte, leste, oeste (direções relativas a direção para que o componente olha) [South to North, East, West Direction Info]
     public static final ComponentDirectionInfo S2NEWDirInfo = new ComponentDirectionInfo(Direction.SOUTH, Arrays.asList(Direction.NORTH, Direction.EAST, Direction.WEST));
 
+    // Map que guarda a informação de cada tipo de componenete
     public static final Map<String, ComponentInfo> componentInfoPerComponentName = new HashMap<>();
 
+    /**
+     * Método responsável por registrar um tipo de componente (ex.: as portas lógicas)
+     * @param componentName     Nome do componente a ser registrado
+     * @param directionInfo     Informação sobre a direção relativa de input/output do componente
+     * @param componentLogic    Lógica do componente (ex.: portas lógicas AND, OR, XOR, NOT etc.)
+     * @return                  Classe com as informações do tipo de componenete que foi registrado
+     */
     public static ComponentInfo registerComponent(String componentName, ComponentDirectionInfo directionInfo, QuartusLogic componentLogic) {
         Supplier<CircuitComponent> componentSupplier = () -> new CircuitComponent(componentName, directionInfo, componentLogic);
         return registerSpecialComponent(componentName, directionInfo, componentLogic, componentSupplier);
     }
 
+    /**
+     * Método responsável por registrar componentes especiais: utilizam classes que herdam da classe CircuitComponent (input e output)
+     * @param componentName         Nome do componenete a ser registrado
+     * @param directionInfo         Informação sobre a direção relativa de input/output do componente
+     * @param componentLogic        Lógica do componente
+     * @param componentSupplier     Construtor da classe que herda CircuitComponent
+     * @return                      Classe com as informações do tipo de componenete que foi registrado
+     */
     public static ComponentInfo registerSpecialComponent(String componentName, ComponentDirectionInfo directionInfo, QuartusLogic componentLogic, Supplier<CircuitComponent> componentSupplier) {
         ComponentInfo info = new ComponentInfo(componentSupplier, directionInfo, componentLogic);
         componentInfoPerComponentName.putIfAbsent(componentName, info);
         return info;
     }
 
+    /**
+     * Método que obtém as informações de um tipo de componente a partir de seu nome
+     * @param componentName         Nome do componenete
+     * @return                      Classe com informações do tipo de componenete (usado para instanciar um componenete)
+     */
     @Nullable
     public static ComponentInfo getComponentInfoByName(String componentName) {
         return componentInfoPerComponentName.getOrDefault(componentName, null);
@@ -62,7 +86,6 @@ public class QuartusCircuitComponents {
         //TODO: dar implementação real ao extensor
         EXTENSOR_GATE = registerComponent("ExtensorGate", WES2NDirInfo, QuartusLogics.EXTENSOR);
 
-        //Os inputs e outputs são meros marcadores e por isso não possuem lógica interna (apenas repassam do sul para o norte relativos)
         INPUT = registerSpecialComponent(CircuitInput.COMP_NAME, CircuitInput.inputDirectionInfo, QuartusLogics.INPUT, CircuitInput::new);
         OUTPUT = registerSpecialComponent(CircuitOutput.COMP_NAME, CircuitOutput.outputDirectionInfo, QuartusLogics.OUTPUT, CircuitOutput::new);
     }

@@ -12,26 +12,26 @@ import java.util.List;
 public interface QuartusInGameComponent {
 	/**
 	 * Assinatura do método que retorna a direção que um dado BlockState tem
-	 * @param state	->	BlockState do bloco
-	 * @return	->	Direção que está virado
+	 * @param state		BlockState do bloco
+	 * @return		Direção que está virado
 	 */
 	Direction getFacingDirection(BlockState state);
 	
 	/**
 	 * Assinarura de método que retorna o componente do circuito
-	 * @return	->	Componente do circuito
+	 * @return		Componente do circuito
 	 */
 	CircuitComponent getCircuitComponent();
 	
 	/**
 	 * Assinatura do método que retorna uma lista com as direções de cada Input da sequência
-	 * @return	->	Lista com direções de cada Input
+	 * @return		Lista com direções de cada Input
 	 */
 	List<Direction> getPossibleInputDirections(Direction facingDirection);
 	
 	/**
 	 * Assinatura do método que retorna uma lista com as direções de cada Output da sequência
-	 * @return	->	Lista com direções de cada Output
+	 * @return		Lista com direções de cada Output
 	 */
     List<Direction> getPossibleOutputDirections(Direction facingDirection);
 }
