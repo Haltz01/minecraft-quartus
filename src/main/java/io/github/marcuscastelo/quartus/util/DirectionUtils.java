@@ -17,9 +17,9 @@ public class DirectionUtils {
 	/**
 	 * Método que retorna a direção horizontal,
 	 * a partir da posição de um bloco até a posição de outro
-	 * @param posA	->	Posição do primeiro bloco
-	 * @param posB	->	Posição do segundo bloco
-	 * @return	->	Direção encontrada
+	 * @param posA		Posição do primeiro bloco
+	 * @param posB		Posição do segundo bloco
+	 * @return		Direção encontrada
 	 */
     @Nullable
     public static Direction getHorizontalDirectionAtoB(BlockPos posA, BlockPos posB) {
@@ -46,9 +46,9 @@ public class DirectionUtils {
 	/**
 	 * Método que retorna a direção vertical,
 	 * a partir da posição de um bloco até a posição de outro
-	 * @param posA	->	Posição do primeiro bloco
-	 * @param posB	->	Posição do segundo bloco
-	 * @return	->	Direção encontrada
+	 * @param posA		Posição do primeiro bloco
+	 * @param posB		Posição do segundo bloco
+	 * @return		Direção encontrada
 	 */
     @Nullable
     public static Direction getVerticalDirectionAtoB(BlockPos posA, BlockPos posB) {

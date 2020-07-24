@@ -51,11 +51,11 @@ public class CircuitUtils {
 	 * Método que analisa o circuito a partir de um dado componente do Mod,
 	 * identificando o caminho a ser seguido com os componentes e 
 	 * retornando uma lista com os dados adquiridos
-	 * @param world		->	Mundo que está sendo jogado
-	 * @param circuit	->	Circuito a ser analisado
-	 * @param originNode->	Nó/Componente de origem no circuito
-	 * @param originPos	->	Posição do nó/componente de origem
-	 * @return	->	Lista com os nós mapeados
+	 * @param world			Mundo que está sendo jogado
+	 * @param circuit		Circuito a ser analisado
+	 * @param originNode	Nó/Componente de origem no circuito
+	 * @param originPos		Posição do nó/componente de origem
+	 * @return		Lista com os nós mapeados
 	 */
     public static List<ConnectedNodeInfo> getConnectedNodesInfo(World world, QuartusCircuit circuit, CircuitComponent originNode, BlockPos originPos) {
         List<ConnectedNodeInfo> connectedNodesInfo = new ArrayList<>();
@@ -195,8 +195,8 @@ public class CircuitUtils {
 	/**
 	 * Método auxiliar que retorna uma função com a direção a seguida,
 	 * traduzindo para o jogo entender qual a direção desejada
-	 * @param facingDir	->	Direção de referência
-	 * @return	->	Função que diz qual direção seguir
+	 * @param facingDir		Direção de referência
+	 * @return		Função que diz qual direção seguir
 	 */
     private static Function<Direction, Direction> getRotationFunction(Direction facingDir) {
         if (facingDir == Direction.NORTH) return direction -> direction;
@@ -209,9 +209,9 @@ public class CircuitUtils {
 	/**
 	 * Método chamado para receber a direção para o qual um bloco está olhando
 	 * em relação ao jogo
-	 * @param facingDir	->	Direção que o bloco 'mira'
-	 * @param relativeDirection	->	Direção relativa à direção do bloco
-	 * @return	->	Direção absoluta (em relação ao norte do mundo)
+	 * @param facingDir		Direção que o bloco 'mira'
+	 * @param relativeDirection		Direção relativa à direção do bloco
+	 * @return		Direção absoluta (em relação ao norte do mundo)
 	 */
     public static Direction getAbsoluteDirection(Direction facingDir, Direction relativeDirection) {
         Function<Direction, Direction> rotationFunction = getRotationFunction(facingDir);
@@ -220,9 +220,9 @@ public class CircuitUtils {
 
 	/**
 	 * Método chamado para receber a direção que um bloco olha no jogo
-	 * @param facingDir	->	Direção que o bloco 'mira'
-	 * @param absoluteDireciton	->	Direção absoluta (em relação ao norte do mundo)
-	 * @return	->	Direção relativa (em relação ao norte do bloco)
+	 * @param facingDir		Direção que o bloco 'mira'
+	 * @param absoluteDireciton		Direção absoluta (em relação ao norte do mundo)
+	 * @return		Direção relativa (em relação ao norte do bloco)
 	 */
     public static Direction getRelativeDirection(Direction facingDir, Direction absoluteDireciton) {
         Function<Direction, Direction> rotationFunction = getRotationFunction(facingDir);
@@ -239,9 +239,9 @@ public class CircuitUtils {
 	 * Podem ser -	Input
 	 * 			 -	Output
 	 * 			 -	Porta Lógica
-	 * @param gateType	->	String com o tipo de porta
-	 * @param gateID	->	Int com o ID da porta
-	 * @return	->	Objeto genérico de acordo com os parâmetros passados
+	 * @param gateType		String com o tipo de porta
+	 * @param gateID		Int com o ID da porta
+	 * @return		Objeto genérico de acordo com os parâmetros passados
 	 */
     public static CircuitComponent createPolimorphicComponent(String gateType, int gateID) {
         ComponentInfo info = QuartusCircuitComponents.getComponentInfoByName(gateType);
@@ -257,8 +257,8 @@ public class CircuitUtils {
 	 * Método auxiliar que retorna um par,
 	 * relacionando a String que identifica um componente
 	 * com seu ID identificador
-	 * @param componentStr	->	String que identifica um componente
-	 * @return	->	Par de String e Int, que identificam um tipo de componente
+	 * @param componentStr		String que identifica um componente
+	 * @return		Par de String e Int, que identificam um tipo de componente
 	 */
     public static Pair<String, Integer> getComponentStrInfo(String componentStr) {
         String[] params = componentStr.split("_");

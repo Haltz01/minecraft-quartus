@@ -93,7 +93,7 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
 
 	/**
 	 * Método que define as propriedades que o bloco designado terá.
-	 * @param builder	->	Especifica que o bloco em questão terá as propriedades
+	 * @param builder		Especifica que o bloco em questão terá as propriedades
 	 * 						de FACING (orientação), EXTENSOR_STATE (void, input, input/output, etc)
 	 * 						e se está POWERED (energizado)
 	 */
@@ -106,8 +106,8 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
 	 * Método que retorna o estado do bloco (blockState) quando posicionado no mundo.
 	 * No caso do ExecutorIOBlock, ele se encontrará sempre à direita do bloco Executor
 	 * A verificação é feita verificando o bloco da esquerda (deve ser um Executor ou outro ExecutorIOBlock)
-	 * @param ctx	->	Contexto do bloco posicionado
-	 * @return	->	Retorna o BlockState 
+	 * @param ctx		Contexto do bloco posicionado
+	 * @return		Retorna o BlockState 
 	 */
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -125,9 +125,9 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
 
     /**
      * Método que retorna uma lista de itens que foram derrubados
-     * @param state	->	Estado do bloco
-     * @param builder	->	Builder que configura as propriedades dos blocos
-     * @return	->	Lista com os itens a serem derrubados
+     * @param state		Estado do bloco
+     * @param builder		Builder que configura as propriedades dos blocos
+     * @return		Lista com os itens a serem derrubados
      */
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
@@ -138,12 +138,12 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
 	 * Define o comportamento de mudança de estado e propagação de informação pela corrente de ExecutorIO
 	 * Faz a verificação dos blocos vizinho e determina o estado de cada bloco da sequência
 	 * Caso a sequência seja desfeita (ExecutorIOBlock ou Executor destruído ou movido), todos blocos à direita serão destruídos
-	 * @param state	->	Identifica o estado do bloco (energizado, dureza, etc)
-	 * @param world	->	Mundo em que está sendo jogado
-	 * @param pos	->	Posição do bloco no mundo
-	 * @param previousBlock	->	Bloco anterior ao analisado
-	 * @param neighborPos	->	Posição do bloco vizinho
-	 * @param moved	->	Boolean que verifica se o bloco foi movido ou de fato destruído
+	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * @param world		Mundo em que está sendo jogado
+	 * @param pos		Posição do bloco no mundo
+	 * @param previousBlock		Bloco anterior ao analisado
+	 * @param neighborPos		Posição do bloco vizinho
+	 * @param moved		Boolean que verifica se o bloco foi movido ou de fato destruído
 	 */
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block previousBlock, BlockPos neighborPos, boolean moved) {

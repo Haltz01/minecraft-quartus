@@ -29,9 +29,9 @@ public class WireConnector {
 	/**
 	 * Método auxiliar que verifica se houve mudanças no fio.
 	 * Compara os BlockState's de antes e depois
-	 * @param oldState	->	BlockState do fio antes de uma alteração
-	 * @param newState	->	BlockState do fio após qualquer alteração
-	 * @return	->	Boolean que diz se houve mudança
+	 * @param oldState		BlockState do fio antes de uma alteração
+	 * @param newState		BlockState do fio após qualquer alteração
+	 * @return		Boolean que diz se houve mudança
 	 */
     private static boolean hasWireChanged(BlockState oldState, BlockState newState) {
         return oldState.get(Properties.HORIZONTAL_FACING) != newState.get(Properties.HORIZONTAL_FACING) ||
@@ -43,9 +43,9 @@ public class WireConnector {
 	/**
 	 * Método que verifica se a conexão do fio
 	 * o faz 'virar'/é do tipo 'turn'
-	 * @param facingDirection	->	Direção que o fio está 'olhando'
-	 * @param auxDirection	->	Outro lado do facingDirection
-	 * @return	->	Boolean que verifica se a conexão faz 'turn'
+	 * @param facingDirection		Direção que o fio está 'olhando'
+	 * @param auxDirection		Outro lado do facingDirection
+	 * @return		Boolean que verifica se a conexão faz 'turn'
 	 */
     public static boolean isConnectionTurned(Direction facingDirection, @Nullable Direction auxDirection) {
         return auxDirection != null && !facingDirection.getOpposite().equals(auxDirection);
@@ -56,9 +56,9 @@ public class WireConnector {
 	 * Orientação positiva é quando a auxDirection equivale
 	 * à rotação do facingDirection no sentido anti-horário,
 	 * em 90° (derivado do conceito de bases positivas no espaço)
-	 * @param facingDirection	->	Direção que o fio está 'olhando'
-	 * @param auxDirection	->	Outro lado do facingDirection
-	 * @return	->	Boolean que verifica se são equivalentes
+	 * @param facingDirection		Direção que o fio está 'olhando'
+	 * @param auxDirection		Outro lado do facingDirection
+	 * @return		Boolean que verifica se são equivalentes
 	 */
     public static boolean isConnectionPositive(Direction facingDirection, @Nullable Direction auxDirection) {
         if (auxDirection == null) return false;
@@ -71,9 +71,9 @@ public class WireConnector {
 	 * facing ou auxDirection. Se a quantidade de blocos foi <= 2,
 	 * salva no par os blocos conectados de acordo com a direção,
 	 * pois não é possível conectar um fio a mais de 2 componentes.
-	 * @param mainConnectionPos	->	Posição do bloco principal
-	 * @param otherBlocksPos	->	Lista de posições de bloco conectados ao bloco principal
-	 * @return	->	Par com duas direções, que podem ser null
+	 * @param mainConnectionPos		Posição do bloco principal
+	 * @param otherBlocksPos		Lista de posições de bloco conectados ao bloco principal
+	 * @return		Par com duas direções, que podem ser null
 	 */
     public static Pair<Direction, Direction> getConnectionHorizontalDirections(BlockPos mainWirePos, List<BlockPos> otherBlocksPos) {
         if (otherBlocksPos.size() > 2) throw new UnsupportedOperationException("Não é possível conectar um fio a mais de 2");
@@ -93,9 +93,9 @@ public class WireConnector {
 	 * facing ou auxDirection. Se a quantidade de blocos foi <= 2,
 	 * salva no par os blocos conectados de acordo com a direção,
 	 * pois não é possível conectar um fio a mais de 2 componentes.
-	 * @param mainConnectionPos	->	Posição do bloco principal
-	 * @param otherBlocksPos	->	Lista de posições de bloco conectados ao bloco principal
-	 * @return	->	Par com duas direções, que podem ser null
+	 * @param mainConnectionPos		Posição do bloco principal
+	 * @param otherBlocksPos		Lista de posições de bloco conectados ao bloco principal
+	 * @return		Par com duas direções, que podem ser null
 	 */
     public static Pair<Direction, Direction> getConnectionVerticalDirections(BlockPos mainWirePos, List<BlockPos> otherBlocksPos) {
         if (otherBlocksPos.size() > 2) throw new UnsupportedOperationException("Não é possível conectar um fio a mais de 2");
@@ -113,8 +113,8 @@ public class WireConnector {
 	 * Método que retorna um EnumSet com bases no par de direções fornecidas
 	 * De acordo com a orientação do fio, ele ajusta as direções conforme
 	 * as ligações de facingDirection e auxDirection do fio
-	 * @param verticalDirections	->	Par de direções verticais
-	 * @return	->	EnumSet com as novas direções verticais
+	 * @param verticalDirections		Par de direções verticais
+	 * @return		EnumSet com as novas direções verticais
 	 */
     public static EnumSet<UpValuesDirections> getConnectionUpValuesInfo(Pair<Direction, Direction> verticalDirections) {
         EnumSet<UpValuesDirections> upValuesDirections = EnumSet.of(UpValuesDirections.NONE);
@@ -131,9 +131,9 @@ public class WireConnector {
 	/**
 	 * Método que faz a atualização dos fios e os conecta com os componentes vizinhos,
 	 * tentando encontrar a melhor combinação
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param mainWirePos	->	Posição do fio principal
-	 * @param otherWiresPos	->	Lista com posições dos outros fios
+	 * @param world		Mundo que está sendo jogado
+	 * @param mainWirePos		Posição do fio principal
+	 * @param otherWiresPos		Lista com posições dos outros fios
 	 */
     public static void connectTo(World world, BlockPos mainWirePos, List<BlockPos> otherWiresPos) {
         if (otherWiresPos.size() > 2) throw new UnsupportedOperationException("Não é possível conectar um fio a mais de 2");
@@ -207,8 +207,8 @@ public class WireConnector {
 	 * Método que retorna a direção contrária da FACING do fio
 	 * Como o fio pode girar, nem sempre a auxDirection é
 	 * necessariamente a direção virada 180°
-	 * @param wireBlockState	->	BlockState do fio, que contém as direções
-	 * @return ->	Direção do outro lado do fio
+	 * @param wireBlockState		BlockState do fio, que contém as direções
+	 * @return 	Direção do outro lado do fio
 	 */
     public static Direction getAuxDirection(BlockState wireBlockState) {
         if (wireBlockState.getBlock() != QuartusBlocks.WIRE) throw new IllegalArgumentException("Blockstate must be a wire blockstate");
@@ -221,10 +221,10 @@ public class WireConnector {
 	 * Positivo	->	anti-horário
 	 * Negativo	->	horário
 	 * seguindo a regra da mão direita para uma base positivamente orientada
-	 * @param facingDirection	->	Direção para o qual o fio 'olha'
-	 * @param turned	->	Boolean que indica se está virado
-	 * @param positive	->	Boolean que indica para qual sentido está virado
-	 * @return	->	Direção contrária à facing
+	 * @param facingDirection		Direção para o qual o fio 'olha'
+	 * @param turned		Boolean que indica se está virado
+	 * @param positive		Boolean que indica para qual sentido está virado
+	 * @return		Direção contrária à facing
 	 */
     public static Direction getAuxDirection(Direction facingDirection, boolean turned, boolean positive) {
         if (!turned) return facingDirection.getOpposite();
@@ -235,9 +235,9 @@ public class WireConnector {
 
 	/**
 	 * Método que verifica quais fios possuem conexões não checadas
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param mainWirePos	->	Posição do fio principal
-	 * @return	->	Lista com posições de conexões não checadas
+	 * @param world		Mundo que está sendo jogado
+	 * @param mainWirePos		Posição do fio principal
+	 * @return		Lista com posições de conexões não checadas
 	 */
     public static List<BlockPos> getWireUncheckedConnections(World world, BlockPos mainWirePos) {
         BlockState wireBlockState = world.getBlockState(mainWirePos);
@@ -261,17 +261,17 @@ public class WireConnector {
 
 	/**
 	 * Método que verifica se um bloco na posição fornecida é um fio
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param pos	->	Posição do bloco no mundo
-	 * @return	->	Boolean que diz se o bloco em questão é um fio ou não
+	 * @param world		Mundo que está sendo jogado
+	 * @param pos		Posição do bloco no mundo
+	 * @return		Boolean que diz se o bloco em questão é um fio ou não
 	 */
     private static boolean isWire(World world, BlockPos pos) { return world.getBlockState(pos).getBlock() == QuartusBlocks.WIRE; }
 
 	/**
 	 * Método que retorna uma lista com posições de blocos com conexões já estabelecidas
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param mainWirePos	->	Posição do bloco no mundo
-	 * @return	->	Lista com posições de blocos com conexões já estabelecidas
+	 * @param world		Mundo que está sendo jogado
+	 * @param mainWirePos		Posição do bloco no mundo
+	 * @return		Lista com posições de blocos com conexões já estabelecidas
 	 */
     public static List<BlockPos> getWireEstabilishedConnections(World world, BlockPos mainWirePos) {
         return getWireUncheckedConnections(world, mainWirePos).stream().filter(connectionPos -> !isWire(world,connectionPos) || areWiresConnected(world, mainWirePos, connectionPos)).collect(Collectors.toList());
@@ -282,10 +282,10 @@ public class WireConnector {
 	/**
 	 * Método que verifica se os fios nas posições dadas
 	 * estão apontando um para o outro
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param wireAPos	->	Posição do fio A
-	 * @param wireBPos	->	Posição do fio B
-	 * @return	->	Boolean que indica se os fios estão virados um para o outro
+	 * @param world		Mundo que está sendo jogado
+	 * @param wireAPos		Posição do fio A
+	 * @param wireBPos		Posição do fio B
+	 * @return		Boolean que indica se os fios estão virados um para o outro
 	 */
     public static boolean areWiresConnected(World world, BlockPos wireAPos, BlockPos wireBPos) {
         //TODO: remover exception de debug (retornar true)
@@ -310,10 +310,10 @@ public class WireConnector {
 
 	/**
 	 * Método que que verifica se um fio é possível se conectar
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param targetPos	->	Posição de um bloco alvo
-	 * @param issuerPos	->	Posição do fio de referência
-	 * @return	->	Boolean que indica se o fio pode realizar uma conexão
+	 * @param world		Mundo que está sendo jogado
+	 * @param targetPos		Posição de um bloco alvo
+	 * @param issuerPos		Posição do fio de referência
+	 * @return		Boolean que indica se o fio pode realizar uma conexão
 	 */
     public static boolean isWireConnectable(World world, BlockPos targetPos, BlockPos issuerPos) {
         List<BlockPos> estabilishedConnectionsPos = getWireEstabilishedConnections(world, targetPos);
@@ -331,8 +331,8 @@ public class WireConnector {
 	/**
 	 * Método que faz updateNeighbor das posições próximas a um fio
 	 * se, e somente se, forem um fio. Ex: um fio na diagonal(alturas diferentes)
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param mainWirePos	->	Posição do fio principal no mundo
+	 * @param world		Mundo que está sendo jogado
+	 * @param mainWirePos		Posição do fio principal no mundo
 	 */
     public static void updateUnnaturalNeighborsIfWires(World world, BlockPos mainWirePos) {
         List<BlockPos> otherWiresPos = getWireUncheckedConnections(world, mainWirePos);
@@ -342,9 +342,9 @@ public class WireConnector {
 	/**
 	 * Método que faz updateNeighbor das posições próximas a um fio
 	 * se, e somente se, forem um fio. Ex: um fio na diagonal(alturas diferentes)
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param mainWirePos	->	Posição do fio principal no mundo
-	 * @param otherWiresPos	->	Posição dos outros fios, ligados ao principal
+	 * @param world		Mundo que está sendo jogado
+	 * @param mainWirePos		Posição do fio principal no mundo
+	 * @param otherWiresPos		Posição dos outros fios, ligados ao principal
 	 */
     public static void updateUnnaturalNeighborsIfWires(World world, BlockPos mainWirePos, List<BlockPos> otherWiresPos) {
         if (otherWiresPos.size() > 0)
@@ -355,10 +355,10 @@ public class WireConnector {
 
 	/**
 	 * Método que retorna a posição de um fio procurado na direção fornecida
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param mainWirePos	->	Posição do fio principal
-	 * @param directionToGo	->	Direção a ser seguida
-	 * @return	->	BlockPos do próximo fio
+	 * @param world		Mundo que está sendo jogado
+	 * @param mainWirePos		Posição do fio principal
+	 * @param directionToGo		Direção a ser seguida
+	 * @return		BlockPos do próximo fio
 	 */
     public static BlockPos findFirstQuartusBlockFromWireInDirection(World world, BlockPos mainWirePos, Direction directionToGo) {
         return findFirstQuartusBlockFromWireInDirection(world, mainWirePos, directionToGo, true);
@@ -366,11 +366,11 @@ public class WireConnector {
 
 	/**
 	 * Método que retorna a posição de um fio procurado na direção fornecida
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param mainWirePos	->	Posição do fio principal
-	 * @param directionToGo	->	Direção a ser seguida
-	 * @param canGoUp	->	Boolean que determina se a busca será também realizada no plano acima
-	 * @return	->	BlockPos do próximo fio
+	 * @param world		Mundo que está sendo jogado
+	 * @param mainWirePos		Posição do fio principal
+	 * @param directionToGo		Direção a ser seguida
+	 * @param canGoUp		Boolean que determina se a busca será também realizada no plano acima
+	 * @return		BlockPos do próximo fio
 	 */
     public static BlockPos findFirstQuartusBlockFromWireInDirection(World world, BlockPos mainWirePos, Direction directionToGo, boolean canGoUp) {
         BlockPos nextComponentPos = mainWirePos.offset(directionToGo);
@@ -400,10 +400,10 @@ public class WireConnector {
 
 	/**
 	 * Método que retorna a próxima direção a ser seguida
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param mainWirePos	->	Posição do fio principal
-	 * @param lastDirection	->	Última direção seguida
-	 * @return	->	Direção a ser seguida
+	 * @param world		Mundo que está sendo jogado
+	 * @param mainWirePos		Posição do fio principal
+	 * @param lastDirection		Última direção seguida
+	 * @return		Direção a ser seguida
 	 */
     @Nullable
     public static Direction getNextDirection(World world, BlockPos mainWirePos, Direction lastDirection) {
@@ -421,10 +421,10 @@ public class WireConnector {
 
 	/**
 	 * Método que retorna um BlockPos do próximo fio a ser navegado
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param mainWirePos	->	Posição do fio principal
-	 * @param directionToGo	->	Direção a ser seguida
-	 * @return	->	BlockPos do próximo fio a ser navegado
+	 * @param world		Mundo que está sendo jogado
+	 * @param mainWirePos		Posição do fio principal
+	 * @param directionToGo		Direção a ser seguida
+	 * @return		BlockPos do próximo fio a ser navegado
 	 */
     @Nullable
     public static BlockPos navigateWire(World world, BlockPos mainWirePos, Direction directionToGo) {
@@ -443,11 +443,11 @@ public class WireConnector {
 	/**
 	 * Método que retorna uma lista com BlockPos dos blocos encontrados
 	 * que podem ser conectados
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param mainWirePos	->	Posição do fio principal
-	 * @param existentConnectionsPos	->	Lista com BlockPos dos blocos que podem ser conectados
-	 * @param maxCount	->	Número de conexões restantes possíveis
-	 * @return	->	Lsita com BlockPos dos blocos que podem ser encontrados
+	 * @param world		Mundo que está sendo jogado
+	 * @param mainWirePos		Posição do fio principal
+	 * @param existentConnectionsPos		Lista com BlockPos dos blocos que podem ser conectados
+	 * @param maxCount		Número de conexões restantes possíveis
+	 * @return		Lsita com BlockPos dos blocos que podem ser encontrados
 	 */
     public static List<BlockPos> findConnectableQuartusBlocks(World world, BlockPos mainWirePos, List<BlockPos> existentConnectionsPos, int maxCount) {
         List<BlockPos> connectionsPos = new ArrayList<>();

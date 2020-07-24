@@ -39,7 +39,7 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
 	 * - Input
 	 * - Output
 	 * - Componentes gerais
-	 * @param component	->	Componente a ser adicionado
+	 * @param component		Componente a ser adicionado
 	 */
     public void addComponent(CircuitComponent component) {
         if (component instanceof CircuitInput)
@@ -52,8 +52,8 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
 
 	/**
 	 * Método que atrela um componente a um identificador ID
-	 * @param ID	->	identificador
-	 * @param component	->	Componente a ser atrelado
+	 * @param ID		identificador
+	 * @param component		Componente a ser atrelado
 	 */
     public void setComponentAtID(int ID, CircuitComponent component) {
         if (component == null) throw new IllegalArgumentException("Component shall not be null");
@@ -101,8 +101,8 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
 
 	/**
 	 * Método que retorna um componente de acordo com seu Identificador ID
-	 * @param ID	->	Identificador de referência
-	 * @return	->	Componente retornado de acordo com o parâmetro ID
+	 * @param ID		Identificador de referência
+	 * @return		Componente retornado de acordo com o parâmetro ID
 	 */
     @Nullable
     public CircuitComponent getComponentByID(int ID) {

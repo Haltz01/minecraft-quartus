@@ -33,8 +33,8 @@ public class CompilerBlockEntity extends BlockEntity implements ImplementedInven
 
 	/**
 	 * Método que atribui os itens e o bloco a uma tag e retorna a tag (informações) do bloco
-	 * @param tag	->	Tag utilizada
-	 * @return	->	Tag/Dados
+	 * @param tag		Tag utilizada
+	 * @return		Tag/Dados
 	 */
     @Override
     public CompoundTag toTag(CompoundTag tag) {
@@ -44,7 +44,7 @@ public class CompilerBlockEntity extends BlockEntity implements ImplementedInven
 
 	/**
 	 * Método que recebe os itens e o bloco de uma tag passada, sem retorno
-	 * @param tag	->	Tag utilizada
+	 * @param tag		Tag utilizada
 	 */
     @Override
     public void fromTag(CompoundTag tag) {

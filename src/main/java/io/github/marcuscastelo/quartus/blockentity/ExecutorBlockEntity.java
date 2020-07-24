@@ -71,8 +71,8 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
 
 	/**
 	 * Método que atribui itens a uma tag e retorna os dados
-	 * @param tag	->	Tag a ser atribuída
-	 * @return	->	Tag/dados armazenados
+	 * @param tag		Tag a ser atribuída
+	 * @return		Tag/dados armazenados
 	 */
     @Override
     public CompoundTag toTag(CompoundTag tag) {
@@ -83,7 +83,7 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
 
 	/**
 	 * Método que retorna dados a partir de uma dada tag
-	 * @param tag	->	Tag que recuperará os dados
+	 * @param tag		Tag que recuperará os dados
 	 */
     @Override
     public void fromTag(CompoundTag tag) {

@@ -65,11 +65,11 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 
 	/**
 	 * Método que faz o updateNeighbor dos blocos quando um WireBlock é posicionado
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param pos	->	Posição do bloco no Mundo
-	 * @param state	->	BlockState do bloco em pos
-	 * @param placer->	Entidade viva (jogador) que posiciona o bloco
-	 * @param itemStack	->	Pilha de itens do inventário do jogador
+	 * @param world		Mundo que está sendo jogado
+	 * @param pos		Posição do bloco no Mundo
+	 * @param state		BlockState do bloco em pos
+	 * @param placer	Entidade viva (jogador) que posiciona o bloco
+	 * @param itemStack		Pilha de itens do inventário do jogador
 	 */
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
@@ -78,12 +78,12 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 
 	/**
 	 * Método que faz o neighborUpdate dos blocos ao redor do bloco recém-colocado
-	 * @param state	->	BlockState do bloco posicionado
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param currPos	->	Posição atual do bloco
-	 * @param block	->	Bloco que causou neighborUpdate do bloco atual (que esta em pos)
-	 * @param neighborPos	->	Posição do bloco que causou neighborUpdate
-	 * @param moved	->	Boolean que verifica se o bloco foi destruído ou simplesmente movido
+	 * @param state		BlockState do bloco posicionado
+	 * @param world		Mundo que está sendo jogado
+	 * @param currPos		Posição atual do bloco
+	 * @param block		Bloco que causou neighborUpdate do bloco atual (que esta em pos)
+	 * @param neighborPos		Posição do bloco que causou neighborUpdate
+	 * @param moved		Boolean que verifica se o bloco foi destruído ou simplesmente movido
 	 */
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos currPos, Block block, BlockPos neighborPos, boolean moved) {
@@ -110,10 +110,10 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 
 	/**
 	 * Método que decide se um bloco pode ser posicionado, por meio de um boolean
-	 * @param state	->	BlockState do bloco
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param pos	->	Posição que se deseja posicionar o bloco
-	 * @return	->	Boolean que diz se é possível colocar o bloco
+	 * @param state		BlockState do bloco
+	 * @param world		Mundo que está sendo jogado
+	 * @param pos		Posição que se deseja posicionar o bloco
+	 * @return		Boolean que diz se é possível colocar o bloco
 	 */
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
@@ -124,13 +124,13 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 	/**
 	 * Método que retorna um BlockState do bloco após decidir se
 	 * é possível posicioná-lo no lugar desejado
-	 * @param state	->	BlockState do bloco
-	 * @param facing	->	Direção ao qual o bloco 'olha'
-	 * @param neighborState	->	BlockState do bloco vizinho
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param pos	->	Posição do bloco
-	 * @param neighborPos	->	Posição do bloco vizinho
-	 * @return	->	BlockState resultante (se coloca ou não)
+	 * @param state		BlockState do bloco
+	 * @param facing		Direção ao qual o bloco 'olha'
+	 * @param neighborState		BlockState do bloco vizinho
+	 * @param world		Mundo que está sendo jogado
+	 * @param pos		Posição do bloco
+	 * @param neighborPos		Posição do bloco vizinho
+	 * @return		BlockState resultante (se coloca ou não)
 	 */
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
@@ -140,10 +140,10 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 	/**
 	 * Método que retorna uma lista com pilha de itens que cairão
 	 * caso o item bloco seja destruído
-	 * @param state	->	BlockState do bloco
-	 * @param builder	->	Efeito de sorte ao destruir um bloco,
+	 * @param state		BlockState do bloco
+	 * @param builder		Efeito de sorte ao destruir um bloco,
 	 * 						com lista de blocos que podem ser derrubados
-	 * @return	->	Lista de ItemStack que podem ser derrubados
+	 * @return		Lista de ItemStack que podem ser derrubados
 	 */
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
@@ -153,11 +153,11 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 
 	/**
 	 * Método que retorna a forma do bloco
-	 * @param state	->	BlockState do bloco
-	 * @param view	->	Visão/Mundo do bloco
-	 * @param pos	->	Posição do bloco no Mundo
-	 * @param context	->	Contexto da entidade do bloco (relativo ao seu estado)
-	 * @return	->	Forma (shape) do bloco
+	 * @param state		BlockState do bloco
+	 * @param view		Visão/Mundo do bloco
+	 * @param pos		Posição do bloco no Mundo
+	 * @param context		Contexto da entidade do bloco (relativo ao seu estado)
+	 * @return		Forma (shape) do bloco
 	 */
     //TODO: arrumar de acordo com as novas mudanças
     @Override
@@ -202,11 +202,11 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 
 	/**
 	 * Método que decide o que acontece quando um bloco é removido
-	 * @param oldState	->	Estado anterior do bloco
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param pos	->	Posição do bloco no Mundo
-	 * @param newState	->	Novo estado do bloco
-	 * @param moved	->	Boolean que verifica se o bloco foi destruído ou simplesmente movido
+	 * @param oldState		Estado anterior do bloco
+	 * @param world		Mundo que está sendo jogado
+	 * @param pos		Posição do bloco no Mundo
+	 * @param newState		Novo estado do bloco
+	 * @param moved		Boolean que verifica se o bloco foi destruído ou simplesmente movido
 	 */
     @Override
     public void onBlockRemoved(BlockState oldState, World world, BlockPos pos, BlockState newState, boolean moved) {
@@ -223,7 +223,7 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 
 	/**
 	 * Método que adiciona propriedades ao bloco
-	 * @param builder	->	Adiciona propriedades ao bloco
+	 * @param builder		Adiciona propriedades ao bloco
 	 */
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -232,8 +232,8 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 
 	/**
 	 * Método que retorna o BlockState de um bloco de acordo com o Contexto
-	 * @param ctx	->	Contexto do bloco (se está virado para o jogador)
-	 * @return	->	BlockState do bloco
+	 * @param ctx		Contexto do bloco (se está virado para o jogador)
+	 * @return		BlockState do bloco
 	 */
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -242,10 +242,10 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 
 	/**
 	 * Método que retorna a próxima direção a ser seguida
-	 * @param world	->	Mundo que está sendo jogado
-	 * @param pos	->	Posição do bloco no Mundo
-	 * @param facingBefore	->	Direção ao qual o bloco 'olhava' anteiormente
-	 * @return	->	Próxima direção a ser seguida
+	 * @param world		Mundo que está sendo jogado
+	 * @param pos		Posição do bloco no Mundo
+	 * @param facingBefore		Direção ao qual o bloco 'olhava' anteiormente
+	 * @return		Próxima direção a ser seguida
 	 */
     @Override
     public Direction nextDirection(World world, BlockPos pos, Direction facingBefore) {

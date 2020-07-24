@@ -34,9 +34,9 @@ public class CircuitCompiler {
 
 	/**
 	 * Construtor padrão da classe CircuitCompiler
-	 * @param world	->	Mundo em que está sendo jogado
-	 * @param startPos	->	Posição inicial para fazer o escaneamento
-	 * @param endPos	->	Posição final para fazer o escaneamento
+	 * @param world		Mundo em que está sendo jogado
+	 * @param startPos		Posição inicial para fazer o escaneamento
+	 * @param endPos		Posição final para fazer o escaneamento
 	 */
     public CircuitCompiler(World world, BlockPos startPos, BlockPos endPos) {
         this.startPos = startPos;
@@ -152,7 +152,7 @@ public class CircuitCompiler {
 	/**
 	 * Método que faz a compilação do circuito, escaneando-o, mapeando seus componentes
 	 * e retornando o circuito já estudado
-	 * @return	->	Circuito compilado
+	 * @return		Circuito compilado
 	 */
     public QuartusCircuit compile() {
         this.errorMessage = new TranslatableText("circuitcompiler.unknown_error", 2);

@@ -38,7 +38,7 @@ public interface ImplementedInventory extends Inventory {
      */
 	/**
 	 * Cria um novo inventário com o tamanho passado como parâmetro
-	 * @return	->	Lista padrão vazia com o tamanho fornecido
+	 * @return		Lista padrão vazia com o tamanho fornecido
 	 */
     static ImplementedInventory ofSize(int size) {
         return of(DefaultedList.ofSize(size, ItemStack.EMPTY));
@@ -49,7 +49,7 @@ public interface ImplementedInventory extends Inventory {
      */
 	/**
 	 * Retorna o tamanho do inventário
-	 * @return	->	Tamanho do inventário
+	 * @return		Tamanho do inventário
 	 */
     @Override
     default int getInvSize() {
@@ -76,7 +76,7 @@ public interface ImplementedInventory extends Inventory {
      */
 	/**
 	 * Retorna o item da posição fornecida
-	 * @return	->	Item na posição dada
+	 * @return		Item na posição dada
 	 */
     @Override
     default ItemStack getInvStack(int slot) {
@@ -91,7 +91,7 @@ public interface ImplementedInventory extends Inventory {
 	 * Toma uma pilha, do tamanho passado como parâmetro, da posição
 	 * Implementação padrão: Se há menos itens na posição do que o necessário,
 	 * toma todos os itens da posição
-	 * @return	->	Pilha de itens com o tamanho fornecido (ou o máximo possível)
+	 * @return		Pilha de itens com o tamanho fornecido (ou o máximo possível)
 	 */
     @Override
     default ItemStack takeInvStack(int slot, int count) {
@@ -106,7 +106,7 @@ public interface ImplementedInventory extends Inventory {
      */
 	/**
 	 * Remove a pilha atual na posição slot e retorna
-	 * @return	->	Pilha de itens removida
+	 * @return		Pilha de itens removida
 	 */
     @Override
     default ItemStack removeInvStack(int slot) {
@@ -145,8 +145,8 @@ public interface ImplementedInventory extends Inventory {
 	}
 	/**
 	 * Método que retorna um boolean que confirma a permissão de uso do inventário pelo usuário
-	 * @param player	->	Jogador
-	 * @return	->	Boolean de confirmação
+	 * @param player		Jogador
+	 * @return		Boolean de confirmação
 	 */
     @Override
     default boolean canPlayerUseInv(PlayerEntity player) {
@@ -158,9 +158,9 @@ public interface ImplementedInventory extends Inventory {
 	 * Apenas utilizada no Compiler e no Executor
 	 * Retorna verdadeiro se for um FloppyDisk (disquete)
 	 * Caso seja falso, não sera possível colocar o item
-	 * @param slot	->	Posição do item no inventário
-	 * @param stack	->	Pilha de itens
-	 * @return	->	Boolean de confirmação
+	 * @param slot		Posição do item no inventário
+	 * @param stack		Pilha de itens
+	 * @return		Boolean de confirmação
 	 */
     @Override
     default boolean isValidInvStack(int slot, ItemStack stack) {
@@ -169,7 +169,7 @@ public interface ImplementedInventory extends Inventory {
 
 	/**
 	 * Método que define o tamanho máximo de uma pilha no inventário
-	 * @return	->	1
+	 * @return		1
 	 */
     @Override
     default int getInvMaxStackAmount() {

@@ -24,7 +24,7 @@ public class ComponentConnection {
 
 	/**
 	 * Método auxiliar que retorna o tipo de componente em questão
-	 * @return	->	ConnectionType, que define qual tipo de componente se trata
+	 * @return		ConnectionType, que define qual tipo de componente se trata
 	 */
     public ConnectionType getType() {
         return type;

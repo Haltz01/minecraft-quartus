@@ -14,7 +14,7 @@ public class CircuitOutput extends CircuitComponent {
 
     /**
      * Construtor da Classe Output
-     * @param ID	->	Identificador do componente
+     * @param ID		Identificador do componente
      */
     public CircuitOutput(int ID) {
         super(COMP_NAME, outputDirectionInfo, ID, QuartusLogics.OUTPUT);

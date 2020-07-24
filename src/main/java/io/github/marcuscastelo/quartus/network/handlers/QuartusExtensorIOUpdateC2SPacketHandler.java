@@ -6,6 +6,9 @@ import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.world.World;
 
+/**
+ * 
+ */
 public class QuartusExtensorIOUpdateC2SPacketHandler {
     public static void register() {
         ServerSidePacketRegistry.INSTANCE.register(QuartusExtensorIOUpdateC2SPacket.ID, (packetContext, packetByteBuf) -> {
