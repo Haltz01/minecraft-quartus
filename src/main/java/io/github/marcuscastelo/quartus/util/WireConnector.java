@@ -1,5 +1,6 @@
 package io.github.marcuscastelo.quartus.util;
 
+import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
 import io.github.marcuscastelo.quartus.block.circuit_parts.WireBlock;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
@@ -16,6 +17,7 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -399,14 +401,13 @@ public class WireConnector {
     }
 
 	/**
-	 * Método que retorna a próxima direção a ser seguida
+	 * Método que retorna a próxima direção a ser seguida (ou optional vazio se a aproximação tiver sido feita por uma direção inválida)
 	 * @param world		Mundo que está sendo jogado
 	 * @param mainWirePos		Posição do fio principal
 	 * @param lastDirection		Última direção seguida
 	 * @return		Direção a ser seguida
 	 */
-    @Nullable
-    public static Direction getNextDirection(World world, BlockPos mainWirePos, Direction lastDirection) {
+    public static Optional<Direction> getNextDirection(World world, BlockPos mainWirePos, Direction lastDirection) {
 		//TODO: colocar no wire
         BlockState mainWireBs = world.getBlockState(mainWirePos);
         if (mainWireBs.getBlock() != QuartusBlocks.WIRE) throw new IllegalArgumentException("Trying to navigate a non-wire block");
@@ -414,9 +415,12 @@ public class WireConnector {
         Direction facingDirection = mainWireBs.get(Properties.HORIZONTAL_FACING);
         Direction auxDirection = getAuxDirection(mainWireBs);
 
-        if (lastDirection.getOpposite() == facingDirection) return auxDirection;
-        else if (lastDirection.getOpposite() == auxDirection) return facingDirection;
-        else return null;
+        if (lastDirection.getOpposite() == facingDirection) return Optional.of(auxDirection);
+        else if (lastDirection.getOpposite() == auxDirection) return Optional.of(facingDirection);
+        else {
+            Quartus.LOGGER.warn("Invalid approaching direction (going to " + lastDirection + ") at " + mainWirePos);
+            return Optional.empty();
+        }
     }
 
 	/**

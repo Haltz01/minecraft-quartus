@@ -3,6 +3,7 @@ package io.github.marcuscastelo.quartus.block;
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.blockentity.CompilerBlockEntity;
 import io.github.marcuscastelo.quartus.circuit.CircuitUtils;
+import io.github.marcuscastelo.quartus.gui.CompilerBlockController;
 import io.github.marcuscastelo.quartus.registry.QuartusCottonGUIs;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -136,7 +137,7 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack compilerIS) {
         handleBlockTagOnPlace(world, pos, compilerIS);
-        CircuitUtils.outlineCompileRegionForClient(world, pos, 10, Blocks.DIRT);
+        CircuitUtils.outlineCompileRegionForClient(world, pos, CompilerBlockController.COMPILING_AREA_SIDE, Blocks.DIRT);
     }
 
 	/**

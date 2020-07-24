@@ -17,6 +17,7 @@ import java.util.*;
 
 
 //TODO: renomear variávies para nova terminologia
+//TODO: manter ordem dos inputs e outputs
 
 /**
  * Classe que define o CircuitCompiler - Compilador do circuito

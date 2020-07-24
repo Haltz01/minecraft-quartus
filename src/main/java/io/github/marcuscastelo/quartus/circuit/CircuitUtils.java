@@ -7,6 +7,7 @@ import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitOutput;
 import io.github.marcuscastelo.quartus.circuit.components.ComponentInfo;
+import io.github.marcuscastelo.quartus.gui.CompilerBlockController;
 import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import io.github.marcuscastelo.quartus.util.WireConnector;
@@ -20,6 +21,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -142,7 +144,9 @@ public class CircuitUtils {
     private static Pair<BlockPos, Direction> getTransportDestinationInfo(World world, BlockPos initialPos, Direction initialDirection) {
         BlockPos currPos = initialPos;
         Direction lastDirection;
-        Direction currDirection = WireConnector.getNextDirection(world, currPos, initialDirection);;
+        Optional<Direction> returnedDirection = WireConnector.getNextDirection(world, currPos, initialDirection);
+        if (!returnedDirection.isPresent()) return new Pair<>(null, null);
+        Direction currDirection = returnedDirection.get();
 
         while (true) {
             lastDirection = currDirection;
@@ -155,8 +159,9 @@ public class CircuitUtils {
             if (!(world.getBlockState(currPos).getBlock() instanceof QuartusTransportInfoProvider)) break;
 
             //Se estiver em um fio que não reconhece a direção informada (não deveria acontecer, pois o if acima checa)
-            currDirection = WireConnector.getNextDirection(world, currPos, currDirection);
-            if (currDirection == null) return new Pair<>(null, null);
+            returnedDirection = WireConnector.getNextDirection(world, currPos, currDirection);
+            if (!returnedDirection.isPresent()) return new Pair<>(null, null);
+            currDirection = returnedDirection.get();
         }
 
         return new Pair<>(currPos, lastDirection.getOpposite());
@@ -170,7 +175,7 @@ public class CircuitUtils {
         BlockState fillState = fillBlock.getDefaultState();
         net.minecraft.util.math.Direction direction = world.getBlockState(compilerPos).get(Properties.HORIZONTAL_FACING).getOpposite();
 
-        BlockPos oPos = compilerPos.offset(direction,10);
+        BlockPos oPos = compilerPos.offset(direction, size);
         world.setBlockState(oPos, fillState);
         for (int s = 1; s <= size/2; s++) {
             world.setBlockState(compilerPos.offset(direction.rotateYClockwise(), s), fillState);
