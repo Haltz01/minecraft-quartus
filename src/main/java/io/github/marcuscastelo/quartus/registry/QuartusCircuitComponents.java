@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * Classe que gerencia as informações do blocos do Mod
+ */
 public class QuartusCircuitComponents {
     // Descreve as direções de um componenete cujos inputs são oeste, leste e outputs são norte (direções relativas a direção para que o componente olha) [West, East to North Direction Info]
     public static final ComponentDirectionInfo WE2NDirInfo = new ComponentDirectionInfo(Arrays.asList(Direction.EAST, Direction.WEST), Direction.NORTH);
