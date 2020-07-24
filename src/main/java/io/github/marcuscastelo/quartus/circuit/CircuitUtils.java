@@ -158,9 +158,7 @@ public class CircuitUtils {
 
             //Se estiver em um fio que não reconhece a direção informada (não deveria acontecer, pois o if acima checa)
             currDirection = WireConnector.getNextDirection(world, currPos, currDirection);
-            if (currDirection == null) {
-                throw new RuntimeException("There is something wrong that is causing navigateWire to allow perpendicular navigation");
-            }
+            if (currDirection == null) return new Pair<>(null, null);
         }
 
         return new Pair<>(currPos, lastDirection.getOpposite());

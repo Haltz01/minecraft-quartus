@@ -5,6 +5,7 @@ import io.github.marcuscastelo.quartus.circuit.CircuitUtils;
 import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
+import io.github.marcuscastelo.quartus.circuit.components.CircuitOutput;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
@@ -119,7 +120,7 @@ public class CircuitCompiler {
             // Caso "especial": extensores -> aumentam a quantidade de inputs de um gate
             //TODO: resolver parâmetros redundantes
             List<CircuitUtils.ConnectedNodeInfo> nextComponentsPos = CircuitUtils.getConnectedNodesInfo(world, circuit, component, nodePos);
-            if (nextComponentsPos.size() == 0) {
+            if (nextComponentsPos.size() == 0 && !(component instanceof CircuitOutput)) {
                 errorMessage = new TranslatableText("circuitcompiler.disconnected_component");
                 failed = true;
             }
@@ -154,15 +155,17 @@ public class CircuitCompiler {
 	 * e retornando o circuito já estudado
 	 * @return	->	Circuito compilado
 	 */
-    public QuartusCircuit compile() {
+    public Optional<QuartusCircuit> compile() {
         this.errorMessage = new TranslatableText("circuitcompiler.unknown_error", 2);
         failed = false;
         scanCircuitNodes();
         exploreCircuit();
 
-        if (failed && MinecraftClient.getInstance().player != null)
+        if (failed && MinecraftClient.getInstance().player != null) {
             MinecraftClient.getInstance().player.sendMessage(errorMessage);
+            return Optional.empty();
+        }
 
-        return circuit;
+        return Optional.of(circuit);
     }
 }

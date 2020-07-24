@@ -20,6 +20,8 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
+import java.util.Optional;
+
 /**
  * Classe que controla o GUI (Graphical User Interface - Interface Gráfico de Usuário)
  * do bloco Compiler
@@ -53,7 +55,7 @@ public class CompilerBlockController extends CottonCraftingController {
 	 * Método que compila um circuito dentro de uma área
 	 * @return	->	Circuito compilado
 	 */
-    private QuartusCircuit compileCircuit() {
+    private Optional<QuartusCircuit> compileCircuit() {
         Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
         BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), 5).offset(facingDir.getOpposite(),10).offset(Direction.DOWN,5);
         BlockPos endPos = compilerBlockPosition.offset(facingDir.rotateYCounterclockwise(), 5).offset(Direction.UP, 5);
@@ -75,10 +77,11 @@ public class CompilerBlockController extends CottonCraftingController {
             MinecraftClient.getInstance().player.sendMessage(new TranslatableText("gui.quartus.compiler.empty"));
             return;
         }
+
         try{
-            QuartusCircuit circuit = compileCircuit();
-            updateFloppyDisk(floppyItemStack, circuit);
-            System.out.println(circuit.serialize());
+            Optional<QuartusCircuit> circuit = compileCircuit();
+            if (!circuit.isPresent()) return;
+            updateFloppyDisk(floppyItemStack, circuit.get());
         } catch (Exception e) {
             e.printStackTrace();
             return;

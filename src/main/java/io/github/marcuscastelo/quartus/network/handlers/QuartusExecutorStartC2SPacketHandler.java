@@ -19,7 +19,11 @@ public class QuartusExecutorStartC2SPacketHandler {
             packetContext.getTaskQueue().execute(() -> {
                 BlockEntity currBlockEntity = world.getBlockEntity(executorPos);
                 if (currBlockEntity instanceof ExecutorBlockEntity) {
-                    ((ExecutorBlockEntity) currBlockEntity).startExecution(packetContext.getPlayer());
+                    try {
+                        ((ExecutorBlockEntity) currBlockEntity).startExecution(packetContext.getPlayer());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         });

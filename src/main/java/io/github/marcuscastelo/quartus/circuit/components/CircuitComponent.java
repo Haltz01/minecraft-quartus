@@ -21,7 +21,6 @@ public class CircuitComponent {
     private Map<Direction, List<ComponentConnection>> connections;
 
     //TODO: ver como fazer pros extensores
-    //TODO: fazer map de lista
 
     private QuartusLogic logic;
 
