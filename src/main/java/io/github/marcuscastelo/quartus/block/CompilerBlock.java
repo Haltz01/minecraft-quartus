@@ -113,6 +113,7 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 
         if (!compilerIS.getTag().getBoolean("hasFloppy")) return;
 
+        // TODO: parar de utilizar essa função (usar world.getBlockEntity)
 		//'Cria' o disquete e atrela ao BlockEntity do novo Compiler no inventário do jogador
         Inventory inv = QuartusCottonGUIs.getBlockInventory(world, pos);
         ItemStack floppyIS = new ItemStack(QuartusItems.FLOPPY_DISK, 1);

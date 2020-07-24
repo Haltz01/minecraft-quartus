@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import static io.github.marcuscastelo.quartus.util.DirectionUtils.HORIZONTAL_DIRECTIONS;
-
 /**
  * Classe que auxilia na conexão dos componentes do jogo que formam um circuito
  */
@@ -250,7 +248,7 @@ public class CircuitUtils {
         else if (gateType.equals(CircuitOutput.COMP_NAME))
             return new CircuitOutput(gateID);
         else
-            return new CircuitComponent(gateType, info.directionInfo, gateID, QuartusLogics.getLogicByID(gateType));
+            return new CircuitComponent(gateType, info.directionInfo, gateID, QuartusLogics.getLogicByName(gateType));
     }
 
 	/**

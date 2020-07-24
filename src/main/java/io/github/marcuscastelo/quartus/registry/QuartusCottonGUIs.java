@@ -11,7 +11,14 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * Classe que registra as GUI (as telas) dos blocos executor e compilador
+ * Obs.: só deve ser chamada para o cliente, o servidor não deve registrar
+ */
 public class QuartusCottonGUIs {
+    /**
+     * Registra as GUIs dos blocos
+     */
     public static void initClient() {
         ScreenProviderRegistry.INSTANCE.registerFactory(Quartus.id("compiler"), (syncId, identifier, playerEntity, packetByteBuf) -> {
             BlockPos compilerPos = packetByteBuf.readBlockPos();

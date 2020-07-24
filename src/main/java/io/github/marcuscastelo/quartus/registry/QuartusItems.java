@@ -11,6 +11,9 @@ import net.minecraft.util.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe responsável por registrar os itens no jogo
+ */
 public class QuartusItems {
     public static final BlockItem WIRE;
     public static final BlockItem EXTENSOR_GATE;
@@ -35,18 +38,36 @@ public class QuartusItems {
 
     public static final Item FLOPPY_DISK;
 
-
+    // Lista ordenada dos itens a serem exibidos na categoria "Quartus" no menu criativo
     private static final List<ItemStack> sampleItemStacksInItemGroupOrder = new ArrayList<>();
+
+    /**
+     * Método responsável por registrar um bloco como item no jogo
+     * @param item_name     Nome do item (bloco) a ser registrado
+     * @param block         Instância definida em QuartusBlocks ("tipo" do bloco)
+     * @return              Item registrado (referente ao bloco)
+     */
     private static BlockItem register(String item_name, Block block) {
         return register(item_name, new BlockItem(block, new Item.Settings().group(Quartus.ITEMGROUP)));
     }
 
+    /**
+     * Método responsável por registrar itens no jogo
+     * @param item_name     Nome do item a ser registrado
+     * @param item          Objeto que determina um "tipo" de item no jogo
+     * @param <T>           Classe genérica que herda item
+     * @return              "Tipo" de item registrado
+     */
     private static <T extends Item> T register(String item_name, T item) {
         sampleItemStacksInItemGroupOrder.add(new ItemStack(item));
         return Registry.register(Registry.ITEM, Quartus.id(item_name), item);
     }
 
-    public static void appendItemGroupStacksInorder(List<ItemStack> itemGroupStacks) {
+    /**
+     * Método que preenche uma lista com os itens do mod na ordem estipulada
+     * @param itemGroupStacks       Lista a ser preenchida
+     */
+    public static void appendItemGroupStacksInOrder(List<ItemStack> itemGroupStacks) {
         itemGroupStacks.addAll(sampleItemStacksInItemGroupOrder);
     }
 

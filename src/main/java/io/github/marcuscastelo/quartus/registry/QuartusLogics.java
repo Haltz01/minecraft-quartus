@@ -12,17 +12,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe que contém as lógicas de cada componente (portas lógicas, entrada, saída, multiplexador, extensor e distribuidor)
+ */
 public class QuartusLogics {
+    // Map que associa a lógica de cada componente ao nome dele
     private static Map<String, QuartusLogic> logicPerName = new HashMap<>();
 
-    public static QuartusLogic register(String logicID, QuartusLogic logic) {
-        logicPerName.putIfAbsent(logicID, logic);
+    /**
+     * Método responsável por registrar as lógicas de cada componenete em um map
+     * @param logicName   Nome que define a lógica do componenete (ex.: 'AndGate' refere-se à lógica da porta AND)
+     * @param logic       Lógica do componenente
+     * @return            Lógica registrada
+     */
+    public static QuartusLogic register(String logicName, QuartusLogic logic) {
+        logicPerName.putIfAbsent(logicName, logic);
         return logic;
     }
 
+    /**
+     * Método responsável por obter a lógica de um componenete já registrado no map
+     * @param logicName     Nome que define a lógica do componenete
+     * @return              Lógica obtida do map (previamente registrada)
+     */
     @Nullable
-    public static QuartusLogic getLogicByID(String logicID) {
-        return logicPerName.getOrDefault(logicID, null);
+    public static QuartusLogic getLogicByName(String logicName) {
+        // TODO: tratar illegalArgumentException
+        return logicPerName.getOrDefault(logicName, null);
     }
 
     public static final QuartusLogic AND_GATE;

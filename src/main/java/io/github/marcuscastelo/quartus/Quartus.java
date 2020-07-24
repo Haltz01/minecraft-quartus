@@ -25,7 +25,7 @@ public class Quartus implements ModInitializer {
     public static ItemGroup ITEMGROUP =
             FabricItemGroupBuilder.create(id("item_group"))
                     .icon(()->new ItemStack(QuartusItems.FLOPPY_DISK))
-                    .appendItems(QuartusItems::appendItemGroupStacksInorder)
+                    .appendItems(QuartusItems::appendItemGroupStacksInOrder)
                     .build();
 	/**
 	 * Método principal de inicialização do Mod, iniciando blocos, entidades de blocos, itens, etc
