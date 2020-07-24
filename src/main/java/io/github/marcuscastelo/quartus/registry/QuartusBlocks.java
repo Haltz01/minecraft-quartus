@@ -10,6 +10,9 @@ import io.github.marcuscastelo.quartus.circuit.components.ComponentInfo;
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
 
+/**
+ * Classe que faz o registro do blocos criados para o Mod
+ */
 public class QuartusBlocks {
     public static final Block WIRE;
     public static final Block EXTENSOR_GATE;
