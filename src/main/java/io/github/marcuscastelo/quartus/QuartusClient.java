@@ -4,7 +4,7 @@ import io.github.marcuscastelo.quartus.registry.QuartusCottonGUIs;
 import net.fabricmc.api.ClientModInitializer;
 
 /**
- * Método que inicializa o Mod criado no momento em que o jogo é executado
+ * Classe que provê o método de inicilização dos recursos do mod que são destinados apenas ao cliente
  */
 public class QuartusClient implements ClientModInitializer {
     @Override

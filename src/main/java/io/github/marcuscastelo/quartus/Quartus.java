@@ -9,33 +9,38 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
+
 /**
- * Classe que implementa o Mod criado, inicializando-o juntamente com suas adições
- * Extende a classe ModInitializer, cuja função é inicializar os Mod's criados 
+ * Classe que implementa a interface ModInitializer (do FabricMC), fornece um método onInitialize
+ * que inicializa os módulos do mod.
  */
 public class Quartus implements ModInitializer {
     //TODO: adicionar receitas ao livro de crafting
 
-
-	//Variáveis auxiliares para identificação do Mod
+	//Prefixo utilizado para qualquer recurso do mod que necessite ser registrado no jogo (blocos, itens, controladores de inventário, etc.).
     public static final String MOD_ID = "quartus";
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static Quartus INSTANCE;
 
-	//Variável que separa um espaço no inventário, posiciona os itens/blocos criados
-	//e "constrói" a interface para os itens criados, separando-os dos itens padrão
+    //Instância de uma estrutura de logging de erros, informações de debug e warnings.
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+
+    /**
+     *  No menu criativo, os itens estão separados por categorias - ou grupos de itens.
+     *  Este campo armazena o grupo de itens do mod (tanto itens puros quanto itens de blocos).
+     *  OBS: a ordem dos itens no grupo é dada pela função @QuartusItems::appendItemGroupStacksInOrder
+     *  @see QuartusItems#appendItemGroupStacksInOrder(List lista a ser preenchida na ordem)
+     */
     public static ItemGroup ITEMGROUP =
             FabricItemGroupBuilder.create(id("item_group"))
                     .icon(()->new ItemStack(QuartusItems.FLOPPY_DISK))
                     .appendItems(QuartusItems::appendItemGroupStacksInOrder)
                     .build();
 	/**
-	 * Método principal de inicialização do Mod, iniciando blocos, entidades de blocos, itens, etc
+	 * Método principal de inicialização do mod, inicia blocos, entidades de blocos, itens e outros recursos do mod.
 	 */
     @Override
     public void onInitialize() {
         System.out.println("onInitialize()");
-        INSTANCE = this;
 
         QuartusBlocks.init();
         QuartusItems.init();
