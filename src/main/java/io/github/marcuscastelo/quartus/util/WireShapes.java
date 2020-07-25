@@ -1,13 +1,13 @@
 package io.github.marcuscastelo.quartus.util;
 
-import io.github.marcuscastelo.quartus.block.circuit_parts.WireBlock;
-import io.github.marcuscastelo.quartus.registry.QuartusProperties;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.github.marcuscastelo.quartus.registry.QuartusProperties.UpValue;
 
 public class WireShapes {
     public static final float WIRE_HEIGHT = 2/16f;
@@ -40,11 +40,11 @@ public class WireShapes {
         return UP_EDGE_PER_DIR_MAP.getOrDefault(direction, VoxelShapes.empty());
     }
 
-    public static VoxelShape getUpVoxelShape(Direction facingDirection, Direction auxDirection, WireBlock.UpValue a) {
+    public static VoxelShape getUpVoxelShape(Direction facingDirection, Direction auxDirection, UpValue a) {
         VoxelShape initialShape = VoxelShapes.empty();
-        if (a == WireBlock.UpValue.FACING) {
+        if (a == UpValue.FACING) {
             initialShape = VoxelShapes.union(getUpEdgeVoxelShape(facingDirection));
-        } else if (a == WireBlock.UpValue.BOTH) {
+        } else if (a == UpValue.BOTH) {
             initialShape = VoxelShapes.union(getUpEdgeVoxelShape(facingDirection), getUpEdgeVoxelShape(auxDirection));
         }
         return initialShape;

@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static io.github.marcuscastelo.quartus.registry.QuartusProperties.UpValue;
+
 /**
  * Classe que analisa as conexões dos fios e tenta conectá-los
  * da forma que possivelmente seriam organizados no mundo real
@@ -131,7 +133,7 @@ public class WireConnector {
     }
 
 	/**
-	 * Método que faz a atualização dos fios e os conecta com os componentes vizinhos,
+	 * Método que faz a atualização do fio informado e os conecta com os componentes vizinhos,
 	 * tentando encontrar a melhor combinação
 	 * @param world		Mundo que está sendo jogado
 	 * @param mainWirePos		Posição do fio principal
@@ -167,7 +169,7 @@ public class WireConnector {
         Pair<Direction, Direction> verticalDirections = getConnectionVerticalDirections(mainWirePos, otherWiresPos);
 
         //Passo 4:
-        WireBlock.UpValue newStateUpValue;
+        UpValue newStateUpValue;
         Direction newFacingDirection = horizontalDirections.getLeft();
         Direction newAuxDirection = horizontalDirections.getRight();
         boolean newTurn = isConnectionTurned(newFacingDirection, newAuxDirection);
@@ -175,9 +177,9 @@ public class WireConnector {
 
         EnumSet<UpValuesDirections> upValuesDirections = getConnectionUpValuesInfo(verticalDirections);
         if (upValuesDirections.contains(UpValuesDirections.BOTH)) {
-            newStateUpValue = WireBlock.UpValue.BOTH;
+            newStateUpValue = UpValue.BOTH;
         } else if (upValuesDirections.contains(UpValuesDirections.SECOND)) {
-            newStateUpValue = WireBlock.UpValue.FACING;
+            newStateUpValue = UpValue.FACING;
             System.out.println("ELE MESMO !!");
             Direction tempDirForSwap = newFacingDirection;
             //Troca a direção principal com a direção auxiliar (para manter o turn certo, muda a posividade)
@@ -186,9 +188,9 @@ public class WireConnector {
             newAuxDirection = tempDirForSwap;
 
         } else if (upValuesDirections.contains(UpValuesDirections.FIRST)) {
-            newStateUpValue = WireBlock.UpValue.FACING;
+            newStateUpValue = UpValue.FACING;
         } else {
-            newStateUpValue = WireBlock.UpValue.NONE;
+            newStateUpValue = UpValue.NONE;
         }
 
         newState = oldState.with(Properties.HORIZONTAL_FACING, newFacingDirection)
@@ -435,12 +437,12 @@ public class WireConnector {
         BlockState mainWireBs = world.getBlockState(mainWirePos);
         if (mainWireBs.getBlock() != QuartusBlocks.WIRE) throw new IllegalArgumentException("Trying to navigate a non-wire block");
 
-        WireBlock.UpValue upValue = mainWireBs.get(QuartusProperties.WIRE_UP);
+        UpValue upValue = mainWireBs.get(QuartusProperties.WIRE_UP);
         Direction facingDir = mainWireBs.get(Properties.HORIZONTAL_FACING);
         Direction auxDir = getAuxDirection(mainWireBs);
         if (directionToGo != facingDir && directionToGo != auxDir) return null;
 
-        boolean canGoUp = upValue == WireBlock.UpValue.BOTH || (upValue == WireBlock.UpValue.FACING && facingDir == directionToGo);
+        boolean canGoUp = upValue == UpValue.BOTH || (upValue == UpValue.FACING && facingDir == directionToGo);
         return findFirstQuartusBlockFromWireInDirection(world, mainWirePos, directionToGo, canGoUp);
     }
 

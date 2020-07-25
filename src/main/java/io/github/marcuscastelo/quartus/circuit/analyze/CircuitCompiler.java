@@ -78,7 +78,7 @@ public class CircuitCompiler {
                     Block nodeBlock = world.getBlockState(nodePos).getBlock();
                     if (!(nodeBlock instanceof QuartusInGameComponent)) continue;
                     System.out.println("[Compile] Encontrado um " + nodeBlock.getName().asString() + " em " + nodePos);
-                    CircuitComponent node = ((QuartusInGameComponent) nodeBlock).getCircuitComponent();
+                    CircuitComponent node = ((QuartusInGameComponent) nodeBlock).createCircuitComponent();
                     componentInPos.putIfAbsent(nodePos, node);
                     circuit.addComponent(node);
                     if (node instanceof CircuitInput)

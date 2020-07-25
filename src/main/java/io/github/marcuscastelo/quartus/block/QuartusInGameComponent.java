@@ -21,7 +21,7 @@ public interface QuartusInGameComponent {
 	 * Assinarura de método que retorna o componente do circuito
 	 * @return		Componente do circuito
 	 */
-	CircuitComponent getCircuitComponent();
+	CircuitComponent createCircuitComponent();
 	
 	/**
 	 * Assinatura do método que retorna uma lista com as direções de cada Input da sequência

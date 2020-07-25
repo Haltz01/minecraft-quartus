@@ -42,7 +42,7 @@ public class QuartusItems {
     private static final List<ItemStack> sampleItemStacksInItemGroupOrder = new ArrayList<>();
 
     /**
-     * Método responsável por registrar um bloco como item no jogo
+     * Método responsável por registrar um bloco como item no jogo.
      * @param item_name     Nome do item (bloco) a ser registrado
      * @param block         Instância definida em QuartusBlocks ("tipo" do bloco)
      * @return              Item registrado (referente ao bloco)
@@ -52,7 +52,7 @@ public class QuartusItems {
     }
 
     /**
-     * Método responsável por registrar itens no jogo
+     * Método responsável por registrar itens no jogo.
      * @param item_name     Nome do item a ser registrado
      * @param item          Objeto que determina um "tipo" de item no jogo
      * @param <T>           Classe genérica que herda item
@@ -64,8 +64,8 @@ public class QuartusItems {
     }
 
     /**
-     * Método que preenche uma lista com os itens do mod na ordem estipulada
-     * @param itemGroupStacks       Lista a ser preenchida
+     * Método que preenche uma lista com os itens do mod na ordem em que foram registrados
+     * @param itemGroupStacks   Lista a ser preenchida
      */
     public static void appendItemGroupStacksInOrder(List<ItemStack> itemGroupStacks) {
         itemGroupStacks.addAll(sampleItemStacksInItemGroupOrder);
@@ -86,7 +86,7 @@ public class QuartusItems {
 
         COMPILER = register("compiler", QuartusBlocks.COMPILER);
         EXECUTOR = register("executor", QuartusBlocks.EXECUTOR);
-        EXTENSOR_IO = register("extensor_io", QuartusBlocks.EXTENSOR_IO);
+        EXTENSOR_IO = register("extensor_io", QuartusBlocks.EXECUTOR_IO);
 
         MULTIPLEXER_GATE = register("multiplexer", QuartusBlocks.MULTIPLEXER_GATE);
 

@@ -45,7 +45,7 @@ public class ExecutorBlockController extends CottonCraftingController {
         BlockPos extensorPos = executorBlockPos.offset(exploreDirection);
         BlockState extensorState = world.getBlockState(extensorPos);
         int distance = 1;
-        while (extensorState.getBlock().equals(QuartusBlocks.EXTENSOR_IO)) {
+        while (extensorState.getBlock().equals(QuartusBlocks.EXECUTOR_IO)) {
             ExecutorIOBlock.ExecutorIOState newExtensorState;
             if (distance <= nInputs && distance <= nOutputs) {
                 newExtensorState =  ExecutorIOBlock.ExecutorIOState.IO;

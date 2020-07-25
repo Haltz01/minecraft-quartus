@@ -35,16 +35,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Classe que implementa as propriedades básicas dos blocos adicionados
+ * Classe que implementa o bloco de componente de circuito.
+ * É um mero receptáculo, os blocos componentes são apenas carcaças.
+ * Recebem {@link ComponentInfo} para determinar suas propriedades
  */
 public class CircuitComponentBlock extends HorizontalFacingBlock implements QuartusInGameComponent {
-	//Variável que armazena qual tipo de bloco está sendo analisado
-	//Define qual tipo de bloco implementado será
     private final ComponentInfo componentInfo;
 
 	/**
 	 * Construtor padrão da classe CircuitComponentBlock
-	 * @param componentInfo		Informação do bloco que está sendo feito
+	 * Bem como o {@link WireBlock}, copia as propriedades do Repetidor de Redstone
+	 * @see WireBlock#WireBlock()
+	 * @param componentInfo		Informação do componente que está sendo criado nesse bloco
 	 */
     public CircuitComponentBlock(ComponentInfo componentInfo) {
         super(Settings.copy(Blocks.REPEATER));
@@ -53,20 +55,20 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
     }
 
 	/**
-	 * Método auxiliar que cria um objeto por meio de um ponteiro para a função
+	 * Método usado para criar instâncias do componente relacionado a este bloco
 	 */
     @Override
-    public CircuitComponent getCircuitComponent() {
+    public CircuitComponent createCircuitComponent() {
         return componentInfo.componentSupplier.get();
     }
 
 	/**
 	 * Método que retorna o contorno do bloco que está 'na mira' do jogador
-	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * @param state		Identifica o estado do bloco
 	 * @param view		'Mundo' em que está o bloco
 	 * @param pos		Posição do bloco 'mirado'
-	 * @param context		Contexto em que o bloco se encontra (ambiente ao redor)
-	 * @return		Retorna o contorno do bloco (hitbox)
+	 * @param context		Contexto da entidade que invocou o método
+	 * @return		Retorna o contorno do bloco (outline)
 	 */
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
@@ -83,7 +85,8 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 
 	/**
 	 * Método auxiliar que define em quais tipos de lugares o bloco pode ser posicionado
-	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * Verifica se o boco abaixo possui face quadrada no topo.
+	 * @param state		Identifica o estado do bloco
 	 * @param world		Mundo em que está sendo jogado
 	 * @param pos		Posição do bloco no mundo
 	 * @return		Retorna boolean que diz se é possível posicionar o bloco
@@ -95,8 +98,9 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
     }
 
 	/**
-	 * Método que retorna o BlockState para utilizar no método de atualizar os blocos de acordo com seus vizinhos
-	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * Método que determina o blockstate após utilizar no método de atualizar os blocos de acordo com seus vizinhos
+	 * @see CircuitComponentBlock#neighborUpdate(BlockState, World, BlockPos, Block, BlockPos, boolean)
+	 * @param state		Identifica o estado do bloco após o método supracitado
 	 * @param facing		Direção para o qual o bloco 'olha'
 	 * @param neighborState		Estado do bloco vizinho
 	 * @param world		Mundo que está sendo jogado
@@ -110,9 +114,9 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
     }
 
 	/**
-	 * Método que retorna uma lista de itens que foram derrubados
+	 * Método que retorna uma lista de itens que serão derrubados
 	 * @param state		Estado do bloco
-	 * @param builder		Builder que configura as propriedades dos blocos
+	 * @param builder	Builder que configura as propriedades de drops
 	 * @return		Lista com os itens a serem derrubados
 	 */
     @Override
@@ -121,23 +125,18 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
     }
 
 	/**
-	 * Método que retorna o BlockState de um bloco recém posicionado
-	 * @param ctx		Contexto em que o bloco se encontra
-	 * @return		BlockState do bloco após posicionar (virado para o jogador)
+	 * Método que retorna o BlockState que determina as propriedades do bloco colocado no mundo
+	 * @param ctx		Contexto em que o jogador colocou o bloco
+	 * @return		BlockState do bloco após posicionar (virado para o lado que o jogador está olhando)
 	 */
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return getDefaultState().with(FACING, ctx.getPlayerFacing());
     }
 
-	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		return ActionResult.SUCCESS;
-	}
-
 	/**
-	 * Método auxiliar que adiciona ao bloco a propriedade de FACING (direção que 'olha')
-	 * @param builder		Builder que adiciona FACING às propriedades do bloco
+	 * Método que adiciona ao construtor de propriedades do bloco a propriedade de FACING (direção que 'olha')
+	 * @param builder		Builder ao qual se adiciona FACING como propriedade do bloco
 	 */
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -145,7 +144,7 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
     }
 
 	/**
-	 * Método que retorna uma lista com as direções dos Inputs de um componente
+	 * Método que retorna uma lista com as direções absolutas (direções do mundo) das portas de input de um componente
 	 */
     @Override
     public List<Direction> getPossibleInputDirections(Direction facingDirection) {
@@ -153,7 +152,7 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
     }
 
 	/**
-	 * Método que retorna uma lista com as direções dos Outputs de um componente
+	 * Método que retorna uma lista com as direções absolutas (direções do mundo) das portas de output de um componente
 	 */
     @Override
     public List<Direction> getPossibleOutputDirections(Direction facingDirection) {

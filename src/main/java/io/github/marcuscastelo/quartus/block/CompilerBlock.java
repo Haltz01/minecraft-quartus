@@ -12,6 +12,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
@@ -49,7 +50,7 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 
 	/**
 	 * Método que define as propriedades que o bloco designado terá.
-	 * @param builder  Especifica que o bloco criado terá
+	 * @param builder  Construtor de propriedades ao qual se especifica que o bloco criado terá
 	 * 					como propriedade FACING -> orientação no mundo
 	 */
     @Override
@@ -82,50 +83,54 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
     }
 
 	/**
-	 * Método chamado quando o jogador tenta usar o bloco (clicar com o botão direito do mouse).
-	 * Pode ser um bloco presente no mundo ou que o jogador esté segurando.
-	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * Método chamado quando o jogador tenta usar o bloco presente no mundo (clicar com o botão direito do mouse)..
+	 * @param state		Identifica o estado do bloco
 	 * @param world		Mundo em que está sendo jogado
 	 * @param pos		Posição do bloco no mundo
 	 * @param player	Jogador que tentou usar o bloco
 	 * @param hand		Mão que o jogador usou para ativar o bloco
 	 * @param hit		Resultado de acertar um bloco
-	 * @return		Retorna o efeito da ação de tentar usar um bloco, na mão ou no mundo
+	 * @return		Retorna o efeito da ação de tentar usar um bloco no mundo
 	 */
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    	//O processamento não precisa ser feito no cliente, apenas no servidor
         if (world.isClient) return ActionResult.SUCCESS;
-		if (state.getBlock() != this) return ActionResult.FAIL;
-		System.out.println(world.getBlockState(hit.getBlockPos()));
 
+        //Avisa o servidor que o jogador está abrindo um inventário de compilador
 		ContainerProviderRegistry.INSTANCE.openContainer(Quartus.id("compiler"), player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
 
+		//Indica para todos os jogadores que o jogador que abriu o compilador deve mexer a mão como sinal de interação bem sucedida
         return ActionResult.SUCCESS;
     }
 
 	/**
-	 * Método auxiliar posicionar o bloco no mundo.
-	 * Caso o bloco já contenha um FloppyDisk (disquete) dentro,
-	 * posiciona o compilador com o disquete e seu circuito.
+	 * Método auxiliar que posiciona um bloco no mundo no caso especial do BlockItem possuir tags NBT.
+	 * Caso o BlockItem contenha um FloppyDisk (disquete) válido dentro,
+	 * posiciona o compilador com o disquete e seu circuito já no inventário.
+	 * OBS: esse bloco com tag especial pode ser obtido no modo criativo por meio de CTRL+MOUSE0 (Ctrl + click) no compilador
 	 * @param world		Mundo em que está sendo jogado
 	 * @param pos		Posição do bloco no mundo
-	 * @param compilerIS		Item/bloco Compiler presente no inventário do jogador
+	 * @param compilerIS		Item/bloco Compiler com a tag especial presente no inventário do jogador
 	 */
     private void handleBlockTagOnPlace(World world, BlockPos pos, ItemStack compilerIS) {
+    	//Se o disquete for inválido, ignora a chamada
         if (compilerIS.getTag() == null) return;
         if (!compilerIS.getTag().contains("hasFloppy")) return;
-
         if (!compilerIS.getTag().getBoolean("hasFloppy")) return;
 
-        // TODO: parar de utilizar essa função (usar world.getBlockEntity)
-		//'Cria' o disquete e atrela ao BlockEntity do novo Compiler no inventário do jogador
+		/*
+			Cria um novo o disquete com o circuito presente no BlockItem e
+			o coloca no inventário do novo bloco Compiler
+		 */
         Inventory inv = QuartusCottonGUIs.getBlockInventory(world, pos);
         ItemStack floppyIS = new ItemStack(QuartusItems.FLOPPY_DISK, 1);
+
+        //Se o disquete possuir um circuito salvo, copie-o também.
         if (compilerIS.getTag().contains("floppyTag"))
             floppyIS.setTag(compilerIS.getTag().getCompound("floppyTag"));
 
-        assert inv != null;
-        inv.setInvStack(0, floppyIS);
+		inv.setInvStack(0, floppyIS);
     }
 
 	/**
@@ -138,19 +143,18 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 	 */
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack compilerIS) {
+    	//Trata o caso de o BlockItem conter tags do disquete previamente nele
         handleBlockTagOnPlace(world, pos, compilerIS);
-
-        if (world.isClient) CircuitUtils.outlineCompileRegionForClient(world, pos, CompilerBlockController.COMPILING_AREA_SIDE);
     }
 
 	/**
 	 * Método que define o que ocorre quando o Compilador é removido/destruído.
 	 * Caso tenha um FloppyDisk dentro do Compiler, o item será derrubado integralmente
-	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * @param state		Identifica o estado do bloco
 	 * @param world		Mundo em que está sendo jogado
 	 * @param pos		Posição do bloco no mundo
 	 * @param newState		Novo estado do bloco após a ação
-	 * @param moved		Boolean que identifica se o bloco foi simplesmente movido ou de fato apagado
+	 * @param moved		Boolean que identifica se o bloco foi apenas movido ou de fato apagado
 	 */
     @Override
     public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
@@ -158,12 +162,13 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
-			//Se houver um FloppyDisk, derruba-o no mundo
+			//Se o compilador estiver em condições normais (com blockentity na posição certa)
             if (blockEntity != null)
                 ItemScatterer.spawn(world, pos, (Inventory)blockEntity);
 
             world.updateHorizontalAdjacent(pos, this);
 
+            //Remove a BlockEntity que estava atrelada à posição atual do mundo
             super.onBlockRemoved(state, world, pos, newState, moved);
         }
     }
@@ -179,9 +184,20 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 		return Collections.singletonList(new ItemStack(state.getBlock().asItem()));
 	}
 
+	/**
+	 * Método chamado todos os ticks para renderizar efeitos especiais no bloco de compilador.
+	 * É usado para renderizar uma partícula nas bordas do circuito
+	 * @param state 	Estado do bloco
+	 * @param world 	Mundo em que o bloco está
+	 * @param pos 		Posição do bloco no mundo
+	 * @param random 	Uma instância da classe Random usada para evitar que o bloco sempre seja atualizado
+	 */
 	@Override
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
 		if (!world.isClient) return;
-		if (random.nextFloat() > 0.05f) CircuitUtils.outlineCompileRegionForClient(world, pos, CompilerBlockController.COMPILING_AREA_SIDE);
+
+		//Gera partículas nas bordas do circuito
+		if (random.nextFloat() > 0.05f)
+			CircuitUtils.outlineCompileRegionForClient(world, pos, CompilerBlockController.COMPILING_AREA_SIDE);
 	}
 }

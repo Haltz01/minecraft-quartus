@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Random;
 /**
  * Classe ExecutorBlock, que define o bloco que simula a execução do circuito montado
+ * Este bloco não funciona sozinho, ele faz uso do bloco {@link ExecutorIOBlock}, que provê
+ * ao executor portas de entrada e saída que levam redstone ao circuito executado e a saída do
+ * circuito de volta para redstone
  */
 public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityProvider {
 
@@ -43,7 +46,7 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
 
 	/**
 	 * Método chamado quando o jogador tenta usar o bloco (clicar com o botão direito do mouse).
-	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * @param state		Identifica o estado do bloco
 	 * @param world		Mundo em que está sendo jogado
 	 * @param pos		Posição do bloco no mundo
 	 * @param player	Jogador que tentou usar o bloco
@@ -53,17 +56,20 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
 	 */
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) return ActionResult.SUCCESS;
-        if (state.getBlock() != this) return ActionResult.FAIL;
+        //O cliente não precisa processar nada
+    	if (world.isClient) return ActionResult.SUCCESS;
 
+    	//Informa ao servidor que o jogador abriu o inventário do executor
         ContainerProviderRegistry.INSTANCE.openContainer(Quartus.id("executor"), player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
 
         return ActionResult.SUCCESS;
     }
 
 	/**
-	 * Método auxiliar que simula o clock (tick) do bloco durante a execução
-	 * O método agenda o tempo de duração entre os tick's
+	 * Método que trata o agendamento de tick realizado.
+	 * Redireciona o tick para a blockentity realizar a simulação.
+	 * OBS: um tick é uma chamada de atualização para processamento interno que o jogo faz com um certo intervalo.
+	 * 	Desse modo, a blockentity não congela o jogo e pode compartilhar tempo de CPU com outros blocos.
 	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
 	 * @param world		Mundo em que está sendo jogado
 	 * @param pos		Posição do bloco no mundo
@@ -78,7 +84,7 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
 
 	/**
 	 * Método que define as propriedades que o bloco designado terá.
-	 * @param builder  Especifica que o bloco criado terá
+	 * @param builder  Construtor usado para especificar que o bloco criado terá
 	 * 					como propriedade FACING -> orientação no mundo
 	 */
     @Override
@@ -112,12 +118,12 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
 
 	/**
 	 * Método que define o que ocorre quando o bloco ExecutorBlock é destruído/removido
-	 * Caso tenha um FloppyDisk dentro do Compiler, o item será derrubado integralmente
-	 * @param state		Identifica o estado do bloco (energizado, dureza, etc)
+	 * Caso tenha um FloppyDisk dentro do Executor, o item será derrubado integralmente
+	 * @param state		Identifica o estado do bloco
 	 * @param world		Mundo em que está sendo jogado
 	 * @param pos		Posição do bloco no mundo
 	 * @param newState		Novo estado do bloco após a ação
-	 * @param moved		Boolean que identifica se o bloco foi simplesmente movido ou de fato apagado
+	 * @param moved		Boolean que identifica se o bloco foi apenas movido ou de fato apagado
 	 */
     @Override
     public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
@@ -160,7 +166,7 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block previousBlock, BlockPos neighborPos, boolean moved) {
         BlockEntity be = world.getBlockEntity(pos);
-        boolean IOChainHasChanged = previousBlock == QuartusBlocks.EXTENSOR_IO || previousBlock == Blocks.END_PORTAL;
+        boolean IOChainHasChanged = previousBlock == QuartusBlocks.EXECUTOR_IO || previousBlock == Blocks.END_PORTAL;
 
         if (!(be instanceof ExecutorBlockEntity)) return;
         ExecutorBlockEntity executorBe = (ExecutorBlockEntity) be;

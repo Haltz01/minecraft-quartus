@@ -135,7 +135,7 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         BlockState IOBlockState;
         for (int i = 0; i < minimumIOBlocks; i++) {
             IOBlockState = world.getBlockState(IOBlockPos);
-            if (IOBlockState.getBlock() != QuartusBlocks.EXTENSOR_IO) break;
+            if (IOBlockState.getBlock() != QuartusBlocks.EXECUTOR_IO) break;
 
             ExecutorIOBlock.ExecutorIOState executorIOState = IOBlockState.get(ExecutorIOBlock.EXTENSOR_STATE);
 
@@ -198,14 +198,14 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         Direction chainOutDirection = executorFacingDir.rotateYCounterclockwise();
         BlockPos IOBlockPos = pos.offset(chainOutDirection);
 
-        while (world.getBlockState(IOBlockPos).getBlock() == QuartusBlocks.EXTENSOR_IO) {
-            world.setBlockState(IOBlockPos, QuartusBlocks.EXTENSOR_IO.getDefaultState().with(Properties.HORIZONTAL_FACING, executorFacingDir));
+        while (world.getBlockState(IOBlockPos).getBlock() == QuartusBlocks.EXECUTOR_IO) {
+            world.setBlockState(IOBlockPos, QuartusBlocks.EXECUTOR_IO.getDefaultState().with(Properties.HORIZONTAL_FACING, executorFacingDir));
             IOBlockPos = IOBlockPos.offset(chainOutDirection);
         }
 
         IOBlockPos = IOBlockPos.offset(chainOutDirection.getOpposite());
-        if (world.getBlockState(IOBlockPos).getBlock() == QuartusBlocks.EXTENSOR_IO)
-            world.setBlockState(IOBlockPos, QuartusBlocks.EXTENSOR_IO.getDefaultState().with(ExecutorIOBlock.EXTENSOR_STATE, ExecutorIOBlock.ExecutorIOState.VOID_END).with(Properties.HORIZONTAL_FACING, executorFacingDir));
+        if (world.getBlockState(IOBlockPos).getBlock() == QuartusBlocks.EXECUTOR_IO)
+            world.setBlockState(IOBlockPos, QuartusBlocks.EXECUTOR_IO.getDefaultState().with(ExecutorIOBlock.EXTENSOR_STATE, ExecutorIOBlock.ExecutorIOState.VOID_END).with(Properties.HORIZONTAL_FACING, executorFacingDir));
     }
 
     /**
