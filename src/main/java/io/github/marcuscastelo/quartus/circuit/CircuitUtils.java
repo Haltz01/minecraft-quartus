@@ -2,7 +2,7 @@ package io.github.marcuscastelo.quartus.circuit;
 
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
-import io.github.marcuscastelo.quartus.block.QuartusTransportInfoProvider;
+import io.github.marcuscastelo.quartus.block.circuit_parts.WireBlock;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitOutput;
@@ -15,11 +15,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
@@ -72,7 +68,7 @@ public class CircuitUtils {
         for (Direction relativeDirectionOutOfOriginNode: originNode.getPossibleOutputDirections()) {
             //Obtém o blockstate imediatamente adjacente e exclui os que não são blocos do mod
             BlockState originBs = world.getBlockState(originPos);
-            if (!(originBs.getBlock() instanceof QuartusInGameComponent) && !(originBs instanceof QuartusTransportInfoProvider)) continue;
+            if (!(originBs.getBlock() instanceof QuartusInGameComponent) && !(originBs.getBlock() instanceof WireBlock)) continue;
 
             //Obtém as direções absolutas
             Direction originFacingDir = originBs.get(Properties.HORIZONTAL_FACING);
@@ -92,12 +88,12 @@ public class CircuitUtils {
                 targetPos = immediateNeighborPos;
                 absoluteDirectionOutOfTargetNode = absoluteDirectionOutOfOriginNode.getOpposite();
             }
-            else if (immediateNeighborBlock instanceof QuartusTransportInfoProvider) {
+            else if (immediateNeighborBlock instanceof WireBlock) {
                 //Se o vizinho for um fio, siga o fio e obtenha a posição do nó em sua extremidade
-                Pair<BlockPos, Direction> throughWireNodeInfo = getTransportDestinationInfo(world, immediateNeighborPos, absoluteDirectionOutOfOriginNode);
+                Pair<BlockPos, Direction> throughWireInfo = getWireEndBlockInfo(world, immediateNeighborPos, absoluteDirectionOutOfOriginNode);
 
-                BlockPos foundBlockPos = throughWireNodeInfo.getLeft();
-                absoluteDirectionOutOfTargetNode = throughWireNodeInfo.getRight();
+                BlockPos foundBlockPos = throughWireInfo.getLeft();
+                absoluteDirectionOutOfTargetNode = throughWireInfo.getRight();
 
                 if (foundBlockPos != null) {
                     Block targetBlock = world.getBlockState(foundBlockPos).getBlock();
@@ -149,7 +145,7 @@ public class CircuitUtils {
 	 * @param initialDirection
 	 * @return
 	 */
-    private static Pair<BlockPos, Direction> getTransportDestinationInfo(World world, BlockPos initialPos, Direction initialDirection) {
+    private static Pair<BlockPos, Direction> getWireEndBlockInfo(World world, BlockPos initialPos, Direction initialDirection) {
         BlockPos currPos = initialPos;
         Direction lastDirection;
         Optional<Direction> returnedDirection = WireConnector.getNextDirection(world, currPos, initialDirection);
@@ -164,7 +160,7 @@ public class CircuitUtils {
             if (currPos == null) break;
 
             //Se o bloco atual não for mais um fio, encerrar
-            if (!(world.getBlockState(currPos).getBlock() instanceof QuartusTransportInfoProvider)) break;
+            if (!(world.getBlockState(currPos).getBlock() instanceof WireBlock)) break;
 
             //Se estiver em um fio que não reconhece a direção informada (não deveria acontecer, pois o if acima checa)
             returnedDirection = WireConnector.getNextDirection(world, currPos, currDirection);
@@ -181,44 +177,32 @@ public class CircuitUtils {
     }
 
     @Environment(EnvType.CLIENT)
-    public static void outlineCompileRegionForClient(World world, BlockPos compilerPos, int size) {
+    public static void outlineCompileRegionForClient(World world, BlockPos compilerPos, int innerSize) {
         if (!world.isClient) return;
 
         BlockState compilerBs = world.getBlockState(compilerPos);
-        Direction circuitDirection = compilerBs.get(Properties.HORIZONTAL_FACING).getOpposite();
+        Direction front = compilerBs.get(Properties.HORIZONTAL_FACING).getOpposite();
+        Direction right = front.rotateYClockwise();
+        Direction left = front.rotateYCounterclockwise();
+        Direction back = front.getOpposite();
 
-        Direction directionToGo = circuitDirection.rotateYCounterclockwise();
-        BlockPos particlePos = compilerPos.offset(directionToGo);
-        System.out.println("ANTES");
+        int blockStep = random.nextInt(2) + 1;
 
-        for (int i = 1; i < size/2; i++) {
-            setParticleAt(world, particlePos);
-            particlePos = particlePos.offset(directionToGo);
+        //Regulariza o tamanho, se for par, torna-se o primeiro menor impar
+        innerSize -= (innerSize+1)%2;
+
+        BlockPos middleCorner1 = compilerPos.offset(right, innerSize/2 + 1);
+        BlockPos middleCorner2 = middleCorner1.offset(front, innerSize + 1);
+        BlockPos middleCorner3 = middleCorner2.offset(left, innerSize + 1);
+        BlockPos middleCorner4 = middleCorner3.offset(back, innerSize+1);
+
+        for (int i = 1; i <= innerSize; i+=blockStep) {
+            setParticleAt(world, middleCorner1.offset(front, i));
+            setParticleAt(world, middleCorner2.offset(left, i));
+            setParticleAt(world, middleCorner3.offset(back, i));
+            setParticleAt(world, middleCorner4.offset(right, i));
         }
 
-        directionToGo = circuitDirection;
-        for (int i = size%2; i < size; i++) {
-            setParticleAt(world, particlePos);
-            particlePos = particlePos.offset(directionToGo);
-        }
-
-        directionToGo = circuitDirection.rotateYClockwise();
-        for (int i = size%2; i < size; i++) {
-            setParticleAt(world, particlePos);
-            particlePos = particlePos.offset(directionToGo);
-        }
-
-        directionToGo = circuitDirection.getOpposite();
-        for (int i = size%2; i < size; i++) {
-            setParticleAt(world, particlePos);
-            particlePos = particlePos.offset(directionToGo);
-        }
-
-        directionToGo = circuitDirection.rotateYCounterclockwise();
-        for (int i = size%2; i < size/2; i++) {
-            setParticleAt(world, particlePos);
-            particlePos = particlePos.offset(directionToGo);
-        }
     }
 
 	/**
