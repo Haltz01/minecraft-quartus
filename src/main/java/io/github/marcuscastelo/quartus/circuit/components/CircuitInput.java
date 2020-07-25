@@ -4,6 +4,8 @@ import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import net.minecraft.util.math.Direction;
 
+import java.util.Optional;
+
 /**
  * Classe que define o Input utilizado pelo Mod
  */
@@ -26,12 +28,5 @@ public class CircuitInput extends CircuitComponent {
      */
     public CircuitInput() {
         super(COMP_NAME, inputDirectionInfo, QuartusLogics.INPUT);
-    }
-
-    /**
-     * Método que faz a chamada para dar update no Input no circuito
-     */
-    public void updateComponent(QuartusCircuit circuit) {
-        super.updateComponent(circuit);
     }
 }

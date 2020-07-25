@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Classe que permite a mapeação dos Inputs no circuito,
@@ -44,7 +45,7 @@ public class WorldInput extends CircuitInput {
 	 * Método que faz o update do WorldInput
 	 */
     @Override
-    public void updateComponent(QuartusCircuit circuit) {
+    public void updateComponent(Optional<QuartusCircuit> circuit) {
         QuartusBus inputBus = getExecutionInfo().getInput(Direction.SOUTH).get(0);
 
         try {

@@ -2,9 +2,11 @@ package io.github.marcuscastelo.quartus.block.circuit_parts;
 
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
 import io.github.marcuscastelo.quartus.circuit.CircuitUtils;
+import io.github.marcuscastelo.quartus.circuit.QuartusBus;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
 import io.github.marcuscastelo.quartus.circuit.components.ComponentInfo;
 import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
+import io.github.marcuscastelo.quartus.util.DirectionUtils;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.Particle;
@@ -17,6 +19,7 @@ import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -32,6 +35,7 @@ import net.minecraft.world.WorldView;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +45,7 @@ import java.util.stream.Collectors;
  */
 public class CircuitComponentBlock extends HorizontalFacingBlock implements QuartusInGameComponent {
     private final ComponentInfo componentInfo;
+    private final CircuitComponent attachedComponent;
 
 	/**
 	 * Construtor padrão da classe CircuitComponentBlock
@@ -52,6 +57,7 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
         super(Settings.copy(Blocks.REPEATER));
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
         this.componentInfo = componentInfo;
+        this.attachedComponent = new CircuitComponent("AttachedComponent", componentInfo.directionInfo, -1, componentInfo.componentLogic);
     }
 
 	/**
@@ -131,7 +137,7 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 	 */
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return getDefaultState().with(FACING, ctx.getPlayerFacing());
+        return getDefaultState().with(FACING, ctx.getPlayerFacing()).with(Properties.POWERED, false);
     }
 
 	/**
@@ -140,7 +146,7 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 	 */
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, Properties.POWERED);
     }
 
 	/**
@@ -158,4 +164,33 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
     public List<Direction> getPossibleOutputDirections(Direction facingDirection) {
 		return componentInfo.directionInfo.possibleOutputDirections.stream().map(direction -> CircuitUtils.getAbsoluteDirection(facingDirection, direction)).collect(Collectors.toList());
     }
+
+	@Override
+	public boolean emitsRedstonePower(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
+		return getStrongRedstonePower(state,view,pos,facing);
+	}
+
+	@Override
+	public int getStrongRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
+    	return state.get(Properties.POWERED)?15:0;
+    }
+
+	@Override
+	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos, boolean moved) {
+		componentInfo.directionInfo.possibleInputDirections.forEach((direction) -> {
+			Direction absoluteDirection = CircuitUtils.getAbsoluteDirection(state.get(FACING), direction);
+			boolean directionValue = world.getEmittedRedstonePower(pos.offset(absoluteDirection), absoluteDirection.getOpposite())>0;
+			attachedComponent.getExecutionInfo().setInput(direction, new QuartusBus(directionValue));
+		});
+		attachedComponent.updateComponent(Optional.empty());
+
+		if (attachedComponent.getExecutionInfo().getOutputs().get(0).equals(QuartusBus.HIGH1b))
+			world.setBlockState(pos, state.with(Properties.POWERED, true));
+		else world.setBlockState(pos, state.with(Properties.POWERED, false));
+	}
 }

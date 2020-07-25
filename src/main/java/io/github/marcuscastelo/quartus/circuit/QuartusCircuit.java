@@ -116,7 +116,7 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
 	//A saída do Input é a mesma que a sua entrada do mundo "real"
     private void updateInputs() {
         for (CircuitInput input: circuitInputs.values()) {
-            input.updateComponent(this);
+            input.updateComponent(Optional.of(this));
         }
     }
 
@@ -125,7 +125,7 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
 	//a saída calculada
     private void updateComponents() {
         for (CircuitComponent component: otherComponents.values()) {
-            component.updateComponent(this);
+            component.updateComponent(Optional.of(this));
         }
     }
 
@@ -133,7 +133,7 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
 	//A saída para o mundo "real" é a mesma que a entrada
     private void updateOutputs() {
         for (CircuitOutput output: circuitOutputs.values()) {
-            output.updateComponent(this);
+            output.updateComponent(Optional.of(this));
         }
     }
 

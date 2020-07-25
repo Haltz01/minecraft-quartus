@@ -27,11 +27,4 @@ public class CircuitOutput extends CircuitComponent {
         super(COMP_NAME, outputDirectionInfo, QuartusLogics.OUTPUT);
     }
 
-    /**
-     * Método que faz a chamada para dar update no Input no circuito
-     */
-    public void updateComponent(QuartusCircuit circuit) {
-        super.updateComponent(circuit);
-    }
-
 }

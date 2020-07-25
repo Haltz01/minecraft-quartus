@@ -5,10 +5,7 @@ import io.github.marcuscastelo.quartus.circuit.*;
 import io.github.marcuscastelo.quartus.util.DirectionUtils;
 import net.minecraft.util.math.Direction;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Classe que define genericamente um componente do circuito, utilizado no Mod
@@ -101,8 +98,8 @@ public class CircuitComponent {
 	 * atualizando seus valores de entrada e saída
 	 * @param circuit		Circuito a ser atualizado
 	 */
-    public void updateComponent(QuartusCircuit circuit) {
-        updateInputInfo(circuit);
+    public void updateComponent(Optional<QuartusCircuit> circuit) {
+        circuit.ifPresent(QuartusCircuit::updateCircuit);
         if (logic != null) logic.updateLogic(executionInfo);
     }
 

@@ -46,7 +46,7 @@ public class ComponentExecutionInfo {
 	 */
     public ImmutableList<QuartusBus> getInput(Direction direction) {
         if (!componentDirectionInfo.possibleInputDirections.contains(direction))
-            throw new IllegalArgumentException("Trying to get input at invalid direction");
+            throw new IllegalArgumentException("Trying to get input at invalid direction " + direction );
         if (!inputInfo.containsKey(direction))
             throw new RuntimeException("Erro de programação: inputInfo não tem a chave que deveria ter");
         return ImmutableList.copyOf(inputInfo.get(direction));
@@ -87,7 +87,7 @@ public class ComponentExecutionInfo {
     public ImmutableList<QuartusBus> getOutputs() {
         List<QuartusBus> allOutputs = new ArrayList<>();
         for (Direction direction: componentDirectionInfo.possibleOutputDirections) {
-            allOutputs.addAll(getInput(direction));
+            allOutputs.addAll(getOutput(direction));
         }
         return ImmutableList.copyOf(allOutputs);
     }
