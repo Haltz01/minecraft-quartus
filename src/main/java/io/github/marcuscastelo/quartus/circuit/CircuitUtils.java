@@ -11,8 +11,15 @@ import io.github.marcuscastelo.quartus.gui.CompilerBlockController;
 import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import io.github.marcuscastelo.quartus.util.WireConnector;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +29,7 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.function.Function;
 
 /**
@@ -167,29 +175,49 @@ public class CircuitUtils {
         return new Pair<>(currPos, lastDirection.getOpposite());
     }
 
-    ///TEMP TODO: REMOVE
+    static Random random = new Random();
+    private static void setParticleAt(World world, BlockPos particlePos) {
+        world.addParticle(new DustParticleEffect(random.nextFloat(), 0, 0, 7), particlePos.getX()+0.5f, particlePos.getY()+0.5f, particlePos.getZ()+0.5f, 0, 0, 0);
+    }
 
-    public static void outlineCompileRegionForClient(World world, BlockPos compilerPos, int size, Block fillBlock) {
+    @Environment(EnvType.CLIENT)
+    public static void outlineCompileRegionForClient(World world, BlockPos compilerPos, int size) {
         if (!world.isClient) return;
 
-        BlockState fillState = fillBlock.getDefaultState();
-        net.minecraft.util.math.Direction direction = world.getBlockState(compilerPos).get(Properties.HORIZONTAL_FACING).getOpposite();
+        BlockState compilerBs = world.getBlockState(compilerPos);
+        Direction circuitDirection = compilerBs.get(Properties.HORIZONTAL_FACING).getOpposite();
 
-        BlockPos oPos = compilerPos.offset(direction, size);
-        world.setBlockState(oPos, fillState);
-        for (int s = 1; s <= size/2; s++) {
-            world.setBlockState(compilerPos.offset(direction.rotateYClockwise(), s), fillState);
-            world.setBlockState(compilerPos.offset(direction.rotateYCounterclockwise(), s), fillState);
-            world.setBlockState(oPos.offset(direction.rotateYClockwise(), s), fillState);
-            world.setBlockState(oPos.offset(direction.rotateYCounterclockwise(), s), fillState);
+        Direction directionToGo = circuitDirection.rotateYCounterclockwise();
+        BlockPos particlePos = compilerPos.offset(directionToGo);
+        System.out.println("ANTES");
+
+        for (int i = 1; i < size/2; i++) {
+            setParticleAt(world, particlePos);
+            particlePos = particlePos.offset(directionToGo);
         }
 
-        BlockPos l, r;
-        l = compilerPos.offset(direction.rotateYCounterclockwise(), size/2);
-        r = compilerPos.offset(direction.rotateYClockwise(), size/2);
-        for (int d = 1; d < size; d++) {
-            world.setBlockState(l.offset(direction, d), fillState);
-            world.setBlockState(r.offset(direction, d), fillState);
+        directionToGo = circuitDirection;
+        for (int i = size%2; i < size; i++) {
+            setParticleAt(world, particlePos);
+            particlePos = particlePos.offset(directionToGo);
+        }
+
+        directionToGo = circuitDirection.rotateYClockwise();
+        for (int i = size%2; i < size; i++) {
+            setParticleAt(world, particlePos);
+            particlePos = particlePos.offset(directionToGo);
+        }
+
+        directionToGo = circuitDirection.getOpposite();
+        for (int i = size%2; i < size; i++) {
+            setParticleAt(world, particlePos);
+            particlePos = particlePos.offset(directionToGo);
+        }
+
+        directionToGo = circuitDirection.rotateYCounterclockwise();
+        for (int i = size%2; i < size/2; i++) {
+            setParticleAt(world, particlePos);
+            particlePos = particlePos.offset(directionToGo);
         }
     }
 

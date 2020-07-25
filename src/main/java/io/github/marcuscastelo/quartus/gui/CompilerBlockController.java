@@ -29,7 +29,7 @@ import java.util.Optional;
 public class CompilerBlockController extends CottonCraftingController {
 	//Variável que armazena a posição do bloco Compiler
     private final BlockPos compilerBlockPosition;
-    public static final int COMPILING_AREA_SIDE = 50;
+    public static final int COMPILING_AREA_SIDE = 10;
 
 	/**
 	 * Método que recebe um pacote de informações e atualiza o Disquete

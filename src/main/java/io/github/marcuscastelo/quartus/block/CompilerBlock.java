@@ -28,6 +28,7 @@ import net.minecraft.world.World;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Classe que implementa o bloco Compilador.
@@ -94,7 +95,8 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient) return ActionResult.SUCCESS;
-		//TODO: verificar se não foi sobreposto peo cliente por outro bloco (causa crash)
+		if (state.getBlock() != this) return ActionResult.FAIL;
+		System.out.println(world.getBlockState(hit.getBlockPos()));
 
 		ContainerProviderRegistry.INSTANCE.openContainer(Quartus.id("compiler"), player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
 
@@ -137,7 +139,8 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack compilerIS) {
         handleBlockTagOnPlace(world, pos, compilerIS);
-        CircuitUtils.outlineCompileRegionForClient(world, pos, CompilerBlockController.COMPILING_AREA_SIDE, Blocks.DIRT);
+
+        if (world.isClient) CircuitUtils.outlineCompileRegionForClient(world, pos, CompilerBlockController.COMPILING_AREA_SIDE);
     }
 
 	/**
@@ -174,5 +177,11 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 	@Override
 	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
 		return Collections.singletonList(new ItemStack(state.getBlock().asItem()));
+	}
+
+	@Override
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+		if (!world.isClient) return;
+		if (random.nextFloat() > 0.05f) CircuitUtils.outlineCompileRegionForClient(world, pos, CompilerBlockController.COMPILING_AREA_SIDE);
 	}
 }
