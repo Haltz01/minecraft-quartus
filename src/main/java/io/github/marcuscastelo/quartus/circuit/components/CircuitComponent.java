@@ -15,7 +15,7 @@ import java.util.*;
 public class CircuitComponent {
     private final ComponentDirectionInfo componentDirectionInfo;
     private final ComponentExecutionInfo executionInfo;
-    private Map<Direction, List<ComponentConnection>> connections;
+    private final Map<Direction, List<ComponentConnection>> connections;
 
     //TODO: ver como fazer pros extensores
 
@@ -28,9 +28,9 @@ public class CircuitComponent {
 
     /**
 	 * Contrutor padrão da classe QuartusCircuitComponent
-	 * @param componentName		Nome do componente
-	 * @param possibleDirectionsInfo		Possíveis direções que a informação pode seguir
-	 * @param ID		Identificador do componente
+	 * @param componentName		        Nome do componente
+	 * @param componentDirectionInfo	Possíveis direções de input e output do componente
+	 * @param ID		                Identificador do componente
 	 */
     public CircuitComponent(String componentName, ComponentDirectionInfo componentDirectionInfo, int ID) {
         this.componentName = componentName;
@@ -165,7 +165,7 @@ public class CircuitComponent {
 
 	/**
 	 * Método que retorna uma lista com as conexões nos inputs de um componente
-	 * @return
+	 * @return lista de conexões do tipo input
 	 */
     public List<ComponentConnection> getInputConnections() {
         List<ComponentConnection> inputConnections = new ArrayList<>();

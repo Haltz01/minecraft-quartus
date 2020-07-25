@@ -18,6 +18,7 @@ public class ComponentDirectionInfo {
     public final ImmutableList<Direction> possibleInputDirections, possibleOutputDirections;
     public final ImmutableMap<Direction, Integer> numberOfBusesInDirectionMap;
 
+    @SafeVarargs
     public ComponentDirectionInfo(List<Direction> possibleInputDirections, List<Direction> possibleOutputDirections, Pair<Direction, Integer> ...busesCountInDirectionArray) {
         Map<Direction, Integer> _numberOfBusesInDirectionMap = new HashMap<>();
         this.possibleInputDirections = ImmutableList.copyOf(possibleInputDirections);

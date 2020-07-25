@@ -1,10 +1,7 @@
 package io.github.marcuscastelo.quartus.circuit.components;
 
-import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import net.minecraft.util.math.Direction;
-
-import java.util.Optional;
 
 /**
  * Classe que define o Input utilizado pelo Mod

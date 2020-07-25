@@ -1,17 +1,13 @@
 package io.github.marcuscastelo.quartus.circuit;
 
 import com.google.common.collect.ImmutableList;
-import io.github.marcuscastelo.quartus.Quartus;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiPredicate;
-import java.util.function.BinaryOperator;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Classe que define um Bus no circuito.

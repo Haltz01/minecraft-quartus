@@ -28,9 +28,9 @@ import static io.github.marcuscastelo.quartus.registry.QuartusProperties.UpValue
  */
 public class WireConnector {
 	//Variável enum que marca qual tipo de conexão o fio faz
-    public enum UpValuesDirections { NONE, FIRST, SECOND, BOTH };
+    public enum UpValuesDirections { NONE, FIRST, SECOND, BOTH }
 
-	/**
+    /**
 	 * Método auxiliar que verifica se houve mudanças no fio.
 	 * Compara os BlockState's de antes e depois
 	 * @param oldState		BlockState do fio antes de uma alteração
@@ -326,10 +326,9 @@ public class WireConnector {
         if (estabilishedConnectionsPos.size() < 2) return true;
 
         //Se o issuer já for uma das conexões, interpreta-se que a conexão é possível
-        if (estabilishedConnectionsPos.contains(issuerPos)) return true;
+        return estabilishedConnectionsPos.contains(issuerPos);
 
         //Em qualquer outro caso, o fio target está cheio
-        return false;
     }
 
 	/**

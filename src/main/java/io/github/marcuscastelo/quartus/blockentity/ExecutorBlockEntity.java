@@ -22,7 +22,6 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,16 +48,6 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
     public ExecutorBlockEntity() {
         super(QuartusBlockEntities.EXECUTOR_BLOCK_ENTITY_TYPE);
         this.inventoryItems = DefaultedList.ofSize(1, ItemStack.EMPTY);
-    }
-
-	/**
-	 * Método que setta a localização do blockEntity a uma posição no mundo
-	 * @param world
-	 * @param pos
-	 */
-    @Override
-    public void setLocation(World world, BlockPos pos) {
-        super.setLocation(world, pos);
     }
 
 	/**

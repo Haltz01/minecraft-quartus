@@ -6,7 +6,6 @@ import io.github.marcuscastelo.quartus.circuit.QuartusBus;
 import io.github.marcuscastelo.quartus.circuit.QuartusLogic;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitOutput;
-import jdk.internal.jline.internal.Nullable;
 import net.minecraft.util.math.Direction;
 
 import java.util.ArrayList;

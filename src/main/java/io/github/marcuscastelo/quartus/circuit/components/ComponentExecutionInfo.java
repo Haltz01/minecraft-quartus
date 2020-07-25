@@ -5,7 +5,6 @@ import io.github.marcuscastelo.quartus.circuit.QuartusBus;
 import net.minecraft.util.math.Direction;
 
 import java.util.*;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -96,7 +95,7 @@ public class ComponentExecutionInfo {
 	 * Método auxiliar que setta os outputs conforme
 	 * a direção e os Buses dados
 	 * @param direction	Direção a ser seguida
-	 * @param Buses	Buses do circuito com os dados
+	 * @param buses	Buses do circuito com os dados
 	 */
     public void setOutput(Direction direction, QuartusBus ...buses) {
         setOutput(direction, Arrays.stream(buses).map(Optional::of).collect(Collectors.toList()));
@@ -156,8 +155,8 @@ public class ComponentExecutionInfo {
 	 * @param buses	Buses com as informações
 	 */
     @SafeVarargs
-    public final void setInput(Direction direction, Optional<QuartusBus>... busesInfo) {
-        setInput(direction, Arrays.asList(busesInfo));
+    public final void setInput(Direction direction, Optional<QuartusBus>... buses) {
+        setInput(direction, Arrays.asList(buses));
     }
 
 	/**
@@ -176,12 +175,12 @@ public class ComponentExecutionInfo {
 	 * @param direction	Direção a ser seguida
 	 * @param buses	Buses com as informações
 	 */
-    public void setInput(Direction direction, List<Optional<QuartusBus>> busesInfo) {
+    public void setInput(Direction direction, List<Optional<QuartusBus>> buses) {
         if (!componentDirectionInfo.possibleInputDirections.contains(direction))
             throw new IllegalArgumentException("Trying to set input at invalid direction");
         if (!inputInfo.containsKey(direction))
             throw new RuntimeException("Erro de programação: inputInfo não tem a chave que deveria ter");
         inputInfo.get(direction).clear();
-        inputInfo.get(direction).addAll(busesInfo.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList()));
+        inputInfo.get(direction).addAll(buses.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList()));
     }
 }

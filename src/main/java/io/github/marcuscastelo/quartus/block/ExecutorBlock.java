@@ -22,7 +22,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 /**
@@ -149,7 +149,7 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
 	 */
 	@Override
 	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-		return Arrays.asList(new ItemStack(state.getBlock().asItem()));
+		return Collections.singletonList(new ItemStack(state.getBlock().asItem()));
 	}
 
 	/**

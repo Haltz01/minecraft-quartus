@@ -1,6 +1,5 @@
 package io.github.marcuscastelo.quartus.registry;
 
-import io.github.marcuscastelo.quartus.block.circuit_parts.WireBlock;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.StringIdentifiable;

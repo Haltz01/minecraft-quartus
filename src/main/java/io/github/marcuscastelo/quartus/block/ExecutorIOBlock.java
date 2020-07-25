@@ -15,7 +15,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -65,11 +65,9 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
 
 
 	/**
-	 * Método que configura o tipo de saída (tipo de informação no jogo) do bloco
-	 * No jogo, redstone é utilizado como mecânica para simulação de presença de corrente (1 ou verdadeiro)
-	 * Se a saída do bloco for verdadeiro/1, a redstone na saída acenderá
-	 * @param state
-	 * @return
+	 * Método que informa o jogo que esse bloco é um bloco que pode emitir redstone
+	 * @param state estado do bloco
+	 * @return true
 	 */
     @Override
     public boolean emitsRedstonePower(BlockState state) {
@@ -131,7 +129,7 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
      */
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        return Arrays.asList(new ItemStack(state.getBlock().asItem()));
+        return Collections.singletonList(new ItemStack(state.getBlock().asItem()));
     }
 
 	/**
@@ -183,7 +181,6 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
             } else {
                 world.setBlockState(pos, state.with(EXTENSOR_STATE, ExecutorIOState.VOID_END));
             }
-            return;
         }
     }
 }

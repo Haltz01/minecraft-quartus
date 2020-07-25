@@ -85,7 +85,6 @@ public class CompilerBlockController extends CottonCraftingController {
             updateFloppyDisk(floppyItemStack, circuit.get());
         } catch (Exception e) {
             e.printStackTrace();
-            return;
         }
     }
 

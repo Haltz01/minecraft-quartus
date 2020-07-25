@@ -14,9 +14,9 @@ import net.minecraft.util.DefaultedList;
  * Traduzido e completado para o português
  */
 public interface ImplementedInventory extends Inventory {
-    /**
-     * Gets the item list of this inventory.
-     * Must return the same instance every time it's called.
+    /*
+      Gets the item list of this inventory.
+      Must return the same instance every time it's called.
      */
 	/**
 	 * Recebe a lista de itens do inventário.
@@ -24,8 +24,8 @@ public interface ImplementedInventory extends Inventory {
 	 */
     DefaultedList<ItemStack> getItems();
     // Creation
-    /**
-     * Creates an inventory from the item list.
+    /*
+      Creates an inventory from the item list.
      */
 	/**
 	 * Cria um inventário a partir da lista de itens
@@ -33,8 +33,8 @@ public interface ImplementedInventory extends Inventory {
     static ImplementedInventory of(DefaultedList<ItemStack> items) {
         return () -> items;
     }
-    /**
-     * Creates a new inventory with the size.
+    /*
+      Creates a new inventory with the size.
      */
 	/**
 	 * Cria um novo inventário com o tamanho passado como parâmetro
@@ -44,8 +44,8 @@ public interface ImplementedInventory extends Inventory {
         return of(DefaultedList.ofSize(size, ItemStack.EMPTY));
     }
     // Inventory
-    /**
-     * Returns the inventory size.
+    /*
+      Returns the inventory size.
      */
 	/**
 	 * Retorna o tamanho do inventário
@@ -55,8 +55,8 @@ public interface ImplementedInventory extends Inventory {
     default int getInvSize() {
         return getItems().size();
     }
-    /**
-     * @return true if this inventory has only empty stacks, false otherwise
+    /*
+      @return true if this inventory has only empty stacks, false otherwise
      */
 	/**
 	 * @return verdadeiro se o inventário possui apenas pilhas/posições vazias, false caso contrário
@@ -71,8 +71,8 @@ public interface ImplementedInventory extends Inventory {
         }
         return true;
     }
-    /**
-     * Gets the item in the slot.
+    /*
+      Gets the item in the slot.
      */
 	/**
 	 * Retorna o item da posição fornecida
@@ -82,10 +82,10 @@ public interface ImplementedInventory extends Inventory {
     default ItemStack getInvStack(int slot) {
         return getItems().get(slot);
     }
-    /**
-     * Takes a stack of the size from the slot.
-     * <p>(default implementation) If there are less items in the slot than what are requested,
-     * takes all items in that slot.
+    /*
+      Takes a stack of the size from the slot.
+      <p>(default implementation) If there are less items in the slot than what are requested,
+      takes all items in that slot.
      */
 	/**
 	 * Toma uma pilha, do tamanho passado como parâmetro, da posição
@@ -101,8 +101,8 @@ public interface ImplementedInventory extends Inventory {
         }
         return result;
     }
-    /**
-     * Removes the current stack in the {@code slot} and returns it.
+    /*
+      Removes the current stack in the {@code slot} and returns it.
      */
 	/**
 	 * Remove a pilha atual na posição slot e retorna
@@ -112,10 +112,10 @@ public interface ImplementedInventory extends Inventory {
     default ItemStack removeInvStack(int slot) {
         return Inventories.removeStack(getItems(), slot);
     }
-    /**
-     * Replaces the current stack in the {@code slot} with the provided stack.
-     * <p>If the stack is too big for this inventory ({@link Inventory#getInvMaxStackAmount()}),
-     * it gets resized to this inventory's maximum amount.
+    /*
+      Replaces the current stack in the {@code slot} with the provided stack.
+      <p>If the stack is too big for this inventory ({@link Inventory#getInvMaxStackAmount()}),
+      it gets resized to this inventory's maximum amount.
      */
 	/**
 	 * Troca de posições a pilha na posição slot com uma pilha fornecida
@@ -129,8 +129,8 @@ public interface ImplementedInventory extends Inventory {
             stack.setCount(getInvMaxStackAmount());
         }
     }
-    /**
-     * Clears {@linkplain #getItems() the item list}}.
+    /*
+      Clears {@linkplain #getItems() the item list}}.
      */
 	/**
 	 * Esvazia a lista de itens

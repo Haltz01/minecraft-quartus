@@ -41,7 +41,7 @@ public class FloppyDiskItem extends Item {
     @Environment(EnvType.CLIENT)
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        if (!user.world.isClient) return TypedActionResult.pass(stack);
+        if (!user.world.isClient || MinecraftClient.getInstance().player == null) return TypedActionResult.pass(stack);
 
         if (stack.getTag() == null || !stack.getTag().contains("circuit")) return TypedActionResult.pass(stack);
         MinecraftClient.getInstance().player.sendMessage(new LiteralText(stack.getOrCreateTag().getString("circuit")));

@@ -2,12 +2,9 @@ package io.github.marcuscastelo.quartus.util;
 
 import com.google.common.collect.ImmutableList;
 import jdk.internal.jline.internal.Nullable;
-import net.fabricmc.loader.util.sat4j.core.Vec;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
-
-import java.util.Map;
 
 /**
  * Classe que possui metodos uteis para o tratamento de direções

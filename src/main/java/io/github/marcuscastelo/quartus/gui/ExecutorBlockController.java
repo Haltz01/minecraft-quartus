@@ -110,7 +110,7 @@ public class ExecutorBlockController extends CottonCraftingController {
 	 * @param syncId		Identificador ID do bloco
 	 * @param playerInventory		Inventário do jogador
 	 * @param blockInventory		Inventário do bloco
-	 * @param compilerBlockPosition		Posição do bloco Executor
+	 * @param executorBlockPos		Posição do bloco Executor
 	 */
     public ExecutorBlockController(int syncId, PlayerInventory playerInventory, Inventory blockInventory, BlockPos executorBlockPos) {
         super(RecipeType.CRAFTING, syncId, playerInventory, blockInventory, null);

@@ -7,7 +7,6 @@ import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitOutput;
 import io.github.marcuscastelo.quartus.circuit.components.ComponentInfo;
-import io.github.marcuscastelo.quartus.gui.CompilerBlockController;
 import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import io.github.marcuscastelo.quartus.util.WireConnector;
@@ -115,8 +114,8 @@ public class CircuitUtils {
             //Nenhum nó nessa direção
             if (targetPos == null) continue;
 
-			/**
-			 * Pega o nó na posição alvo e analisa suas entradas e saídas, conectando-os
+			/*
+			  Pega o nó na posição alvo e analisa suas entradas e saídas, conectando-os
 			 */
             BlockState targetBlockState = world.getBlockState(targetPos);
             Block targetBlock = targetBlockState.getBlock();
@@ -138,12 +137,12 @@ public class CircuitUtils {
         return connectedNodesInfo;
     }
 
-	/**
+	/** TODO: melhorar comentario
 	 * Método auxiliar que analisa um fio/wire do circuito e identifica qual direção para seguir
-	 * @param world
-	 * @param initialPos
-	 * @param initialDirection
-	 * @return
+	 * @param world             Mundo em que o circuito é compilado
+	 * @param initialPos        Posição do bloco que chamou a função
+	 * @param initialDirection  Direção que o bloco que chamou andou para encontrar o fio que está prestes a ser percorrido
+	 * @return                  Par de posição e direção do componente que foi encontrado
 	 */
     private static Pair<BlockPos, Direction> getWireEndBlockInfo(World world, BlockPos initialPos, Direction initialDirection) {
         BlockPos currPos = initialPos;
