@@ -28,7 +28,8 @@ import java.util.Optional;
  */
 public class CompilerBlockController extends CottonCraftingController {
 	//Variável que armazena a posição do bloco Compiler
-    final BlockPos compilerBlockPosition;
+    private final BlockPos compilerBlockPosition;
+    public static final int COMPILING_AREA_SIDE = 10;
 
 	/**
 	 * Método que recebe um pacote de informações e atualiza o Disquete
@@ -57,8 +58,8 @@ public class CompilerBlockController extends CottonCraftingController {
 	 */
     private Optional<QuartusCircuit> compileCircuit() {
         Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
-        BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), 5).offset(facingDir.getOpposite(),10).offset(Direction.DOWN,5);
-        BlockPos endPos = compilerBlockPosition.offset(facingDir.rotateYCounterclockwise(), 5).offset(Direction.UP, 5);
+        BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), COMPILING_AREA_SIDE /2).offset(facingDir.getOpposite(), COMPILING_AREA_SIDE).offset(Direction.DOWN, COMPILING_AREA_SIDE);
+        BlockPos endPos = compilerBlockPosition.offset(facingDir.rotateYCounterclockwise(), COMPILING_AREA_SIDE).offset(Direction.UP, COMPILING_AREA_SIDE);
 
         System.out.println("Compiling from " + startPos + " to " + endPos);
         CircuitCompiler compiler = new CircuitCompiler(world, startPos, endPos);

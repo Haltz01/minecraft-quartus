@@ -54,7 +54,7 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient) return ActionResult.SUCCESS;
-        //TODO: verificar se não foi sobreposto peo cliente por outro bloco (causa crash)
+        if (state.getBlock() != this) return ActionResult.FAIL;
 
         ContainerProviderRegistry.INSTANCE.openContainer(Quartus.id("executor"), player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
 

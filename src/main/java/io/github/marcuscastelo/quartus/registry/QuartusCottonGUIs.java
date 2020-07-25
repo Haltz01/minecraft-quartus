@@ -39,6 +39,6 @@ public class QuartusCottonGUIs {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof Inventory)
             return (Inventory) blockEntity;
-        return null;
+        throw new RuntimeException("Trying to get inventory of " + pos + " which doesn't have any inventory");
     }
 }

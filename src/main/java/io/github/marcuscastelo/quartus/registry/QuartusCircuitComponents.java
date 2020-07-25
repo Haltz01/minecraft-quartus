@@ -55,9 +55,9 @@ public class QuartusCircuitComponents {
      * @param componentName         Nome do componenete
      * @return                      Classe com informações do tipo de componenete (usado para instanciar um componenete)
      */
-    @Nullable
     public static ComponentInfo getComponentInfoByName(String componentName) {
-        return componentInfoPerComponentName.getOrDefault(componentName, null);
+        if (!componentInfoPerComponentName.containsKey(componentName)) throw new IllegalArgumentException("Unknown component " + componentName);
+        return componentInfoPerComponentName.get(componentName);
     }
 
     public static final ComponentInfo AND_GATE;

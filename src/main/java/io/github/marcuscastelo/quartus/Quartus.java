@@ -14,6 +14,8 @@ import org.apache.logging.log4j.Logger;
  * Extende a classe ModInitializer, cuja função é inicializar os Mod's criados 
  */
 public class Quartus implements ModInitializer {
+    //TODO: adicionar receitas ao livro de crafting
+
 
 	//Variáveis auxiliares para identificação do Mod
     public static final String MOD_ID = "quartus";
