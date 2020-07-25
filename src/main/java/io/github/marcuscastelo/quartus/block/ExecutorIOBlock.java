@@ -74,12 +74,9 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
         return true;
     }
 
-	//TODO: verificar as duas funcoes abaixo
     @Override
     public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
-        Direction outputDir = state.get(FACING);
-        if (facing != outputDir) return 0;
-        return state.get(POWERED)? 15: 0;
+        return getStrongRedstonePower(state, view, pos, facing);
     }
 
     @Override

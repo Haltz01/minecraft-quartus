@@ -8,12 +8,17 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.Texts;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import java.time.format.TextStyle;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,7 +55,7 @@ public class FloppyDiskItem extends Item {
     }
 
 	/**
-	 * Método que cria e/ou atribui uma tag "circuit" ao item
+	 * Método que cria uma tooltip no item de acordo com a sua tag circuit
 	 * @param stack		Pilha que contém uma lista de items guardados no inventario de um bloco
 	 * @param world		Mundo que está sendo jogado
 	 * @param tooltip		Dica flutuante
@@ -59,7 +64,21 @@ public class FloppyDiskItem extends Item {
 	//TODO: TESTAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11!ONZE
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
-        stack.getOrCreateTag().get("circuit");
+		String circuitStr = stack.getOrCreateTag().getString("circuit");
+		if (circuitStr.length() == 0) {
+			tooltip.add(new TranslatableText("quartus.item.floppy_disk.empty"));
+			return;
+		}
+
+		String[] lines = circuitStr.split("\n");
+		if (lines.length > 8) {
+			tooltip.add(new TranslatableText("quartus.item.floppy_disk.circuit_too_big"));
+			return;
+		}
+
+		Arrays.stream(lines).forEach(line -> {
+			tooltip.add(new LiteralText(line));
+		});
     }
 
 	/**

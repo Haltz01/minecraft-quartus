@@ -88,11 +88,8 @@ public class CircuitCompiler {
         }
     }
 
-    //TODO: pensar em forma de ordernar os inputs e outputs (colorar cnomes?)
-    //TODO: outline bonita com render e indicação de componentes incorretos (pós-entrega)
+    //TODO: indicação de componentes incorretos (pós-entrega)
 
-
-    //TODO: tratar quando o circuito sai pra fora do tamanho máximo (dá NullPointerException agora -> circuit.addLink(nextNodeInfo.AtoB, nextNodeInfo.BtoA, component, componentInPos.get(nextNodePos)) );
 	/**
 	 * Método auxiliar que explora o circuito mapeado pelo scanCircuitNodes
 	 */
@@ -110,10 +107,6 @@ public class CircuitCompiler {
 
             //Se a posição já foi explorada
             if (component.hasOutputConnections()) continue;
-
-            // TODO: mais ou menos por aqui deve ser adicionado um tratamento para os extensores e distribuidores!! -> eles não existem de verdade, são só facilitadores do que queremos fazer
-            // TODO: extensor só pode ser conectado em GATES!!
-            // Guerra vai fazer!!
 
             // Percorre os fios a partir de um node
             // Retorna 0 ou 1 nodes na maioria dos casos

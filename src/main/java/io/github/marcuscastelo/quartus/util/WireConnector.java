@@ -292,10 +292,8 @@ public class WireConnector {
 	 * @return		Boolean que indica se os fios estão virados um para o outro
 	 */
     public static boolean areWiresConnected(World world, BlockPos wireAPos, BlockPos wireBPos) {
-        //TODO: remover exception de debug (retornar true)
         if (wireAPos == wireBPos) throw new IllegalArgumentException("Trying to check whether a wire is connected to itself");
         Direction AtoBHorDirection = DirectionUtils.getHorizontalDirectionAtoB(wireAPos, wireBPos);
-        //TODO: remover exception de debug (retornar false)
         if (AtoBHorDirection == null) throw new IllegalArgumentException("Trying to check whether wires are horizontally-diagonally connected");
 
         Direction BtoAHorDirection = AtoBHorDirection.getOpposite();
