@@ -3,6 +3,7 @@ package io.github.marcuscastelo.quartus.block.circuit_parts;
 import io.github.marcuscastelo.quartus.block.QuartusTransportInfoProvider;
 import io.github.marcuscastelo.quartus.registry.QuartusProperties;
 import io.github.marcuscastelo.quartus.util.WireConnector;
+import io.github.marcuscastelo.quartus.util.WireShapes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -24,11 +25,9 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
+import org.apache.http.impl.conn.Wire;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Classe que define o comportamento de um WireBlock
@@ -37,12 +36,12 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 	/**
 	 * Sub-Classe que determina o valor do fio
 	 */
-    public enum UpValues implements StringIdentifiable {
+    public enum UpValue implements StringIdentifiable {
         NONE("none"), FACING("facing"), BOTH("both");
 
         String identifier;
 
-        UpValues(String identifier) {
+        UpValue(String identifier) {
             this.identifier = identifier;
         }
 
@@ -54,14 +53,14 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 	//Variáveis auxiliares que definem o estado do fio
     private static final BooleanProperty TURN = QuartusProperties.WIRE_TURN;
     private static final BooleanProperty POSITIVE = QuartusProperties.WIRE_POSITIVE;
-    private static final EnumProperty<UpValues> UP = QuartusProperties.WIRE_UP;
+    private static final EnumProperty<UpValue> UP = QuartusProperties.WIRE_UP;
 
 	/**
 	 * Construtor padrão da Classe WireBlock
 	 */
     public WireBlock() {
         super(Settings.copy(Blocks.REPEATER));
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH).with(TURN, false).with(POSITIVE, false).with(UP, UpValues.NONE));
+        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH).with(TURN, false).with(POSITIVE, false).with(UP, UpValue.NONE));
     }
 
 	/**
@@ -93,7 +92,11 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 
         //Se o fio atual já possui duas conexões, não precisa atualizar
         List<BlockPos> alreadyEstabilishedConnections = WireConnector.getWireEstabilishedConnections(world, currPos);
-        if (alreadyEstabilishedConnections.size() == 2) return;
+        if (alreadyEstabilishedConnections.size() == 2) {
+            if (block != Blocks.END_PORTAL)
+                WireConnector.updateUnnaturalNeighborsIfWires(world, currPos);
+            return;
+        }
 
         int freeConnectionSlotsCount = 2 - alreadyEstabilishedConnections.size();
 
@@ -163,42 +166,18 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
     //TODO: arrumar de acordo com as novas mudanças
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
-        if (state.get(TURN)) {
-            //Adds center part
-            VoxelShape shape = VoxelShapes.cuboid(6/16f, 0, 6/16f, 10/16f, 2/16f, 10/16f);
-            Direction d = state.get(FACING);
-            if (true) return shape;
+        Direction facingDirection = state.get(FACING);
+        Direction auxDirection = WireConnector.getAuxDirection(state);
 
-            if (d == Direction.NORTH) {
-                //North
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(6/16f, 0, 0, 10/16f, 2/16f, 6/16f));
-                //West
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, 0, 6/16f, 6/16f, 2/16f, 10/16f));
-            }
-            else if (d == Direction.SOUTH) {
-                //South
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(6/16f, 0, 10/16f, 10/16f, 2/16f, 1f));
-                //East
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(10/16f, 0, 6/16f, 1f, 2/16f, 10/16f));
-            }
-            else if (d == Direction.WEST) {
-                //West
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, 0, 6/16f, 6/16f, 2/16f, 10/16f));
-                //South
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(6/16f, 0, 10/16f, 10/16f, 2/16f, 1f));
-            } else {
-                //East
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(10/16f, 0, 6/16f, 1f, 2/16f, 10/16f));
-                //North
-                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(6/16f, 0, 0, 10/16f, 2/16f, 6/16f));
-            }
-            return shape;
+        UpValue upValue = state.get(UP);
 
-        }
-        else if (state.get(FACING) == Direction.NORTH || state.get(FACING) == Direction.SOUTH)
-            return VoxelShapes.cuboid(6/16f, 0.0f, 0f, 10/16f, 2/16f, 1f);
-        else
-            return VoxelShapes.cuboid(0, 0.0f, 6/16f, 1f, 2/16f, 10/16f);
+        VoxelShape totalShape;
+        VoxelShape baseShape = WireShapes.getBaseShape(facingDirection, auxDirection);
+        VoxelShape upShape = WireShapes.getUpVoxelShape(facingDirection, auxDirection, upValue);
+
+        totalShape = VoxelShapes.union(baseShape, upShape);
+
+        return totalShape;
     }
 
 	/**
@@ -250,8 +229,7 @@ public class WireBlock extends HorizontalFacingBlock implements QuartusTransport
 	 */
     @Override
     public Direction nextDirection(World world, BlockPos pos, Direction facingBefore) {
-        //TODO: implementar
-
+        //TODO: copiar do WireConnector
         return Direction.NORTH;
     }
 }
