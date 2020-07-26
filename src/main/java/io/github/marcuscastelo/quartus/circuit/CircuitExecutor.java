@@ -27,8 +27,6 @@ public class CircuitExecutor {
     private CircuitExecutor(World world, List<BlockPos> inputControllers, List<BlockPos> outputControllers, CircuitDescriptor descriptor) {
         this.descriptor = descriptor;
 
-        System.out.println("Passo 1:" + descriptor.serialize());
-
         Map<Integer, ExecutableWorldInput> inputs = new HashMap<>();
         Map<Integer, ExecutableWorldOutput> outputs = new HashMap<>();
         Map<Integer, ExecutableComponent> otherComponents = new HashMap<>();
@@ -40,8 +38,6 @@ public class CircuitExecutor {
         List<InputDescriptor> inputDescriptions = descriptor.getInputsList();
         List<OutputDescriptor> outputDescriptions = descriptor.getOutputsList();
 
-        System.out.println("Passo 2:" + descriptor.serialize());
-
         for (int i = 0; i < inputCount; i++ ){
             InputDescriptor input = inputDescriptions.get(i);
             inputs.put(input.getID(), new ExecutableWorldInput(this, world, inputControllers.get(i), input));
@@ -51,8 +47,6 @@ public class CircuitExecutor {
             outputs.put(output.getID(), new ExecutableWorldOutput(this, world, outputControllers.get(i), output));
         }
 
-        System.out.println("Passo 3:" + descriptor.serialize());
-
         descriptor.getOtherComponentsList().forEach(componentDescriptor -> {
             otherComponents.put(componentDescriptor.getID(), new ExecutableComponent.Builder().setCircuitExecutor(this).setComponentDescriptor(componentDescriptor).build());
         });
@@ -60,8 +54,6 @@ public class CircuitExecutor {
         this.inputs = ImmutableMap.copyOf(inputs);
         this.outputs = ImmutableMap.copyOf(outputs);
         this.otherComponents = ImmutableMap.copyOf(otherComponents);
-
-        System.out.println("Fim (4):" + descriptor.serialize());
 
     }
 

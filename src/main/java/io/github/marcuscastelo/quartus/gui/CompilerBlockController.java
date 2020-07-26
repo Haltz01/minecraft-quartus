@@ -55,8 +55,6 @@ public class CompilerBlockController extends CottonCraftingController {
 	 * @param circuit		Circuito analisado
 	 */
     private void updateFloppyDisk(ItemStack floppyItemStack, CircuitDescriptor circuit) {
-        System.out.println(circuit.serialize());
-
         //Update client's itemstack
         floppyItemStack.getOrCreateTag().putString("circuit", circuit.serialize());
 

@@ -35,15 +35,6 @@ public class QuartusFloppyDiskUpdateC2SPacketHandler {
                 if (itemStack.isEmpty()) return;
                 if (!itemStack.getItem().equals(QuartusItems.FLOPPY_DISK)) return;
 
-
-                String circuitStr = packet.getCompoundTag().getString("circuit");
-                for (int i = 0; i < 10; i++) {
-                    CircuitDescriptor descriptor = new CircuitDescriptor.Serializer().unserialize(circuitStr);
-                    circuitStr = descriptor.serialize();
-                }
-
-                packet.getCompoundTag().putString("circuit", circuitStr);
-
                 itemStack.setTag(packet.getCompoundTag());
             });
         });

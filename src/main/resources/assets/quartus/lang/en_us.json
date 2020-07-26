@@ -25,7 +25,7 @@
   "blockentity.quartus.executor.unknown_error": "Ops! Something went wrong when trying to execute the circuit",
   "blockentity.quartus.executor.not_enough_io": "There are not enough inputs and/or outputs for the circuit",
   "circuitcompiler.unknown_error": "Unknown error when compiling the circuit",
-  "circuitcompiler.out_of_bounds": "Some component is out of bounds. The circuit must be inside a 10x10x10 space",
+  "circuitcompiler.out_of_bounds": "Some component is out of bounds. The circuit must be inside the red marking",
   "circuitcompiler.disconnected_component": "Hm... It seems like a component is disconnected from the circuit",
   "quartus.item.floppy_disk.circuit_too_big": "Too many connections, right click to see",
   "quartus.item.floppy_disk.empty": "The disk is empty"

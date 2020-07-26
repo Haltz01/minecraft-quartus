@@ -180,7 +180,6 @@ public class WireConnector {
             newStateUpValue = UpValue.BOTH;
         } else if (upValuesDirections.contains(UpValuesDirections.SECOND)) {
             newStateUpValue = UpValue.FACING;
-            System.out.println("ELE MESMO !!");
             Direction tempDirForSwap = newFacingDirection;
             //Troca a direção principal com a direção auxiliar (para manter o turn certo, muda a posividade)
             if (newTurn) newPositive = !newPositive;

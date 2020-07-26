@@ -24,7 +24,7 @@
   "blockentity.quartus.executor.unknown_error": "Opa! Houve um problema ao tentar executar o circuito",
   "blockentity.quartus.executor.not_enough_io": "Não há entradas e/ou saídas suficientes para o circuito",
   "circuitcompiler.unknown_error": "Erro desconhecido ao executar o circuito",
-  "circuitcompiler.out_of_bounds": "Algum componente está fora dos limites permitidos. O circuito deve estar dentro de um espaço 10x10x10",
+  "circuitcompiler.out_of_bounds": "Algum componente está fora dos limites permitidos. O circuito deve estar dentro da marcação vermelha",
   "circuitcompiler.disconnected_component": "Hm... Parece que algum componente está desconectado do circuito",
   "quartus.item.floppy_disk.circuit_too_big": "Muitas conexões, clique com o botão direito para ver",
   "quartus.item.floppy_disk.empty": "O disco está vazio"

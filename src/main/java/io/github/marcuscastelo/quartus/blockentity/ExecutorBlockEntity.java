@@ -75,11 +75,9 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
     public CompoundTag toTag(CompoundTag tag) {
         if (circuitDescriptor != null) {
             tag.putString("circuit_description", circuitDescriptor.serialize());
-            System.out.println("D Salvando: " + circuitDescriptor.serialize());
         }
         if (circuitExecutor != null) {
             tag.putString("execution_state", circuitExecutor.serialize());
-            System.out.println("E Salvando: " + circuitExecutor.serialize());
         }
         tag.putBoolean("executing", executing);
         Inventories.toTag(tag, inventoryItems);
