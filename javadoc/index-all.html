@@ -73,7 +73,7 @@
 </a>
 <h2 class="title">A</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#addComponent-io.github.marcuscastelo.quartus.circuit.components.CircuitComponent-">addComponent(CircuitComponent)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.<a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html" title="class in io.github.marcuscastelo.quartus.circuit">QuartusCircuit</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#addComponent-io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor-">addComponent(CircuitComponent)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.<a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html" title="class in io.github.marcuscastelo.quartus.circuit">QuartusCircuit</a></dt>
 <dd>
 <div class="block">Método que adiciona um componente ao circuito, de acordo com sua classificação:
  - Input
@@ -84,7 +84,7 @@
 <dd>
 <div class="block">Método que adiciona uma conexão a um componente de acordo com a direção dada</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#addLink-Direction-Direction-io.github.marcuscastelo.quartus.circuit.components.CircuitComponent-io.github.marcuscastelo.quartus.circuit.components.CircuitComponent-">addLink(Direction, Direction, CircuitComponent, CircuitComponent)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.<a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html" title="class in io.github.marcuscastelo.quartus.circuit">QuartusCircuit</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#addLink-Direction-Direction-io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor-io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor-">addLink(Direction, Direction, CircuitComponent, CircuitComponent)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.<a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html" title="class in io.github.marcuscastelo.quartus.circuit">QuartusCircuit</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/registry/QuartusBlocks.html#AND_GATE">AND_GATE</a></span> - Static variable in class io.github.marcuscastelo.quartus.registry.<a href="io/github/marcuscastelo/quartus/registry/QuartusBlocks.html" title="class in io.github.marcuscastelo.quartus.registry">QuartusBlocks</a></dt>
 <dd>&nbsp;</dd>
@@ -644,7 +644,7 @@
 <dd>
 <div class="block">Método que retorna a Tag do bloco QuartusFloppyDiskUpdateC2SPacket</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/CircuitUtils.html#getConnectedNodesInfo-World-io.github.marcuscastelo.quartus.circuit.QuartusCircuit-io.github.marcuscastelo.quartus.circuit.components.CircuitComponent-BlockPos-">getConnectedNodesInfo(World, QuartusCircuit, CircuitComponent, BlockPos)</a></span> - Static method in class io.github.marcuscastelo.quartus.circuit.<a href="io/github/marcuscastelo/quartus/circuit/CircuitUtils.html" title="class in io.github.marcuscastelo.quartus.circuit">CircuitUtils</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/CircuitUtils.html#getConnectedNodesInfo-World-io.github.marcuscastelo.quartus.circuit.CircuitDescriptor-io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor-BlockPos-">getConnectedNodesInfo(World, QuartusCircuit, CircuitComponent, BlockPos)</a></span> - Static method in class io.github.marcuscastelo.quartus.circuit.<a href="io/github/marcuscastelo/quartus/circuit/CircuitUtils.html" title="class in io.github.marcuscastelo.quartus.circuit">CircuitUtils</a></dt>
 <dd>
 <div class="block">Método que analisa o circuito a partir de um dado componente do Mod,
  identificando o caminho a ser seguido com os componentes e 
@@ -1493,7 +1493,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/network/QuartusSerializable.html#serialize--">serialize()</a></span> - Method in interface io.github.marcuscastelo.quartus.network.<a href="io/github/marcuscastelo/quartus/network/QuartusSerializable.html" title="interface in io.github.marcuscastelo.quartus.network">QuartusSerializable</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#setComponentAtID-int-io.github.marcuscastelo.quartus.circuit.components.CircuitComponent-">setComponentAtID(int, CircuitComponent)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.<a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html" title="class in io.github.marcuscastelo.quartus.circuit">QuartusCircuit</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#setComponentAtID-int-io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor-">setComponentAtID(int, CircuitComponent)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.<a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html" title="class in io.github.marcuscastelo.quartus.circuit">QuartusCircuit</a></dt>
 <dd>
 <div class="block">Método que atrela um componente a um identificador ID</div>
 </dd>
@@ -1615,42 +1615,42 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#updateCircuit--">updateCircuit()</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.<a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html" title="class in io.github.marcuscastelo.quartus.circuit">QuartusCircuit</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/CircuitComponent.html#updateComponent-io.github.marcuscastelo.quartus.circuit.QuartusCircuit-">updateComponent(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.components.<a href="io/github/marcuscastelo/quartus/circuit/components/CircuitComponent.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitComponent</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/CircuitComponent.html#updateComponent-io.github.marcuscastelo.quartus.circuit.CircuitDescriptor-">updateComponent(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.components.<a href="io/github/marcuscastelo/quartus/circuit/components/CircuitComponent.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitComponent</a></dt>
 <dd>
 <div class="block">Método que faz a chamada do updateInputInfo de um circuito,
  atualizando seus valores de entrada e saída</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/CircuitInput.html#updateComponent-io.github.marcuscastelo.quartus.circuit.QuartusCircuit-">updateComponent(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.components.<a href="io/github/marcuscastelo/quartus/circuit/components/CircuitInput.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitInput</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/CircuitInput.html#updateComponent-io.github.marcuscastelo.quartus.circuit.CircuitDescriptor-">updateComponent(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.components.<a href="io/github/marcuscastelo/quartus/circuit/components/CircuitInput.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitInput</a></dt>
 <dd>
 <div class="block">Método que faz a chamada para dar update no Input no circuito</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/CircuitOutput.html#updateComponent-io.github.marcuscastelo.quartus.circuit.QuartusCircuit-">updateComponent(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.components.<a href="io/github/marcuscastelo/quartus/circuit/components/CircuitOutput.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitOutput</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/CircuitOutput.html#updateComponent-io.github.marcuscastelo.quartus.circuit.CircuitDescriptor-">updateComponent(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.components.<a href="io/github/marcuscastelo/quartus/circuit/components/CircuitOutput.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitOutput</a></dt>
 <dd>
 <div class="block">Método que faz a chamada para dar update no Input no circuito</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldInput.html#updateComponent-io.github.marcuscastelo.quartus.circuit.QuartusCircuit-">updateComponent(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.components.executor.<a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldInput.html" title="class in io.github.marcuscastelo.quartus.circuit.components.executor">WorldInput</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldInput.html#updateComponent-io.github.marcuscastelo.quartus.circuit.CircuitDescriptor-">updateComponent(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.components.executor.<a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldInput.html" title="class in io.github.marcuscastelo.quartus.circuit.components.executor">WorldInput</a></dt>
 <dd>
 <div class="block">Método que faz o update do WorldInput</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldOutput.html#updateComponent-io.github.marcuscastelo.quartus.circuit.QuartusCircuit-">updateComponent(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.components.executor.<a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldOutput.html" title="class in io.github.marcuscastelo.quartus.circuit.components.executor">WorldOutput</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldOutput.html#updateComponent-io.github.marcuscastelo.quartus.circuit.CircuitDescriptor-">updateComponent(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.components.executor.<a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldOutput.html" title="class in io.github.marcuscastelo.quartus.circuit.components.executor">WorldOutput</a></dt>
 <dd>
 <div class="block">Método que faz o update do WorldOutput</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#updateComponents--">updateComponents()</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.<a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html" title="class in io.github.marcuscastelo.quartus.circuit">QuartusCircuit</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/gui/ExecutorBlockController.html#updateExtensorModels-io.github.marcuscastelo.quartus.circuit.QuartusCircuit-">updateExtensorModels(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.gui.<a href="io/github/marcuscastelo/quartus/gui/ExecutorBlockController.html" title="class in io.github.marcuscastelo.quartus.gui">ExecutorBlockController</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/gui/ExecutorBlockController.html#updateExtensorModels-io.github.marcuscastelo.quartus.circuit.CircuitDescriptor-">updateExtensorModels(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.gui.<a href="io/github/marcuscastelo/quartus/gui/ExecutorBlockController.html" title="class in io.github.marcuscastelo.quartus.gui">ExecutorBlockController</a></dt>
 <dd>
 <div class="block">Método que atualiza os extensores I/O do Executor
  Recebe um pacote de dados, referente ao circuito
  e atribui a quantidade correta de inputs e outputs
  para a sequência de blocos à direita do Executor</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/gui/CompilerBlockController.html#updateFloppyDisk-ItemStack-io.github.marcuscastelo.quartus.circuit.QuartusCircuit-">updateFloppyDisk(ItemStack, QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.gui.<a href="io/github/marcuscastelo/quartus/gui/CompilerBlockController.html" title="class in io.github.marcuscastelo.quartus.gui">CompilerBlockController</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/gui/CompilerBlockController.html#updateFloppyDisk-ItemStack-io.github.marcuscastelo.quartus.circuit.CircuitDescriptor-">updateFloppyDisk(ItemStack, QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.gui.<a href="io/github/marcuscastelo/quartus/gui/CompilerBlockController.html" title="class in io.github.marcuscastelo.quartus.gui">CompilerBlockController</a></dt>
 <dd>
 <div class="block">Método que recebe um pacote de informações e atualiza o Disquete
  dentro do compilador para todos os jogadores</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/CircuitComponent.html#updateInputInfo-io.github.marcuscastelo.quartus.circuit.QuartusCircuit-">updateInputInfo(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.components.<a href="io/github/marcuscastelo/quartus/circuit/components/CircuitComponent.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitComponent</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/CircuitComponent.html#updateInputInfo-io.github.marcuscastelo.quartus.circuit.CircuitDescriptor-">updateInputInfo(QuartusCircuit)</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.components.<a href="io/github/marcuscastelo/quartus/circuit/components/CircuitComponent.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#updateInputs--">updateInputs()</a></span> - Method in class io.github.marcuscastelo.quartus.circuit.<a href="io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html" title="class in io.github.marcuscastelo.quartus.circuit">QuartusCircuit</a></dt>
 <dd>&nbsp;</dd>
@@ -1776,7 +1776,7 @@ the order they are declared.</div>
  possibilitando diferenciá-los pela posição e atribuir
  corretamente as mudanças e ordem de execução</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldInput.html#WorldInput-World-BlockPos-io.github.marcuscastelo.quartus.circuit.components.CircuitInput-">WorldInput(World, BlockPos, CircuitInput)</a></span> - Constructor for class io.github.marcuscastelo.quartus.circuit.components.executor.<a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldInput.html" title="class in io.github.marcuscastelo.quartus.circuit.components.executor">WorldInput</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldInput.html#WorldInput-World-BlockPos-io.github.marcuscastelo.quartus.circuit.components.InputDescriptor-">WorldInput(World, BlockPos, CircuitInput)</a></span> - Constructor for class io.github.marcuscastelo.quartus.circuit.components.executor.<a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldInput.html" title="class in io.github.marcuscastelo.quartus.circuit.components.executor">WorldInput</a></dt>
 <dd>
 <div class="block">Construtor padrão, que liga o Input no circuito ao WorldInput</div>
 </dd>
@@ -1786,7 +1786,7 @@ the order they are declared.</div>
  possibilitando diferenciá-los pela posição e atribuir
  corretamente as mudanças e ordem de execução</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldOutput.html#WorldOutput-World-BlockPos-io.github.marcuscastelo.quartus.circuit.components.CircuitOutput-">WorldOutput(World, BlockPos, CircuitOutput)</a></span> - Constructor for class io.github.marcuscastelo.quartus.circuit.components.executor.<a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldOutput.html" title="class in io.github.marcuscastelo.quartus.circuit.components.executor">WorldOutput</a></dt>
+<dt><span class="memberNameLink"><a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldOutput.html#WorldOutput-World-BlockPos-io.github.marcuscastelo.quartus.circuit.components.OutputDescriptor-">WorldOutput(World, BlockPos, CircuitOutput)</a></span> - Constructor for class io.github.marcuscastelo.quartus.circuit.components.executor.<a href="io/github/marcuscastelo/quartus/circuit/components/executor/WorldOutput.html" title="class in io.github.marcuscastelo.quartus.circuit.components.executor">WorldOutput</a></dt>
 <dd>
 <div class="block">Construtor padrão, que liga o Output no circuito ao WorldOutput</div>
 </dd>

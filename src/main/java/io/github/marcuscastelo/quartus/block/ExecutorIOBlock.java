@@ -142,6 +142,8 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
 	 */
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block previousBlock, BlockPos neighborPos, boolean moved) {
+        if (neighborPos == pos) return;
+
         //Obtém informações do blockstate atual
         ExecutorIOState executorIOState = state.get(EXTENSOR_STATE);
         Direction facingDirection = world.getBlockState(pos).get(FACING);

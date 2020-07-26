@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.marcuscastelo.quartus.block.ExecutorIOBlock;
-import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
+import io.github.marcuscastelo.quartus.circuit.CircuitDescriptor;
 import io.github.marcuscastelo.quartus.network.QuartusExecutorStartC2SPacket;
 import io.github.marcuscastelo.quartus.network.QuartusExtensorIOUpdateC2SPacket;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
@@ -37,7 +37,7 @@ public class ExecutorBlockController extends CottonCraftingController {
 	 * para a sequência de blocos à direita do Executor
 	 * @param circuit		Circuito desenvolvido com blocos do Mod
 	 */
-    private void updateExtensorModels(QuartusCircuit circuit) {
+    private void updateExtensorModels(CircuitDescriptor circuit) {
         int nInputs = circuit.getInputCount();
         int nOutputs = circuit.getOutputCount();
 
@@ -90,8 +90,7 @@ public class ExecutorBlockController extends CottonCraftingController {
 
         String circuitStr = stack.getOrCreateTag().getString("circuit");
 
-        QuartusCircuit circuit = new QuartusCircuit();
-        circuit.unserialize(circuitStr);
+        CircuitDescriptor circuit = new CircuitDescriptor.Serializer().unserialize(circuitStr);
 
         updateExtensorModels(circuit);
 

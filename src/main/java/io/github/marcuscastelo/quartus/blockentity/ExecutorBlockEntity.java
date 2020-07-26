@@ -2,15 +2,15 @@ package io.github.marcuscastelo.quartus.blockentity;
 
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.ExecutorIOBlock;
-import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
-import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
-import io.github.marcuscastelo.quartus.circuit.components.CircuitOutput;
-import io.github.marcuscastelo.quartus.circuit.components.executor.WorldInput;
-import io.github.marcuscastelo.quartus.circuit.components.executor.WorldOutput;
+import io.github.marcuscastelo.quartus.circuit.CircuitDescriptor;
+import io.github.marcuscastelo.quartus.circuit.CircuitExecutor;
+import io.github.marcuscastelo.quartus.circuit.components.info.ComponentDirectionInfo;
+import io.github.marcuscastelo.quartus.circuit.components.info.ComponentExecutionInfo;
 import io.github.marcuscastelo.quartus.registry.QuartusBlockEntities;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import jdk.internal.jline.internal.Nullable;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,22 +22,30 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Classe que define o BlockEntity do Executor
  */
-public class ExecutorBlockEntity extends BlockEntity implements ImplementedInventory {
+public class ExecutorBlockEntity extends BlockEntity implements ImplementedInventory, BlockEntityClientSerializable {
 	//Variável que define o tick/clock do executor
     public static final int EXECUTION_DELAY = 2; // cada tick equivale a 1/20 segundos
 
 	//Variáveis auxiliares
     boolean executing = false;
-    QuartusCircuit currentCircuit = null;
+    boolean loadedFromSave = false;
+    CircuitDescriptor circuitDescriptor = null;
+    CircuitExecutor circuitExecutor = null;
     DefaultedList<ItemStack> inventoryItems;
     String errorMessage = "blockentity.quartus.executor.unknown_error";
+
+    String circuitDescStr = "", circuitStateStr = "";
 
     List<BlockPos> inputsPos = new ArrayList<>();
     List<BlockPos> outputsPos = new ArrayList<>();
@@ -65,6 +73,14 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
 	 */
     @Override
     public CompoundTag toTag(CompoundTag tag) {
+        if (circuitDescriptor != null) {
+            tag.putString("circuit_description", circuitDescriptor.serialize());
+            System.out.println("D Salvando: " + circuitDescriptor.serialize());
+        }
+        if (circuitExecutor != null) {
+            tag.putString("execution_state", circuitExecutor.serialize());
+            System.out.println("E Salvando: " + circuitExecutor.serialize());
+        }
         tag.putBoolean("executing", executing);
         Inventories.toTag(tag, inventoryItems);
         return super.toTag(tag);
@@ -79,10 +95,9 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         super.fromTag(tag);
         Inventories.fromTag(tag, inventoryItems);
         executing = tag.getBoolean("executing");
-    }
-
-    public boolean hasCircuit() {
-        return currentCircuit != null;
+        circuitDescStr = tag.getString("circuit_description");
+        circuitStateStr = tag.getString("execution_state");
+        loadedFromSave = true;
     }
 
     private void scheduleTick() {
@@ -97,23 +112,21 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         return floppyDisk.getOrCreateTag().contains("circuit") && !floppyDisk.getOrCreateTag().getString("circuit").isEmpty();
     }
 
-    private void loadCircuitFromInv() {
+    private void loadCircuitDescriptorFromInv() {
         if (isFloppyValid()) {
             ItemStack floppyDisk = inventoryItems.get(0);
-            currentCircuit = new QuartusCircuit();
-            currentCircuit.unserialize(floppyDisk.getOrCreateTag().getString("circuit"));
+            circuitDescriptor = new CircuitDescriptor.Serializer().unserialize(floppyDisk.getOrCreateTag().getString("circuit"));
         }
     }
 
     private void scanIOPorts() {
-        assert world != null;
-        if (currentCircuit == null) {
-            if (executing)
-                stopExecution();
+        if (world == null || circuitDescriptor == null) {
+            System.out.println("Couldn't scan io ports");
+            if (executing) stopExecution();
             return;
         }
 
-        int minimumIOBlocks = Math.max(currentCircuit.getInputCount(), currentCircuit.getOutputCount());
+        int minimumIOBlocks = Math.max(circuitDescriptor.getInputCount(), circuitDescriptor.getOutputCount());
         inputsPos = new ArrayList<>();
         outputsPos = new ArrayList<>();
 
@@ -124,7 +137,7 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         BlockState IOBlockState;
         for (int i = 0; i < minimumIOBlocks; i++) {
             IOBlockState = world.getBlockState(IOBlockPos);
-            if (IOBlockState.getBlock() != QuartusBlocks.EXECUTOR_IO) break;
+            if (!(IOBlockState.getBlock() instanceof ExecutorIOBlock)) break;
 
             ExecutorIOBlock.ExecutorIOState executorIOState = IOBlockState.get(ExecutorIOBlock.EXTENSOR_STATE);
 
@@ -141,46 +154,35 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         }
 
         //Se houver menos portas I/O que o necessário, pare a execução
-        if (inputsPos.size() != currentCircuit.getInputCount() || outputsPos.size() != currentCircuit.getOutputCount()) {
-            stopExecution();
+        if (inputsPos.size() != circuitDescriptor.getInputCount() || outputsPos.size() != circuitDescriptor.getOutputCount()) {
+            if (executing) stopExecution();
             errorMessage = "blockentity.quartus.executor.not_enough_io";
         }
     }
 
-    private void overwriteCircuitIO()  {
-        if (currentCircuit == null) {
-            if (executing)
-                stopExecution();
+    private void createCircuitExecutor() {
+        if (circuitDescriptor == null || world == null) {
+            if (executing) stopExecution();
             return;
         }
 
-        if (inputsPos.size() != currentCircuit.getInputCount()) {
-            Quartus.LOGGER.error("Invalid inputs state at ExecutorBlockEntity::overwriteCircuitIO()");
-            return;
-        }
-        if (outputsPos.size() != currentCircuit.getOutputCount()) {
-            Quartus.LOGGER.error("Invalid outputs state at ExecutorBlockEntity::overwriteCircuitIO()");
-            return;
-        }
-
-        int inputPosInd = 0;
-        for (CircuitInput input: currentCircuit.getInputs()) {
-            int inputID = input.getID();
-            WorldInput worldInput = new WorldInput(world, inputsPos.get(inputPosInd++), input);
-            currentCircuit.setComponentAtID(inputID, worldInput);
-        }
-
-        int outputPosInd = 0;
-        for (CircuitOutput output: currentCircuit.getOutputs()) {
-            int outputID = output.getID();
-            WorldOutput worldOutput = new WorldOutput(world, outputsPos.get(outputPosInd++), output);
-            currentCircuit.setComponentAtID(outputID, worldOutput);
+        try {
+            circuitExecutor = new CircuitExecutor.Builder().setWorld(world).setInputControllersPos(inputsPos).setOutputControllersPos(outputsPos).setCircuitDescriptor(circuitDescriptor).build();
+        } catch (Exception e) {
+            System.out.println("Error creating circuit executor");
+            e.printStackTrace();
+            if (executing) stopExecution();
         }
     }
 
+
+
     //Redefine o estado de todas as portas I/O conectadas ao executor de volta para void (e a última para void_end)
     private void resetIOStatesToVoid() {
-        assert world != null;
+        if (world == null) {
+            return;
+        }
+
         BlockState executorBs = world.getBlockState(pos);
 
         Direction executorFacingDir = executorBs.get(Properties.HORIZONTAL_FACING);
@@ -188,13 +190,13 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         BlockPos IOBlockPos = pos.offset(chainOutDirection);
 
         while (world.getBlockState(IOBlockPos).getBlock() == QuartusBlocks.EXECUTOR_IO) {
-            world.setBlockState(IOBlockPos, QuartusBlocks.EXECUTOR_IO.getDefaultState().with(Properties.HORIZONTAL_FACING, executorFacingDir));
+            world.setBlockState(IOBlockPos, QuartusBlocks.EXECUTOR_IO.getDefaultState().with(Properties.HORIZONTAL_FACING, executorFacingDir), 2);
             IOBlockPos = IOBlockPos.offset(chainOutDirection);
         }
 
         IOBlockPos = IOBlockPos.offset(chainOutDirection.getOpposite());
         if (world.getBlockState(IOBlockPos).getBlock() == QuartusBlocks.EXECUTOR_IO)
-            world.setBlockState(IOBlockPos, QuartusBlocks.EXECUTOR_IO.getDefaultState().with(ExecutorIOBlock.EXTENSOR_STATE, ExecutorIOBlock.ExecutorIOState.VOID_END).with(Properties.HORIZONTAL_FACING, executorFacingDir));
+            world.setBlockState(IOBlockPos, QuartusBlocks.EXECUTOR_IO.getDefaultState().with(ExecutorIOBlock.EXTENSOR_STATE, ExecutorIOBlock.ExecutorIOState.VOID_END).with(Properties.HORIZONTAL_FACING, executorFacingDir), 2);
     }
 
     /**
@@ -212,10 +214,11 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         executing = true;
         errorMessage = "blockentity.quartus.executor.unknown_error";
         //Passos 1, 2 e 3
-        loadCircuitFromInv();
+        loadCircuitDescriptorFromInv();
         scanIOPorts();
-        overwriteCircuitIO();
+        createCircuitExecutor();
 
+        if (circuitExecutor == null) stopExecution();
         if (executing) { //Se nenhuma etapa falhou, agende o tick
             //Passo 4
             scheduleTick();
@@ -231,8 +234,6 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
         }
         else //Se nenhum jogador houver iniciado o processo de execução, exiba o erro no log
             Quartus.LOGGER.error("An error has occurred @ExecutorBlockEntity::startExecution(), but no issuer (player) has been found: " + errorMessage);
-
-        stopExecution();
     }
 
     /* Parar a execução significa destruir o circuito interno (mantendo o disquete intacto),
@@ -240,29 +241,65 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
      */
     public void stopExecution() {
         executing = false;
-        currentCircuit = null;
+        circuitDescriptor = null;
+        circuitExecutor = null;
         resetIOStatesToVoid();
     }
 
-    public void tick() {
+    public void resumeExecution() {
+        executing = true;
+        if (circuitDescStr.length() == 0){
+            stopExecution();
+            return;
+        }
+
+        circuitDescriptor = new CircuitDescriptor.Serializer().unserialize(circuitDescStr);
+
+        if (circuitStateStr.length() == 0) {
+            stopExecution();
+            return;
+        }
+
+        scanIOPorts();
+        try {
+            circuitExecutor = new CircuitExecutor.Serializer().unserialize(circuitStateStr)
+                    .setCircuitDescriptor(circuitDescriptor)
+                    .setInputControllersPos(inputsPos)
+                    .setOutputControllersPos(outputsPos)
+                    .setWorld(world)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("D Carregado: " + circuitDescStr);
+        System.out.println("D Atualmente: " + circuitDescriptor.serialize());
+
+        System.out.println("E Carregado: " + circuitStateStr);
+        System.out.println("E Atualmente: " + circuitExecutor.serialize());
+
+        scheduleTick();
+    }
+
+    public void onScheduledTick() {
         /* Nesse momento, existem duas possibilidades de estado:
             1) O executor está em execução normal
             2) O mundo está sendo carregado e o executor tem que retomar as atividades
          */
 
+
         if (!isFloppyValid()) stopExecution();
         if (!executing) return;
 
-        //TODO: manter o estado do circuito através de reinicializações do servidor (atualmente ele inicia do zero)
         //Para o caso 2, temos que nos certificar que o circuito não é nulo
-        if (!hasCircuit()) {
+        if (circuitExecutor == null) {
             //Se o mundo tiver acabado de ser carregado (caso 2), o circuito é nulo, então solicite o recomeço da simulação
-            startExecution(null);
+            resumeExecution();
             return;
         }
 
         for (int i = 0; i < 20; i++)
-            currentCircuit.updateCircuit();
+            circuitExecutor.updateCircuit();
 
         //Chama a própria função tick após um intervalo
         scheduleTick();
@@ -270,6 +307,18 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
 
     //Sempre que algum bloco é colocado ou alterado na chain de IO
     public void chainChanged() {
-        scanIOPorts();
+        if (executing)
+            scanIOPorts();
     }
+
+    @Override
+    public void fromClientTag(CompoundTag compoundTag) {
+        fromTag(compoundTag);
+    }
+
+    @Override
+    public CompoundTag toClientTag(CompoundTag compoundTag) {
+        return toTag(compoundTag);
+    }
+
 }

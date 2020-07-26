@@ -3,8 +3,8 @@ package io.github.marcuscastelo.quartus.gui;
 import io.github.cottonmc.cotton.gui.CottonCraftingController;
 import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.marcuscastelo.quartus.blockentity.CompilerBlockEntity;
-import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
-import io.github.marcuscastelo.quartus.circuit.analyze.CircuitCompiler;
+import io.github.marcuscastelo.quartus.circuit.CircuitDescriptor;
+import io.github.marcuscastelo.quartus.circuit.CircuitCompiler;
 import io.github.marcuscastelo.quartus.network.QuartusFloppyDiskUpdateC2SPacket;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import io.netty.buffer.Unpooled;
@@ -20,7 +20,6 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
@@ -55,7 +54,7 @@ public class CompilerBlockController extends CottonCraftingController {
 	 * @param floppyItemStack		Pilha de item no inventário do blcoo
 	 * @param circuit		Circuito analisado
 	 */
-    private void updateFloppyDisk(ItemStack floppyItemStack, QuartusCircuit circuit) {
+    private void updateFloppyDisk(ItemStack floppyItemStack, CircuitDescriptor circuit) {
         System.out.println(circuit.serialize());
 
         //Update client's itemstack
@@ -74,7 +73,7 @@ public class CompilerBlockController extends CottonCraftingController {
 	 * Método que compila um circuito dentro de uma área
 	 * @return		Circuito compilado
 	 */
-    private Optional<QuartusCircuit> compileCircuit() {
+    private Optional<CircuitDescriptor> compileCircuit() {
         int size = getCompilingAreaSize();
         Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
         BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), size /2).offset(facingDir.getOpposite(), size).offset(Direction.DOWN, size);
@@ -99,7 +98,7 @@ public class CompilerBlockController extends CottonCraftingController {
         }
 
         try{
-            Optional<QuartusCircuit> circuit = compileCircuit();
+            Optional<CircuitDescriptor> circuit = compileCircuit();
             if (!circuit.isPresent()) return;
             updateFloppyDisk(floppyItemStack, circuit.get());
         } catch (Exception e) {

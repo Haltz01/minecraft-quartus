@@ -1,7 +1,10 @@
 package io.github.marcuscastelo.quartus.network.handlers;
 
 import io.github.marcuscastelo.quartus.blockentity.ImplementedInventory;
+import io.github.marcuscastelo.quartus.circuit.CircuitDescriptor;
+import io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor;
 import io.github.marcuscastelo.quartus.network.QuartusFloppyDiskUpdateC2SPacket;
+import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.inventory.Inventory;
@@ -31,6 +34,15 @@ public class QuartusFloppyDiskUpdateC2SPacketHandler {
                 ItemStack itemStack = inv.getInvStack(0);
                 if (itemStack.isEmpty()) return;
                 if (!itemStack.getItem().equals(QuartusItems.FLOPPY_DISK)) return;
+
+
+                String circuitStr = packet.getCompoundTag().getString("circuit");
+                for (int i = 0; i < 10; i++) {
+                    CircuitDescriptor descriptor = new CircuitDescriptor.Serializer().unserialize(circuitStr);
+                    circuitStr = descriptor.serialize();
+                }
+
+                packet.getCompoundTag().putString("circuit", circuitStr);
 
                 itemStack.setTag(packet.getCompoundTag());
             });

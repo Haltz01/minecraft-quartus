@@ -1,6 +1,7 @@
 package io.github.marcuscastelo.quartus.circuit;
 
 import com.google.common.collect.ImmutableList;
+import io.github.marcuscastelo.quartus.network.QuartusSimetricSerializer;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 
 import java.util.ArrayList;
@@ -56,9 +57,13 @@ public class QuartusBus {
             throw new IllegalArgumentException("Different bus sizes, unable to setValue");
         }
 
-        values = copyFrom.values;
+        setValueIgnoreSize(copyFrom);
     }
     public void setValue(Boolean value, Boolean ...values) { setValue(new QuartusBus(value, values)); }
+
+    private void setValueIgnoreSize(QuartusBus copyFrom) {
+        values = copyFrom.values;
+    }
 
     /**
      * Método auxiliar que compara se um Bus é igual a outro objeto
@@ -139,4 +144,20 @@ public class QuartusBus {
         HIGH1b = new QuartusBus(true);
         LOW1b = new QuartusBus(false);
     }
+
+    public static class Serializer implements QuartusSimetricSerializer<QuartusBus, String> {
+        @Override
+        public String serialize(QuartusBus bus) {
+            StringBuilder builder = new StringBuilder();
+            bus.values.stream().forEach(value -> builder.append(value?1:0).append(","));
+            return builder.toString();
+        }
+
+        @Override
+        public QuartusBus unserialize(String serial) {
+            return new QuartusBus(Arrays.stream(serial.split(",")).map(s -> s.equals("1")).collect(Collectors.toList()));
+        }
+    }
+
+
 }

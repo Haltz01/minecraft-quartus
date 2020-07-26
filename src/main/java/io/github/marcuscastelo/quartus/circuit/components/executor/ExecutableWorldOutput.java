@@ -1,9 +1,11 @@
 package io.github.marcuscastelo.quartus.circuit.components.executor;
 
+import io.github.marcuscastelo.quartus.circuit.CircuitExecutor;
 import io.github.marcuscastelo.quartus.circuit.ComponentConnection;
 import io.github.marcuscastelo.quartus.circuit.QuartusBus;
-import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
-import io.github.marcuscastelo.quartus.circuit.components.CircuitOutput;
+import io.github.marcuscastelo.quartus.circuit.CircuitDescriptor;
+import io.github.marcuscastelo.quartus.circuit.components.OutputDescriptor;
+import io.github.marcuscastelo.quartus.circuit.components.info.ComponentExecutionInfo;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +21,7 @@ import java.util.Optional;
  * possibilitando diferenciá-los pela posição e atribuir
  * corretamente as mudanças e ordem de execução
  */
-public class WorldOutput extends CircuitOutput {
+public class ExecutableWorldOutput extends ExecutableComponent {
 	//Variáveis auxiliares para mapear os Outputs
     public final World world;
     public final BlockPos pos;
@@ -30,26 +32,19 @@ public class WorldOutput extends CircuitOutput {
 	 * @param pos		Posição do bloco no mundo
 	 * @param outputImport		Output que está sendo enviado ao bloco do Input no mundo 'real'
 	 */
-    public WorldOutput(World world, BlockPos pos, CircuitOutput outputImport) {
-        super(outputImport.getID());
+    public ExecutableWorldOutput(CircuitExecutor executor, World world, BlockPos pos, OutputDescriptor outputImport) {
+        super(executor, outputImport, new ComponentExecutionInfo(outputImport.getComponentDirectionInfo()));
         this.world = world;
         this.pos = pos;
-
-        Map<Direction, List<ComponentConnection>> connectionMap = outputImport.getConnections();
-        for (Map.Entry<Direction, List<ComponentConnection>> connectionEntry: connectionMap.entrySet()) {
-            Direction direction = connectionEntry.getKey();
-            List<ComponentConnection> connectionsToImport = connectionEntry.getValue();
-            this.getConnections().get(direction).addAll(connectionsToImport);
-        }
     }
 
 	/**
 	 * Método que faz o update do WorldOutput
 	 */
     @Override
-    public void updateComponent(Optional<QuartusCircuit> circuit) {
+    public void updateComponent() {
         //Propagate input -> output
-        super.updateComponent(circuit);
+        super.updateComponent();
         QuartusBus outputBus = getExecutionInfo().getOutput(Direction.NORTH).get(0);
 
         BlockState blockState = world.getBlockState(pos);

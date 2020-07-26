@@ -2,7 +2,7 @@ package io.github.marcuscastelo.quartus.circuit;
 
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
 import io.github.marcuscastelo.quartus.block.circuit_parts.WireBlock;
-import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
+import io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor;
 import io.github.marcuscastelo.quartus.util.DirectionUtils;
 import io.github.marcuscastelo.quartus.util.WireConnector;
 import net.minecraft.block.Block;
@@ -65,7 +65,7 @@ public class CircuitExplorer {
 	 * @param compAPos		Posição do nó/componente de origem TODO: remover parametro?
 	 * @return		Lista com as informações dos nós explorados
 	 */
-    public static List<ConnectedBlocksInfo> getConnectedNodesInfo(World world, QuartusCircuit circuit, CircuitComponent componentA, BlockPos compAPos) {
+    public static List<ConnectedBlocksInfo> getConnectedNodesInfo(World world, CircuitDescriptor circuit, ComponentDescriptor componentA, BlockPos compAPos) {
         List<ConnectedBlocksInfo> connectedNodesAboluteInfo = new ArrayList<>();
 
         if (!isWire(world, compAPos) && !isComponent(world,compAPos)) {
@@ -84,10 +84,13 @@ public class CircuitExplorer {
 
             //Obtém informações dos vizinhos imediatos
             BlockPos neighborPos = compAPos.offset(absoluteAtoB);
-            Block neighborBlock = world.getBlockState(neighborPos).getBlock();
+            BlockState neighborState = world.getBlockState(neighborPos);
+            Block neighborBlock = neighborState.getBlock();
 
             if (neighborBlock instanceof QuartusInGameComponent){
-                connectedNodesAboluteInfo.add(new ConnectedBlocksInfo(relativeAtoB, relativeAtoB.getOpposite(), neighborPos));
+                Direction relativeBtoA = DirectionUtils.getRelativeDirection(neighborState.get(Properties.HORIZONTAL_FACING), absoluteAtoB.getOpposite());
+                System.out.println(relativeAtoB + " -------- " + relativeBtoA + " <<<>>>>" + neighborPos);
+                connectedNodesAboluteInfo.add(new ConnectedBlocksInfo(relativeAtoB, relativeBtoA, neighborPos));
             }
             else if (neighborBlock instanceof WireBlock) {
                 //Se o vizinho for um fio, siga o fio e obtenha a posição do nó em sua extremidade
@@ -95,6 +98,7 @@ public class CircuitExplorer {
                 throughWireInfo.ifPresent(connectedNodesAboluteInfo::add);
             }
         }
+        //TODO: verificar por direção ruim
 
         return connectedNodesAboluteInfo;
     }

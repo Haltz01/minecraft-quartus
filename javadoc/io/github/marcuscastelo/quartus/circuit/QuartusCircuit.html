@@ -99,7 +99,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>io.github.marcuscastelo.quartus.circuit.QuartusCircuit</li>
+<li>io.github.marcuscastelo.quartus.circuit.CircuitDescriptor</li>
 </ul>
 </li>
 </ul>
@@ -183,7 +183,7 @@ implements <a href="../../../../../io/github/marcuscastelo/quartus/network/Quart
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#addComponent-io.github.marcuscastelo.quartus.circuit.components.CircuitComponent-">addComponent</a></span>(<a href="../../../../../io/github/marcuscastelo/quartus/circuit/components/CircuitComponent.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitComponent</a>&nbsp;component)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#addComponent-io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor-">addComponent</a></span>(<a href="../../../../../io/github/marcuscastelo/quartus/circuit/components/CircuitComponent.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitComponent</a>&nbsp;component)</code>
 <div class="block">Método que adiciona um componente ao circuito, de acordo com sua classificação:
  - Input
  - Output
@@ -192,7 +192,7 @@ implements <a href="../../../../../io/github/marcuscastelo/quartus/network/Quart
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#addLink-Direction-Direction-io.github.marcuscastelo.quartus.circuit.components.CircuitComponent-io.github.marcuscastelo.quartus.circuit.components.CircuitComponent-">addLink</a></span>(Direction&nbsp;AtoBDirection,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#addLink-Direction-Direction-io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor-io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor-">addLink</a></span>(Direction&nbsp;AtoBDirection,
        Direction&nbsp;BtoADirection,
        <a href="../../../../../io/github/marcuscastelo/quartus/circuit/components/CircuitComponent.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitComponent</a>&nbsp;compA,
        <a href="../../../../../io/github/marcuscastelo/quartus/circuit/components/CircuitComponent.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitComponent</a>&nbsp;compB)</code>&nbsp;</td>
@@ -227,7 +227,7 @@ implements <a href="../../../../../io/github/marcuscastelo/quartus/network/Quart
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#setComponentAtID-int-io.github.marcuscastelo.quartus.circuit.components.CircuitComponent-">setComponentAtID</a></span>(int&nbsp;ID,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/github/marcuscastelo/quartus/circuit/QuartusCircuit.html#setComponentAtID-int-io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor-">setComponentAtID</a></span>(int&nbsp;ID,
                 <a href="../../../../../io/github/marcuscastelo/quartus/circuit/components/CircuitComponent.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitComponent</a>&nbsp;component)</code>
 <div class="block">Método que atrela um componente a um identificador ID</div>
 </td>
@@ -343,7 +343,7 @@ implements <a href="../../../../../io/github/marcuscastelo/quartus/network/Quart
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="addComponent-io.github.marcuscastelo.quartus.circuit.components.CircuitComponent-">
+<a name="addComponent-io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -360,7 +360,7 @@ implements <a href="../../../../../io/github/marcuscastelo/quartus/network/Quart
 </dl>
 </li>
 </ul>
-<a name="setComponentAtID-int-io.github.marcuscastelo.quartus.circuit.components.CircuitComponent-">
+<a name="setComponentAtID-int-io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -412,7 +412,7 @@ implements <a href="../../../../../io/github/marcuscastelo/quartus/network/Quart
 <pre>public&nbsp;java.util.List&lt;<a href="../../../../../io/github/marcuscastelo/quartus/circuit/components/CircuitOutput.html" title="class in io.github.marcuscastelo.quartus.circuit.components">CircuitOutput</a>&gt;&nbsp;getOutputs()</pre>
 </li>
 </ul>
-<a name="addLink-Direction-Direction-io.github.marcuscastelo.quartus.circuit.components.CircuitComponent-io.github.marcuscastelo.quartus.circuit.components.CircuitComponent-">
+<a name="addLink-Direction-Direction-io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor-io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor-">
 <!--   -->
 </a>
 <ul class="blockList">

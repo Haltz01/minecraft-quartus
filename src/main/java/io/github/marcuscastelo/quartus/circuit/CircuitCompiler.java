@@ -1,11 +1,11 @@
-package io.github.marcuscastelo.quartus.circuit.analyze;
+package io.github.marcuscastelo.quartus.circuit;
 
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
+import io.github.marcuscastelo.quartus.circuit.CircuitDescriptor;
 import io.github.marcuscastelo.quartus.circuit.CircuitExplorer;
-import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
-import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
-import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
-import io.github.marcuscastelo.quartus.circuit.components.CircuitOutput;
+import io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor;
+import io.github.marcuscastelo.quartus.circuit.components.InputDescriptor;
+import io.github.marcuscastelo.quartus.circuit.components.OutputDescriptor;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
@@ -25,11 +25,11 @@ import java.util.*;
 public class CircuitCompiler {
 	//Variáveis que auxiliam no mapeamento do circuito
     BlockPos startPos, endPos;
-    QuartusCircuit circuit;
+    CircuitDescriptor circuit;
     World world;
 
     Queue<BlockPos> explorePoll;
-    Map<BlockPos, CircuitComponent> componentInPos;
+    Map<BlockPos, ComponentDescriptor> componentInPos;
 
     Text errorMessage;
     boolean failed;
@@ -44,7 +44,7 @@ public class CircuitCompiler {
         this.startPos = startPos;
         this.endPos = endPos;
         this.world = world;
-        this.circuit = new QuartusCircuit();
+        this.circuit = new CircuitDescriptor();
         this.explorePoll = new LinkedList<>();
         this.componentInPos = new HashMap<>();
         this.errorMessage = new TranslatableText("circuitcompiler.unknown_error", 1);
@@ -78,10 +78,10 @@ public class CircuitCompiler {
                     Block nodeBlock = world.getBlockState(nodePos).getBlock();
                     if (!(nodeBlock instanceof QuartusInGameComponent)) continue;
                     System.out.println("[Compile] Encontrado um " + nodeBlock.getName().asString() + " em " + nodePos);
-                    CircuitComponent node = ((QuartusInGameComponent) nodeBlock).createCircuitComponent(circuit);
+                    ComponentDescriptor node = ((QuartusInGameComponent) nodeBlock).createCircuitComponent(circuit);
                     componentInPos.putIfAbsent(nodePos, node);
                     circuit.addComponent(node);
-                    if (node instanceof CircuitInput)
+                    if (node instanceof InputDescriptor)
                         explorePoll.add(nodePos);
                 }
             }
@@ -98,7 +98,7 @@ public class CircuitCompiler {
             BlockPos nodePos = explorePoll.poll();
             System.out.println("Explorando a pos " + nodePos.toString());
 
-            CircuitComponent component = componentInPos.getOrDefault(nodePos, null);
+            ComponentDescriptor component = componentInPos.getOrDefault(nodePos, null);
             if (component == null) {
                 errorMessage = new TranslatableText("circuitcompiler.out_of_bounds", nodePos.toString());
                 failed = true;
@@ -114,7 +114,7 @@ public class CircuitCompiler {
             // Caso "especial": extensores -> aumentam a quantidade de inputs de um gate
             //TODO: resolver parâmetros redundantes
             List<CircuitExplorer.ConnectedBlocksInfo> nextComponentsPos = CircuitExplorer.getConnectedNodesInfo(world, circuit, component, nodePos);
-            if (nextComponentsPos.size() == 0 && !(component instanceof CircuitOutput)) {
+            if (nextComponentsPos.size() == 0 && !(component instanceof OutputDescriptor)) {
                 errorMessage = new TranslatableText("circuitcompiler.disconnected_component");
                 failed = true;
             }
@@ -149,7 +149,7 @@ public class CircuitCompiler {
 	 * e retornando o circuito já estudado
 	 * @return		Circuito compilado
 	 */
-    public Optional<QuartusCircuit> compile() {
+    public Optional<CircuitDescriptor> compile() {
         this.errorMessage = new TranslatableText("circuitcompiler.unknown_error", 2);
         failed = false;
         scanCircuitNodes();

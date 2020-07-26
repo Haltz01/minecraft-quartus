@@ -9,7 +9,6 @@ import net.minecraft.util.math.Direction;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * Classe que gerencia as informações do blocos do Mod
@@ -33,7 +32,7 @@ public class QuartusCircuitComponents {
      * @return                  Classe com as informações do tipo de componenete que foi registrado
      */
     public static ComponentInfo registerComponent(String componentName, ComponentDirectionInfo directionInfo, QuartusLogic componentLogic) {
-        CircuitComponent.Builder builder = new CircuitComponent.Builder().setName(componentName).setDirections(directionInfo).setLogic(componentLogic);
+        ComponentDescriptor.Builder builder = new ComponentDescriptor.Builder().setName(componentName).setDirections(directionInfo).setLogic(componentLogic);
         return registerSpecialComponent(componentName, directionInfo, componentLogic, builder);
     }
 
@@ -45,7 +44,7 @@ public class QuartusCircuitComponents {
      * @param componentBuilder      Construtor da classe que herda CircuitComponent
      * @return                      Classe com as informações do tipo de componenete que foi registrado
      */
-    public static ComponentInfo registerSpecialComponent(String componentName, ComponentDirectionInfo directionInfo, QuartusLogic componentLogic, CircuitComponent.Builder componentBuilder) {
+    public static ComponentInfo registerSpecialComponent(String componentName, ComponentDirectionInfo directionInfo, QuartusLogic componentLogic, ComponentDescriptor.Builder componentBuilder) {
         ComponentInfo info = new ComponentInfo(componentBuilder, directionInfo, componentLogic);
         componentInfoPerComponentName.putIfAbsent(componentName, info);
         return info;
@@ -90,8 +89,8 @@ public class QuartusCircuitComponents {
         //TODO: dar implementação real ao extensor
         EXTENSOR_GATE = registerComponent("ExtensorGate", WES2NDirInfo, QuartusLogics.EXTENSOR);
 
-        INPUT = registerSpecialComponent(CircuitInput.COMP_NAME, CircuitInput.inputDirectionInfo, QuartusLogics.INPUT, new CircuitInput.Builder());
-        OUTPUT = registerSpecialComponent(CircuitOutput.COMP_NAME, CircuitOutput.outputDirectionInfo, QuartusLogics.OUTPUT, new CircuitOutput.Builder());
+        INPUT = registerSpecialComponent(InputDescriptor.COMP_NAME, InputDescriptor.inputDirectionInfo, QuartusLogics.INPUT, new InputDescriptor.Builder());
+        OUTPUT = registerSpecialComponent(OutputDescriptor.COMP_NAME, OutputDescriptor.outputDirectionInfo, QuartusLogics.OUTPUT, new OutputDescriptor.Builder());
     }
 
 }

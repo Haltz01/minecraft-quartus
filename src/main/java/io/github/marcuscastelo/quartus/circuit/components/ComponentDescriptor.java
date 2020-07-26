@@ -18,15 +18,14 @@ import java.util.*;
  */
 
 
-public class CircuitComponent {
+public class ComponentDescriptor {
     private final ComponentDirectionInfo componentDirectionInfo;
-    private final ComponentExecutionInfo executionInfo;
     private final Map<Direction, List<ComponentConnection>> connections;
 
     //TODO: ver como fazer pros extensores
 
     private final QuartusLogic logic;
-    private final int ID;
+    private int ID;
     private final String componentName;
 
     /**
@@ -35,13 +34,12 @@ public class CircuitComponent {
 	 * @param componentDirectionInfo	Possíveis direções de input e output do componente
 	 * @param ID		                Identificador do componente
 	 */
-    protected CircuitComponent(String componentName, ComponentDirectionInfo componentDirectionInfo, int ID, QuartusLogic logic) {
+    protected ComponentDescriptor(String componentName, ComponentDirectionInfo componentDirectionInfo, int ID, QuartusLogic logic) {
         this.componentName = componentName;
         this.connections = new HashMap<>();
         this.logic = logic;
 
         this.componentDirectionInfo = componentDirectionInfo;
-        this.executionInfo = new ComponentExecutionInfo(componentDirectionInfo);
 
         this.ID = ID;
 
@@ -53,52 +51,14 @@ public class CircuitComponent {
 	//Método que retorna o ID de um componente
     public int getID() { return ID; }
 
-    //TODO: tornar mais genérica: atualmente foca apenas em trazer a saída do outro (supondo ser única) para a entrada deste (supondo ser única)
-    private void updateInputValues(QuartusCircuit circuit) {
-        forDirection:
-        for (Map.Entry<Direction, List<ComponentConnection>> entry: connections.entrySet()) {
-            Direction AtoBDirection = entry.getKey();
+    @Deprecated
+    public void overrideID(int ID) { this.ID = ID;}
 
-            //FIXME: suporta apenas uma entrada e uma saída
-            List<ComponentConnection> possibleConnections = entry.getValue();
-            if (entry.getValue().size() == 0) continue; //nenhuma conexão nessa direção
-            ComponentConnection arbitrarilyChosenConnection = null;
-
-            //Pega a primeira conexão de input encontrada (ou desiste da direção se nenhuma for encontrada)
-            for (int i = 0; i < possibleConnections.size(); i++) {
-                arbitrarilyChosenConnection = entry.getValue().get(i);
-                if (arbitrarilyChosenConnection.getType() == ComponentConnection.ConnectionType.INPUT) break;
-                if (i == possibleConnections.size()-1) continue forDirection;
-            }
-
-            int BID = getComponentStrInfo(arbitrarilyChosenConnection.connectToCompStr).getRight();
-            CircuitComponent BComponent = circuit.getComponentByID(BID);
-
-            Direction BtoADirection = arbitrarilyChosenConnection.BtoADirection;
-
-            //Copia o output do B para o input do atual (A)
-            ImmutableList<QuartusBus> BOutputs = BComponent.executionInfo.getOutput(BtoADirection);
-            this.executionInfo.setInput(AtoBDirection, BOutputs);
-        }
-    }
-
-	/**
-	 * Método que faz a chamada do updateInputInfo de um circuito,
-	 * atualizando seus valores de entrada e saída
-	 * @param circuit		Circuito a ser atualizado
-	 */
-    public void updateComponent(Optional<QuartusCircuit> circuit) {
-        circuit.ifPresent(this::updateInputValues);
-        if (logic != null) logic.updateLogic(executionInfo);
+    public QuartusLogic getLogic() {
+        return logic;
     }
 
     /**
-	 * Método que retorna as informações que estão nos inputs e outputs de um componente
-	 * @return		Mapeamento dos Bus's com suas respectivas informações
-	 */    
-    public ComponentExecutionInfo getExecutionInfo() { return executionInfo; }
-	
-	/**
 	 * Método que verifica se um dado componente possui conexões nas suas saídas
 	 * @return		Boolean que verifica se há conexões nas saídas
 	 */
@@ -152,7 +112,11 @@ public class CircuitComponent {
         return outputConnections;
     }
 
-	/**
+    public ComponentDirectionInfo getComponentDirectionInfo() {
+        return componentDirectionInfo;
+    }
+
+    /**
 	 * Método que retorna uma lista com as conexões nos inputs de um componente
 	 * @return lista de conexões do tipo input
 	 */
@@ -206,8 +170,8 @@ public class CircuitComponent {
             return this;
         }
 
-        public Builder setID(QuartusCircuit circuit) {
-            this.ID = circuit.generateID();
+        public Builder setID(CircuitDescriptor circuit) {
+            this.ID = circuit.generateNextID();
             return this;
         }
 
@@ -221,8 +185,8 @@ public class CircuitComponent {
             return this;
         }
         
-        public CircuitComponent build() {
-            return new CircuitComponent(componentName, directionInfo, ID, logic);
+        public ComponentDescriptor build() {
+            return new ComponentDescriptor(componentName, directionInfo, ID, logic);
         }
     }
 
@@ -235,14 +199,14 @@ public class CircuitComponent {
      * @param gateID		Int com o ID da porta
      * @return		Objeto genérico de acordo com os parâmetros passados
      */
-    public static CircuitComponent createPolimorphicComponent(String gateType, int gateID) {
+    public static ComponentDescriptor createPolimorphicComponent(String gateType, int gateID) {
         ComponentInfo info = QuartusCircuitComponents.getComponentInfoByName(gateType);
-        if (gateType.equals(CircuitInput.COMP_NAME))
-            return new CircuitInput(gateID);
-        else if (gateType.equals(CircuitOutput.COMP_NAME))
-            return new CircuitOutput(gateID);
+        if (gateType.equals(InputDescriptor.COMP_NAME))
+            return new InputDescriptor(gateID);
+        else if (gateType.equals(OutputDescriptor.COMP_NAME))
+            return new OutputDescriptor(gateID);
         else
-            return new CircuitComponent(gateType, info.directionInfo, gateID, QuartusLogics.getLogicByName(gateType));
+            return new ComponentDescriptor(gateType, info.directionInfo, gateID, QuartusLogics.getLogicByName(gateType));
     }
 
     /**

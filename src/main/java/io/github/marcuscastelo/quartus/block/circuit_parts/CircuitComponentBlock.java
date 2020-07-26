@@ -1,9 +1,10 @@
 package io.github.marcuscastelo.quartus.block.circuit_parts;
 
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
+import io.github.marcuscastelo.quartus.circuit.CircuitDescriptor;
 import io.github.marcuscastelo.quartus.circuit.QuartusBus;
-import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
-import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
+import io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor;
+import io.github.marcuscastelo.quartus.circuit.components.executor.ExecutableComponent;
 import io.github.marcuscastelo.quartus.circuit.components.info.ComponentInfo;
 import io.github.marcuscastelo.quartus.util.DirectionUtils;
 import net.minecraft.block.*;
@@ -34,7 +35,6 @@ import java.util.stream.Collectors;
  */
 public class CircuitComponentBlock extends HorizontalFacingBlock implements QuartusInGameComponent {
     private final ComponentInfo componentInfo;
-    private final CircuitComponent attachedComponent;
 
 	/**
 	 * Construtor padrão da classe CircuitComponentBlock
@@ -46,15 +46,14 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
         super(Settings.copy(Blocks.REPEATER));
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
         this.componentInfo = componentInfo;
-        this.attachedComponent = componentInfo.componentBuilder.setDirections(componentInfo.directionInfo).setLogic(componentInfo.componentLogic).build();
     }
 
 	/** TODO: comment
 	 * Método usado para criar instâncias do componente relacionado a este bloco
 	 */
     @Override
-    public CircuitComponent createCircuitComponent(QuartusCircuit circuit) {
-        return componentInfo.componentBuilder.setID(circuit.generateID()).build();
+    public ComponentDescriptor createCircuitComponent(CircuitDescriptor circuit) {
+        return componentInfo.componentBuilder.setID(circuit.generateNextID()).build();
     }
 
 	/**
@@ -126,7 +125,7 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 	 */
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return getDefaultState().with(FACING, ctx.getPlayerFacing()).with(Properties.POWERED, false);
+        return getDefaultState().with(FACING, ctx.getPlayerFacing());
     }
 
 	/**
@@ -135,7 +134,7 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 	 */
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, Properties.POWERED);
+        builder.add(FACING);
     }
 
 	/**
@@ -157,29 +156,5 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 	@Override
 	public boolean emitsRedstonePower(BlockState state) {
 		return true;
-	}
-
-	@Override
-	public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
-		return getStrongRedstonePower(state,view,pos,facing);
-	}
-
-	@Override
-	public int getStrongRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
-    	return state.get(Properties.POWERED)?15:0;
-    }
-
-	@Override
-	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos, boolean moved) {
-		componentInfo.directionInfo.possibleInputDirections.forEach((direction) -> {
-			Direction absoluteDirection = DirectionUtils.getAbsoluteDirection(state.get(FACING), direction);
-			boolean directionValue = world.getEmittedRedstonePower(pos.offset(absoluteDirection), absoluteDirection.getOpposite())>0;
-			attachedComponent.getExecutionInfo().setInput(direction, new QuartusBus(directionValue));
-		});
-		attachedComponent.updateComponent(Optional.empty());
-
-		if (attachedComponent.getExecutionInfo().getOutputs().get(0).equals(QuartusBus.HIGH1b))
-			world.setBlockState(pos, state.with(Properties.POWERED, true));
-		else world.setBlockState(pos, state.with(Properties.POWERED, false));
 	}
 }

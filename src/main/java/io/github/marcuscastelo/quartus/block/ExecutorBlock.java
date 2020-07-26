@@ -79,7 +79,7 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof ExecutorBlockEntity)
-            ((ExecutorBlockEntity) be).tick();
+            ((ExecutorBlockEntity) be).onScheduledTick();
     }
 
 	/**

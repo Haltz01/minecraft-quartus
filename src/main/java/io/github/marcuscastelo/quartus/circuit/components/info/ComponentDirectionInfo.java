@@ -73,4 +73,13 @@ public class ComponentDirectionInfo {
         if (!possibleInputDirections.contains(direction) && !possibleOutputDirections.contains(direction)) return 0;
         return numberOfBusesInDirectionMap.getOrDefault(direction, 0);
     }
+
+    @Override
+    public String toString() {
+        return "ComponentDirectionInfo{" +
+                "possibleInputDirections=" + possibleInputDirections +
+                ", possibleOutputDirections=" + possibleOutputDirections +
+                ", numberOfBusesInDirectionMap=" + numberOfBusesInDirectionMap +
+                '}';
+    }
 }

@@ -1,6 +1,6 @@
 package io.github.marcuscastelo.quartus.circuit.components;
 
-import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
+import io.github.marcuscastelo.quartus.circuit.CircuitDescriptor;
 import io.github.marcuscastelo.quartus.circuit.components.info.ComponentDirectionInfo;
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import net.minecraft.util.math.Direction;
@@ -8,7 +8,7 @@ import net.minecraft.util.math.Direction;
 /**
  * Classe que define o Input utilizado pelo Mod
  */
-public class CircuitInput extends CircuitComponent {
+public class InputDescriptor extends ComponentDescriptor {
 
     //Variáveis que definem o tipo e a direção do Input
     public static final String COMP_NAME = "Input";
@@ -18,21 +18,21 @@ public class CircuitInput extends CircuitComponent {
      * Construtor da Classe Output
      * @param ID		Identificador do componente
      */
-    public CircuitInput(int ID) {
+    public InputDescriptor(int ID) {
         super(COMP_NAME, inputDirectionInfo, ID, QuartusLogics.OUTPUT);
     }
 
     /**
      * Construtor da Classe Input, sem uso do identificador
      */
-    public CircuitInput(QuartusCircuit circuit) {
-        super(COMP_NAME, inputDirectionInfo, circuit.generateID(), QuartusLogics.INPUT);
+    public InputDescriptor(CircuitDescriptor circuit) {
+        super(COMP_NAME, inputDirectionInfo, circuit.generateNextID(), QuartusLogics.INPUT);
     }
 
-    public static class Builder extends CircuitComponent.Builder {
+    public static class Builder extends ComponentDescriptor.Builder {
         @Override
-        public CircuitComponent build() {
-            return new CircuitInput(ID);
+        public ComponentDescriptor build() {
+            return new InputDescriptor(ID);
         }
     }
 }
