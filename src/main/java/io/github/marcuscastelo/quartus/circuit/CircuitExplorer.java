@@ -6,15 +6,12 @@ import io.github.marcuscastelo.quartus.block.circuit_parts.WireBlock;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitOutput;
-import io.github.marcuscastelo.quartus.circuit.components.ComponentInfo;
+import io.github.marcuscastelo.quartus.circuit.components.info.ComponentInfo;
 import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import io.github.marcuscastelo.quartus.util.WireConnector;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
@@ -24,8 +21,9 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
-import java.util.function.Function;
+
+import static io.github.marcuscastelo.quartus.util.DirectionUtils.getAbsoluteDirection;
+import static io.github.marcuscastelo.quartus.util.DirectionUtils.getRelativeDirection;
 
 /**
  * Classe que auxilia na conexão dos componentes do jogo que formam um circuito
@@ -71,7 +69,7 @@ public class CircuitUtils {
 
             //Obtém as direções absolutas
             Direction originFacingDir = originBs.get(Properties.HORIZONTAL_FACING);
-            Direction absoluteDirectionOutOfOriginNode = CircuitUtils.getAbsoluteDirection(originFacingDir, relativeDirectionOutOfOriginNode);
+            Direction absoluteDirectionOutOfOriginNode = getAbsoluteDirection(originFacingDir, relativeDirectionOutOfOriginNode);
             Direction absoluteDirectionOutOfTargetNode;
 
             //Obtém informações dos vizinhos imediatos
@@ -170,82 +168,6 @@ public class CircuitUtils {
         return new Pair<>(currPos, lastDirection.getOpposite());
     }
 
-    static Random random = new Random();
-    private static void setParticleAt(World world, BlockPos particlePos) {
-        world.addParticle(new DustParticleEffect(random.nextFloat(), 0, 0, 7), particlePos.getX()+0.5f, particlePos.getY()+0.5f, particlePos.getZ()+0.5f, 0, 0, 0);
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static void outlineCompileRegionForClient(World world, BlockPos compilerPos, int innerSize) {
-        if (!world.isClient) return;
-
-        BlockState compilerBs = world.getBlockState(compilerPos);
-        Direction front = compilerBs.get(Properties.HORIZONTAL_FACING).getOpposite();
-        Direction right = front.rotateYClockwise();
-        Direction left = front.rotateYCounterclockwise();
-        Direction back = front.getOpposite();
-
-        int blockStep = random.nextInt(2) + 1;
-
-        //Regulariza o tamanho, se for par, torna-se o primeiro menor impar
-        innerSize -= (innerSize+1)%2;
-
-        BlockPos middleCorner1 = compilerPos.offset(right, innerSize/2 + 1);
-        BlockPos middleCorner2 = middleCorner1.offset(front, innerSize + 1);
-        BlockPos middleCorner3 = middleCorner2.offset(left, innerSize + 1);
-        BlockPos middleCorner4 = middleCorner3.offset(back, innerSize+1);
-
-        for (int i = 1; i <= innerSize; i+=blockStep) {
-            setParticleAt(world, middleCorner1.offset(front, i));
-            setParticleAt(world, middleCorner2.offset(left, i));
-            setParticleAt(world, middleCorner3.offset(back, i));
-            setParticleAt(world, middleCorner4.offset(right, i));
-        }
-
-    }
-
-	/**
-	 * Método auxiliar que retorna uma função com a direção a seguida,
-	 * traduzindo para o jogo entender qual a direção desejada
-	 * @param facingDir		Direção de referência
-	 * @return		Função que diz qual direção seguir
-	 */
-    private static Function<Direction, Direction> getRotationFunction(Direction facingDir) {
-        if (facingDir == Direction.NORTH) return direction -> direction;
-        else if (facingDir == Direction.EAST) return Direction::rotateYClockwise;
-        else if (facingDir == Direction.SOUTH) return Direction::getOpposite;
-        else if (facingDir == Direction.WEST) return Direction::rotateYCounterclockwise;
-        else throw new IllegalArgumentException("Unknown direction: " + facingDir);
-    }
-
-	/**
-	 * Método chamado para receber a direção para o qual um bloco está olhando
-	 * em relação ao jogo
-	 * @param facingDir		Direção que o bloco 'mira'
-	 * @param relativeDirection		Direção relativa à direção do bloco
-	 * @return		Direção absoluta (em relação ao norte do mundo)
-	 */
-    public static Direction getAbsoluteDirection(Direction facingDir, Direction relativeDirection) {
-        Function<Direction, Direction> rotationFunction = getRotationFunction(facingDir);
-        return rotationFunction.apply(relativeDirection);
-    }
-
-	/**
-	 * Método chamado para receber a direção que um bloco olha no jogo
-	 * @param facingDir		Direção que o bloco 'mira'
-	 * @param absoluteDireciton		Direção absoluta (em relação ao norte do mundo)
-	 * @return		Direção relativa (em relação ao norte do bloco)
-	 */
-    public static Direction getRelativeDirection(Direction facingDir, Direction absoluteDireciton) {
-        Function<Direction, Direction> rotationFunction = getRotationFunction(facingDir);
-
-        //Para reverter uma conversão Relativa -> Absoluta, basta executar 3 vezes a transformação novamente
-        Direction relativeDirection = absoluteDireciton;
-        for (int i = 0; i < 3; i++)
-            relativeDirection = rotationFunction.apply(relativeDirection);
-        return relativeDirection;
-    }
-    
     /**
 	 * Método que retorna um objeto de classe genérica pertencente aos componentes do circuito
 	 * Podem ser -	Input

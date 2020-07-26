@@ -2,8 +2,6 @@ package io.github.marcuscastelo.quartus.block;
 
 import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.blockentity.CompilerBlockEntity;
-import io.github.marcuscastelo.quartus.circuit.CircuitUtils;
-import io.github.marcuscastelo.quartus.gui.CompilerBlockController;
 import io.github.marcuscastelo.quartus.registry.QuartusCottonGUIs;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -27,7 +25,6 @@ import net.minecraft.world.World;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Classe que implementa o bloco Compilador.
@@ -180,22 +177,5 @@ public class CompilerBlock extends HorizontalFacingBlock implements BlockEntityP
 	@Override
 	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
 		return Collections.singletonList(new ItemStack(state.getBlock().asItem()));
-	}
-
-	/**
-	 * Método chamado todos os ticks para renderizar efeitos especiais no bloco de compilador.
-	 * É usado para renderizar uma partícula nas bordas do circuito
-	 * @param state 	Estado do bloco
-	 * @param world 	Mundo em que o bloco está
-	 * @param pos 		Posição do bloco no mundo
-	 * @param random 	Uma instância da classe Random usada para evitar que o bloco sempre seja atualizado
-	 */
-	@Override
-	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-		if (!world.isClient) return;
-
-		//Gera partículas nas bordas do circuito
-		if (random.nextFloat() > 0.05f)
-			CircuitUtils.outlineCompileRegionForClient(world, pos, CompilerBlockController.COMPILING_AREA_SIDE);
 	}
 }

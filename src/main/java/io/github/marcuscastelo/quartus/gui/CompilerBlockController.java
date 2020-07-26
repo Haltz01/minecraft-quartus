@@ -1,26 +1,30 @@
 package io.github.marcuscastelo.quartus.gui;
 
 import io.github.cottonmc.cotton.gui.CottonCraftingController;
-import io.github.cottonmc.cotton.gui.widget.WButton;
-import io.github.cottonmc.cotton.gui.widget.WGridPanel;
-import io.github.cottonmc.cotton.gui.widget.WItemSlot;
+import io.github.cottonmc.cotton.gui.widget.*;
+import io.github.marcuscastelo.quartus.blockentity.CompilerBlockEntity;
 import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.circuit.analyze.CircuitCompiler;
 import io.github.marcuscastelo.quartus.network.QuartusFloppyDiskUpdateC2SPacket;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import io.netty.buffer.Unpooled;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 
 import java.util.Optional;
+import java.util.function.Consumer;
+
 
 /**
  * Classe que controla o GUI (Graphical User Interface - Interface Gráfico de Usuário)
@@ -29,7 +33,21 @@ import java.util.Optional;
 public class CompilerBlockController extends CottonCraftingController {
 	//Variável que armazena a posição do bloco Compiler
     private final BlockPos compilerBlockPosition;
-    public static final int COMPILING_AREA_SIDE = 10;
+
+
+    private Consumer<Integer> onCompileAreaSizeSetted = null;
+    private void setCompilingAreaSize(int newSize) {
+        BlockEntity be = world.getBlockEntity(compilerBlockPosition);
+        if (!(be instanceof CompilerBlockEntity)) return;
+        ((CompilerBlockEntity) be).setCompilingAreaSize(newSize);
+        if (onCompileAreaSizeSetted != null) onCompileAreaSizeSetted.accept(newSize);
+    }
+
+    private int getCompilingAreaSize() {
+        BlockEntity be = world.getBlockEntity(compilerBlockPosition);
+        if (!(be instanceof CompilerBlockEntity)) return 0;
+        return ((CompilerBlockEntity) be).getCompilingAreaSize();
+    }
 
 	/**
 	 * Método que recebe um pacote de informações e atualiza o Disquete
@@ -51,15 +69,17 @@ public class CompilerBlockController extends CottonCraftingController {
         floppyDiskUpdateC2SPacket.send(buf);
     }
 
+    //TODO: compile on server
 	//TODO: support areas bigger than 10x10
 	/**
 	 * Método que compila um circuito dentro de uma área
 	 * @return		Circuito compilado
 	 */
     private Optional<QuartusCircuit> compileCircuit() {
+        int size = getCompilingAreaSize();
         Direction facingDir = world.getBlockState(compilerBlockPosition).get(Properties.HORIZONTAL_FACING);
-        BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), COMPILING_AREA_SIDE /2).offset(facingDir.getOpposite(), COMPILING_AREA_SIDE).offset(Direction.DOWN, COMPILING_AREA_SIDE);
-        BlockPos endPos = compilerBlockPosition.offset(facingDir.rotateYCounterclockwise(), COMPILING_AREA_SIDE).offset(Direction.UP, COMPILING_AREA_SIDE);
+        BlockPos startPos = compilerBlockPosition.offset(facingDir.rotateYClockwise(), size /2).offset(facingDir.getOpposite(), size).offset(Direction.DOWN, size);
+        BlockPos endPos = compilerBlockPosition.offset(facingDir.rotateYCounterclockwise(), size).offset(Direction.UP, size);
 
         System.out.println("Compiling from " + startPos + " to " + endPos);
         CircuitCompiler compiler = new CircuitCompiler(world, startPos, endPos);
@@ -101,19 +121,32 @@ public class CompilerBlockController extends CottonCraftingController {
         super(RecipeType.CRAFTING, syncId, playerInventory, blockInventory, null);
         this.compilerBlockPosition = compilerBlockPosition;
 
-        WGridPanel root = new WGridPanel();
+        WGridPanel root = new WGridPanel(1);
         setRootPanel(root);
 
         root.setSize(150,100);
 
         WItemSlot itemSlot = WItemSlot.of(blockInventory, 0);
-        root.add(itemSlot, 1, 1);
+        root.add(itemSlot, 20, 15);
 
         WButton compileButton = new WButton(new TranslatableText("gui.quartus.compiler.compile_btn"));
         compileButton.setOnClick(this::onCompilerButtonClick);
-        root.add(compileButton, 0, 3,  3, 20);
+        root.add(compileButton, 0, 40,  60, 20);
 
-        root.add(this.createPlayerInventoryPanel(),0,5);
+        WButton increaseButton = new WButton(new LiteralText("+"));
+        increaseButton.setOnClick(() -> setCompilingAreaSize(getCompilingAreaSize()+1));
+        root.add(increaseButton, 80, 0,  20, 20);
+
+        WButton decreaseButton = new WButton(new LiteralText("-"));
+        decreaseButton.setOnClick(() -> setCompilingAreaSize(getCompilingAreaSize()-1));
+        root.add(decreaseButton, 80, 20,  20, 20);
+
+        WTextField textField = new WTextField();
+        onCompileAreaSizeSetted = newSize -> textField.setText(String.valueOf(newSize));
+        onCompileAreaSizeSetted.accept(getCompilingAreaSize());
+        root.add(textField, 110, 10, 20, 20);
+
+        root.add(this.createPlayerInventoryPanel(),0,80);
         root.validate(this);
     }
 }
