@@ -2,6 +2,8 @@ package io.github.marcuscastelo.quartus.circuit.components;
 
 import com.google.common.collect.ImmutableList;
 import io.github.marcuscastelo.quartus.circuit.*;
+import io.github.marcuscastelo.quartus.circuit.components.info.ComponentDirectionInfo;
+import io.github.marcuscastelo.quartus.circuit.components.info.ComponentExecutionInfo;
 import io.github.marcuscastelo.quartus.util.DirectionUtils;
 import net.minecraft.util.math.Direction;
 
@@ -82,7 +84,7 @@ public class CircuitComponent {
                 if (i == possibleConnections.size()-1) continue forDirection;
             }
 
-            int BID = CircuitUtils.getComponentStrInfo(arbitrarilyChosenConnection.connectToCompStr).getRight();
+            int BID = CircuitExplorer.getComponentStrInfo(arbitrarilyChosenConnection.connectToCompStr).getRight();
             CircuitComponent BComponent = circuit.getComponentByID(BID);
 
             Direction BtoADirection = arbitrarilyChosenConnection.BtoADirection;

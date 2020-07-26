@@ -6,7 +6,7 @@ import io.github.marcuscastelo.quartus.block.ExecutorBlock;
 import io.github.marcuscastelo.quartus.block.ExecutorIOBlock;
 import io.github.marcuscastelo.quartus.block.circuit_parts.CircuitComponentBlock;
 import io.github.marcuscastelo.quartus.block.circuit_parts.WireBlock;
-import io.github.marcuscastelo.quartus.circuit.components.ComponentInfo;
+import io.github.marcuscastelo.quartus.circuit.components.info.ComponentInfo;
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
 

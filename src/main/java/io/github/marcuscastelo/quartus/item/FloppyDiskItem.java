@@ -61,7 +61,6 @@ public class FloppyDiskItem extends Item {
 	 * @param tooltip		Dica flutuante
 	 * @param context		Contexto da tooltip
 	 */
-	//TODO: TESTAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11!ONZE
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
 		String circuitStr = stack.getOrCreateTag().getString("circuit");

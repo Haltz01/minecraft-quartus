@@ -1,6 +1,6 @@
 package io.github.marcuscastelo.quartus.circuit;
 
-import io.github.marcuscastelo.quartus.circuit.components.ComponentExecutionInfo;
+import io.github.marcuscastelo.quartus.circuit.components.info.ComponentExecutionInfo;
 
 /**
  * Interface que possui a assinatura do método updateLogic

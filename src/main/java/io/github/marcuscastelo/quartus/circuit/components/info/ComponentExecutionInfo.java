@@ -1,4 +1,4 @@
-package io.github.marcuscastelo.quartus.circuit.components;
+package io.github.marcuscastelo.quartus.circuit.components.info;
 
 import com.google.common.collect.ImmutableList;
 import io.github.marcuscastelo.quartus.circuit.QuartusBus;

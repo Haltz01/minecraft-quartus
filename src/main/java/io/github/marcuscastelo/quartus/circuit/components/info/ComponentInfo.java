@@ -1,6 +1,7 @@
-package io.github.marcuscastelo.quartus.circuit.components;
+package io.github.marcuscastelo.quartus.circuit.components.info;
 
 import io.github.marcuscastelo.quartus.circuit.QuartusLogic;
+import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
 
 import java.util.function.Supplier;
 

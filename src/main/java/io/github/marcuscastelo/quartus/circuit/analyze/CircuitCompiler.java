@@ -1,7 +1,7 @@
 package io.github.marcuscastelo.quartus.circuit.analyze;
 
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
-import io.github.marcuscastelo.quartus.circuit.CircuitUtils;
+import io.github.marcuscastelo.quartus.circuit.CircuitExplorer;
 import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
@@ -113,13 +113,13 @@ public class CircuitCompiler {
             // Caso "especial": distribuidor -> a saída de um outro gate gera mais de um fio para vários inputs (de outros gates)
             // Caso "especial": extensores -> aumentam a quantidade de inputs de um gate
             //TODO: resolver parâmetros redundantes
-            List<CircuitUtils.ConnectedNodeInfo> nextComponentsPos = CircuitUtils.getConnectedNodesInfo(world, circuit, component, nodePos);
+            List<CircuitExplorer.ConnectedBlocksInfo> nextComponentsPos = CircuitExplorer.getConnectedNodesInfo(world, circuit, component, nodePos);
             if (nextComponentsPos.size() == 0 && !(component instanceof CircuitOutput)) {
                 errorMessage = new TranslatableText("circuitcompiler.disconnected_component");
                 failed = true;
             }
 
-            for (CircuitUtils.ConnectedNodeInfo nextNodeInfo : nextComponentsPos) {
+            for (CircuitExplorer.ConnectedBlocksInfo nextNodeInfo : nextComponentsPos) {
                 BlockPos nextNodePos = nextNodeInfo.bPos;
 
                 System.out.println("Vizinho: " + nextNodePos);

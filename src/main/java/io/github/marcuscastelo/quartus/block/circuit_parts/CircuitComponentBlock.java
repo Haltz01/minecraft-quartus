@@ -1,10 +1,10 @@
 package io.github.marcuscastelo.quartus.block.circuit_parts;
 
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
-import io.github.marcuscastelo.quartus.circuit.CircuitUtils;
 import io.github.marcuscastelo.quartus.circuit.QuartusBus;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
-import io.github.marcuscastelo.quartus.circuit.components.ComponentInfo;
+import io.github.marcuscastelo.quartus.circuit.components.info.ComponentInfo;
+import io.github.marcuscastelo.quartus.util.DirectionUtils;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.item.ItemPlacementContext;
@@ -142,7 +142,7 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 	 */
     @Override
     public List<Direction> getPossibleInputDirections(Direction facingDirection) {
-		return componentInfo.directionInfo.possibleInputDirections.stream().map(direction -> CircuitUtils.getAbsoluteDirection(facingDirection, direction)).collect(Collectors.toList());
+		return componentInfo.directionInfo.possibleInputDirections.stream().map(direction -> DirectionUtils.getAbsoluteDirection(facingDirection, direction)).collect(Collectors.toList());
     }
 
 	/**
@@ -150,7 +150,7 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 	 */
     @Override
     public List<Direction> getPossibleOutputDirections(Direction facingDirection) {
-		return componentInfo.directionInfo.possibleOutputDirections.stream().map(direction -> CircuitUtils.getAbsoluteDirection(facingDirection, direction)).collect(Collectors.toList());
+		return componentInfo.directionInfo.possibleOutputDirections.stream().map(direction -> DirectionUtils.getAbsoluteDirection(facingDirection, direction)).collect(Collectors.toList());
     }
 
 	@Override
@@ -171,7 +171,7 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
 	@Override
 	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos, boolean moved) {
 		componentInfo.directionInfo.possibleInputDirections.forEach((direction) -> {
-			Direction absoluteDirection = CircuitUtils.getAbsoluteDirection(state.get(FACING), direction);
+			Direction absoluteDirection = DirectionUtils.getAbsoluteDirection(state.get(FACING), direction);
 			boolean directionValue = world.getEmittedRedstonePower(pos.offset(absoluteDirection), absoluteDirection.getOpposite())>0;
 			attachedComponent.getExecutionInfo().setInput(direction, new QuartusBus(directionValue));
 		});

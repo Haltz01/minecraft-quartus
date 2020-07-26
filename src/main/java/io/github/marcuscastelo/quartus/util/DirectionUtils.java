@@ -6,6 +6,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
+import java.util.function.Function;
+
 /**
  * Classe que possui metodos uteis para o tratamento de direções
  */
@@ -61,6 +63,48 @@ public class DirectionUtils {
 
         Direction k = Direction.UP;
         return (difference.getY()>0)?k:k.getOpposite();
+    }
+
+    /**
+     * Método auxiliar que retorna uma função com a direção a seguida,
+     * traduzindo para o jogo entender qual a direção desejada
+     * @param facingDir		Direção de referência
+     * @return		Função que diz qual direção seguir
+     */
+    private static Function<Direction, Direction> getRotationFunction(Direction facingDir) {
+        if (facingDir == Direction.NORTH) return direction -> direction;
+        else if (facingDir == Direction.EAST) return Direction::rotateYClockwise;
+        else if (facingDir == Direction.SOUTH) return Direction::getOpposite;
+        else if (facingDir == Direction.WEST) return Direction::rotateYCounterclockwise;
+        else throw new IllegalArgumentException("Unknown direction: " + facingDir);
+    }
+
+    /**
+     * Método chamado para receber a direção que um bloco olha no jogo
+     * @param facingDir		Direção que o bloco 'mira'
+     * @param absoluteDireciton		Direção absoluta (em relação ao norte do mundo)
+     * @return		Direção relativa (em relação ao norte do bloco)
+     */
+    public static Direction getRelativeDirection(Direction facingDir, Direction absoluteDireciton) {
+        Function<Direction, Direction> rotationFunction = getRotationFunction(facingDir);
+
+        //Para reverter uma conversão Relativa -> Absoluta, basta executar 3 vezes a transformação novamente
+        Direction relativeDirection = absoluteDireciton;
+        for (int i = 0; i < 3; i++)
+            relativeDirection = rotationFunction.apply(relativeDirection);
+        return relativeDirection;
+    }
+
+    /**
+     * Método chamado para receber a direção para o qual um bloco está olhando
+     * em relação ao jogo
+     * @param facingDir		Direção que o bloco 'mira'
+     * @param relativeDirection		Direção relativa à direção do bloco
+     * @return		Direção absoluta (em relação ao norte do mundo)
+     */
+    public static Direction getAbsoluteDirection(Direction facingDir, Direction relativeDirection) {
+        Function<Direction, Direction> rotationFunction = getRotationFunction(facingDir);
+        return rotationFunction.apply(relativeDirection);
     }
 
     public Vec3i decomposeDirection(Direction direction) {

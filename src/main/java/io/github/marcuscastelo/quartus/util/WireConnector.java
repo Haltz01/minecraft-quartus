@@ -407,7 +407,6 @@ public class WireConnector {
 	 * @return		Direção a ser seguida
 	 */
     public static Optional<Direction> getNextDirection(World world, BlockPos mainWirePos, Direction lastDirection) {
-		//TODO: colocar no wire
         BlockState mainWireBs = world.getBlockState(mainWirePos);
         if (mainWireBs.getBlock() != QuartusBlocks.WIRE) throw new IllegalArgumentException("Trying to navigate a non-wire block");
 

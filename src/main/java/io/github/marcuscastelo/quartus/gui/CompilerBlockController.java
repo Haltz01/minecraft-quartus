@@ -21,6 +21,7 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -34,13 +35,12 @@ public class CompilerBlockController extends CottonCraftingController {
 	//Variável que armazena a posição do bloco Compiler
     private final BlockPos compilerBlockPosition;
 
-
-    private Consumer<Integer> onCompileAreaSizeSetted = null;
+    private final Consumer<Integer> onCompileAreaSizeSetted;
     private void setCompilingAreaSize(int newSize) {
         BlockEntity be = world.getBlockEntity(compilerBlockPosition);
         if (!(be instanceof CompilerBlockEntity)) return;
         ((CompilerBlockEntity) be).setCompilingAreaSize(newSize);
-        if (onCompileAreaSizeSetted != null) onCompileAreaSizeSetted.accept(newSize);
+        if (onCompileAreaSizeSetted != null) onCompileAreaSizeSetted.accept(getCompilingAreaSize());
     }
 
     private int getCompilingAreaSize() {
@@ -69,8 +69,7 @@ public class CompilerBlockController extends CottonCraftingController {
         floppyDiskUpdateC2SPacket.send(buf);
     }
 
-    //TODO: compile on server
-	//TODO: support areas bigger than 10x10
+    //TODO: compile on server (mas achar os blocos no cliente for n³)
 	/**
 	 * Método que compila um circuito dentro de uma área
 	 * @return		Circuito compilado
@@ -126,25 +125,45 @@ public class CompilerBlockController extends CottonCraftingController {
 
         root.setSize(150,100);
 
+        WTextField textField = new WTextField();
+        textField.setTextPredicate(StringUtils::isNumeric);
+        textField.setMaxLength(2);
+        onCompileAreaSizeSetted = newSize -> textField.setText(String.valueOf(newSize));
+        onCompileAreaSizeSetted.accept(getCompilingAreaSize());
+        textField.setChangedListener(text -> {
+            int currentCompilingAreaSize = getCompilingAreaSize();
+            int newCompilingAreaSize = Integer.parseInt(text);
+            if (currentCompilingAreaSize != newCompilingAreaSize) {
+                setCompilingAreaSize(newCompilingAreaSize);
+            }
+        });
+        root.add(textField, 110, 10, 20, 20);
+
         WItemSlot itemSlot = WItemSlot.of(blockInventory, 0);
         root.add(itemSlot, 20, 15);
 
         WButton compileButton = new WButton(new TranslatableText("gui.quartus.compiler.compile_btn"));
-        compileButton.setOnClick(this::onCompilerButtonClick);
+        compileButton.setOnClick(() -> {
+            onCompilerButtonClick();
+            textField.onFocusLost();
+        });
         root.add(compileButton, 0, 40,  60, 20);
 
         WButton increaseButton = new WButton(new LiteralText("+"));
-        increaseButton.setOnClick(() -> setCompilingAreaSize(getCompilingAreaSize()+1));
+        increaseButton.setOnClick(() -> {
+            setCompilingAreaSize(getCompilingAreaSize()+2);
+            textField.onFocusLost();
+        });
         root.add(increaseButton, 80, 0,  20, 20);
 
         WButton decreaseButton = new WButton(new LiteralText("-"));
-        decreaseButton.setOnClick(() -> setCompilingAreaSize(getCompilingAreaSize()-1));
+        decreaseButton.setOnClick(() -> {
+            setCompilingAreaSize(getCompilingAreaSize()-2);
+            textField.onFocusLost();
+        });
         root.add(decreaseButton, 80, 20,  20, 20);
 
-        WTextField textField = new WTextField();
-        onCompileAreaSizeSetted = newSize -> textField.setText(String.valueOf(newSize));
-        onCompileAreaSizeSetted.accept(getCompilingAreaSize());
-        root.add(textField, 110, 10, 20, 20);
+
 
         root.add(this.createPlayerInventoryPanel(),0,80);
         root.validate(this);

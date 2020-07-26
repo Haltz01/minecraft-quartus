@@ -2,6 +2,8 @@ package io.github.marcuscastelo.quartus.registry;
 
 import io.github.marcuscastelo.quartus.circuit.QuartusLogic;
 import io.github.marcuscastelo.quartus.circuit.components.*;
+import io.github.marcuscastelo.quartus.circuit.components.info.ComponentDirectionInfo;
+import io.github.marcuscastelo.quartus.circuit.components.info.ComponentInfo;
 import net.minecraft.util.math.Direction;
 
 import java.util.Arrays;

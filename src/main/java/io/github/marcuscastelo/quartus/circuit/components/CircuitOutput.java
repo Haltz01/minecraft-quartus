@@ -1,5 +1,6 @@
 package io.github.marcuscastelo.quartus.circuit.components;
 
+import io.github.marcuscastelo.quartus.circuit.components.info.ComponentDirectionInfo;
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import net.minecraft.util.math.Direction;
 

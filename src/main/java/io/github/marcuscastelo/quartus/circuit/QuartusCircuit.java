@@ -162,7 +162,7 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
 
             str.append(component.getOutputConnectionsString());
             for (ComponentConnection connection: component.getOutputConnections())
-                componentsToPrint.add(getComponentByID(CircuitUtils.getComponentStrInfo(connection.connectToCompStr).getRight()));
+                componentsToPrint.add(getComponentByID(CircuitExplorer.getComponentStrInfo(connection.connectToCompStr).getRight()));
         }
 
         return str.toString();
@@ -194,8 +194,8 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
             Direction directionAtoB = Direction.byName(directionAtoBStr);
             Direction directionBtoA = Direction.byName(directionBtoAStr);
 
-            Pair<String, Integer> fromGateInfo = CircuitUtils.getComponentStrInfo(fromGateStr);
-            Pair<String, Integer> toGateInfo = CircuitUtils.getComponentStrInfo(toGateStr);
+            Pair<String, Integer> fromGateInfo = CircuitExplorer.getComponentStrInfo(fromGateStr);
+            Pair<String, Integer> toGateInfo = CircuitExplorer.getComponentStrInfo(toGateStr);
 
             String fromGateType = fromGateInfo.getLeft();
             int fromGateID = fromGateInfo.getRight();
@@ -207,13 +207,13 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
             CircuitComponent toComp = initializedGates.getOrDefault(toGateID, null);
 
             if (fromComp == null) {
-                fromComp = CircuitUtils.createPolimorphicComponent(fromGateType, fromGateID);
+                fromComp = CircuitExplorer.createPolimorphicComponent(fromGateType, fromGateID);
                 initializedGates.putIfAbsent(fromGateID, fromComp);
                 addComponent(fromComp);
             }
 
             if (toComp == null) {
-                toComp = CircuitUtils.createPolimorphicComponent(toGateType, toGateID);
+                toComp = CircuitExplorer.createPolimorphicComponent(toGateType, toGateID);
                 initializedGates.putIfAbsent(toGateID, toComp);
                 addComponent(toComp);
             }
