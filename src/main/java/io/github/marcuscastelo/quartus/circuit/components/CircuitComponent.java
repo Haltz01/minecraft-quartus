@@ -4,7 +4,11 @@ import com.google.common.collect.ImmutableList;
 import io.github.marcuscastelo.quartus.circuit.*;
 import io.github.marcuscastelo.quartus.circuit.components.info.ComponentDirectionInfo;
 import io.github.marcuscastelo.quartus.circuit.components.info.ComponentExecutionInfo;
+import io.github.marcuscastelo.quartus.circuit.components.info.ComponentInfo;
+import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
+import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import io.github.marcuscastelo.quartus.util.DirectionUtils;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.Direction;
 
 import java.util.*;
@@ -21,10 +25,7 @@ public class CircuitComponent {
 
     //TODO: ver como fazer pros extensores
 
-    private QuartusLogic logic;
-
-    public static int LAST_ID = 1;
-
+    private final QuartusLogic logic;
     private final int ID;
     private final String componentName;
 
@@ -34,10 +35,10 @@ public class CircuitComponent {
 	 * @param componentDirectionInfo	Possíveis direções de input e output do componente
 	 * @param ID		                Identificador do componente
 	 */
-    public CircuitComponent(String componentName, ComponentDirectionInfo componentDirectionInfo, int ID) {
+    protected CircuitComponent(String componentName, ComponentDirectionInfo componentDirectionInfo, int ID, QuartusLogic logic) {
         this.componentName = componentName;
         this.connections = new HashMap<>();
-        this.logic = null;
+        this.logic = logic;
 
         this.componentDirectionInfo = componentDirectionInfo;
         this.executionInfo = new ComponentExecutionInfo(componentDirectionInfo);
@@ -49,25 +50,11 @@ public class CircuitComponent {
         }
     }
 
-    public CircuitComponent(String componentName, ComponentDirectionInfo componentDirectionInfo) {
-        this(componentName, componentDirectionInfo, LAST_ID++);
-    }
-
-    public CircuitComponent(String componentName, ComponentDirectionInfo componentDirectionInfo, QuartusLogic logic) {
-        this(componentName, componentDirectionInfo);
-        this.logic = logic;
-    }
-
-    public CircuitComponent(String componentName, ComponentDirectionInfo componentDirectionInfo, int ID, QuartusLogic logic) {
-        this(componentName, componentDirectionInfo, ID);
-        this.logic = logic;
-    }
-
 	//Método que retorna o ID de um componente
     public int getID() { return ID; }
 
     //TODO: tornar mais genérica: atualmente foca apenas em trazer a saída do outro (supondo ser única) para a entrada deste (supondo ser única)
-    private void updateInputInfo(QuartusCircuit circuit) {
+    private void updateInputValues(QuartusCircuit circuit) {
         forDirection:
         for (Map.Entry<Direction, List<ComponentConnection>> entry: connections.entrySet()) {
             Direction AtoBDirection = entry.getKey();
@@ -84,7 +71,7 @@ public class CircuitComponent {
                 if (i == possibleConnections.size()-1) continue forDirection;
             }
 
-            int BID = CircuitExplorer.getComponentStrInfo(arbitrarilyChosenConnection.connectToCompStr).getRight();
+            int BID = getComponentStrInfo(arbitrarilyChosenConnection.connectToCompStr).getRight();
             CircuitComponent BComponent = circuit.getComponentByID(BID);
 
             Direction BtoADirection = arbitrarilyChosenConnection.BtoADirection;
@@ -101,7 +88,7 @@ public class CircuitComponent {
 	 * @param circuit		Circuito a ser atualizado
 	 */
     public void updateComponent(Optional<QuartusCircuit> circuit) {
-        circuit.ifPresent(QuartusCircuit::updateCircuit);
+        circuit.ifPresent(this::updateInputValues);
         if (logic != null) logic.updateLogic(executionInfo);
     }
 
@@ -199,5 +186,76 @@ public class CircuitComponent {
     @Override
     public String toString() {
         return componentName+"_"+getID();
+    }
+
+
+    public static class Builder {
+        protected String componentName = "UnnamedComponent";
+        protected int ID = 0xF0F0F0F0;
+        protected ComponentDirectionInfo directionInfo = new ComponentDirectionInfo(Collections.emptyList(), Collections.emptyList());
+        protected QuartusLogic logic = QuartusLogic.EMPTY_LOGIC;
+        public Builder() {}
+
+        public Builder setName(String componentName) {
+            this.componentName = componentName;
+            return this;
+        }
+
+        public Builder setID(int ID) {
+            this.ID = ID;
+            return this;
+        }
+
+        public Builder setID(QuartusCircuit circuit) {
+            this.ID = circuit.generateID();
+            return this;
+        }
+
+        public Builder setDirections(ComponentDirectionInfo directionInfo) {
+            this.directionInfo = directionInfo;
+            return this;
+        }
+
+        public Builder setLogic(QuartusLogic logic) {
+            this.logic = logic;
+            return this;
+        }
+        
+        public CircuitComponent build() {
+            return new CircuitComponent(componentName, directionInfo, ID, logic);
+        }
+    }
+
+    /**
+     * Método que retorna um objeto de classe genérica pertencente aos componentes do circuito
+     * Podem ser -	Input
+     * 			 -	Output
+     * 			 -	Porta Lógica
+     * @param gateType		String com o tipo de porta
+     * @param gateID		Int com o ID da porta
+     * @return		Objeto genérico de acordo com os parâmetros passados
+     */
+    public static CircuitComponent createPolimorphicComponent(String gateType, int gateID) {
+        ComponentInfo info = QuartusCircuitComponents.getComponentInfoByName(gateType);
+        if (gateType.equals(CircuitInput.COMP_NAME))
+            return new CircuitInput(gateID);
+        else if (gateType.equals(CircuitOutput.COMP_NAME))
+            return new CircuitOutput(gateID);
+        else
+            return new CircuitComponent(gateType, info.directionInfo, gateID, QuartusLogics.getLogicByName(gateType));
+    }
+
+    /**
+     * Método auxiliar que retorna um par,
+     * relacionando a String que identifica um componente
+     * com seu ID identificador
+     * @param componentStr		String que identifica um componente
+     * @return		Par de String e Int, que identificam um tipo de componente
+     */
+    public static Pair<String, Integer> getComponentStrInfo(String componentStr) {
+        String[] params = componentStr.split("_");
+        String gateType = params[0];
+        int gateID = Integer.parseInt(params[1]);
+        return new Pair<>(gateType, gateID);
     }
 }

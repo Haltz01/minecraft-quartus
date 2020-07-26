@@ -1,5 +1,6 @@
 package io.github.marcuscastelo.quartus.circuit.components;
 
+import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.circuit.components.info.ComponentDirectionInfo;
 import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import net.minecraft.util.math.Direction;
@@ -21,10 +22,16 @@ public class CircuitOutput extends CircuitComponent {
     }
 
     /**
-     * Construtor da Classe Output, sem uso do identificador
+     * Construtor da Classe Input, sem uso do identificador
      */
-    public CircuitOutput() {
-        super(COMP_NAME, outputDirectionInfo, QuartusLogics.OUTPUT);
+    public CircuitOutput(QuartusCircuit circuit) {
+        super(COMP_NAME, outputDirectionInfo, circuit.generateID(), QuartusLogics.INPUT);
     }
 
+    public static class Builder extends CircuitComponent.Builder {
+        @Override
+        public CircuitComponent build() {
+            return new CircuitOutput(ID);
+        }
+    }
 }

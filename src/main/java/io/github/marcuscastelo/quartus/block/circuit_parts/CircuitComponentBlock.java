@@ -2,6 +2,7 @@ package io.github.marcuscastelo.quartus.block.circuit_parts;
 
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
 import io.github.marcuscastelo.quartus.circuit.QuartusBus;
+import io.github.marcuscastelo.quartus.circuit.QuartusCircuit;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
 import io.github.marcuscastelo.quartus.circuit.components.info.ComponentInfo;
 import io.github.marcuscastelo.quartus.util.DirectionUtils;
@@ -45,15 +46,15 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
         super(Settings.copy(Blocks.REPEATER));
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
         this.componentInfo = componentInfo;
-        this.attachedComponent = new CircuitComponent("AttachedComponent", componentInfo.directionInfo, -1, componentInfo.componentLogic);
+        this.attachedComponent = componentInfo.componentBuilder.setDirections(componentInfo.directionInfo).setLogic(componentInfo.componentLogic).build();
     }
 
-	/**
+	/** TODO: comment
 	 * Método usado para criar instâncias do componente relacionado a este bloco
 	 */
     @Override
-    public CircuitComponent createCircuitComponent() {
-        return componentInfo.componentSupplier.get();
+    public CircuitComponent createCircuitComponent(QuartusCircuit circuit) {
+        return componentInfo.componentBuilder.setID(circuit.generateID()).build();
     }
 
 	/**

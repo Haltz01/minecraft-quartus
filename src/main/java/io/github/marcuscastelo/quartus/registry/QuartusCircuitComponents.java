@@ -33,8 +33,8 @@ public class QuartusCircuitComponents {
      * @return                  Classe com as informações do tipo de componenete que foi registrado
      */
     public static ComponentInfo registerComponent(String componentName, ComponentDirectionInfo directionInfo, QuartusLogic componentLogic) {
-        Supplier<CircuitComponent> componentSupplier = () -> new CircuitComponent(componentName, directionInfo, componentLogic);
-        return registerSpecialComponent(componentName, directionInfo, componentLogic, componentSupplier);
+        CircuitComponent.Builder builder = new CircuitComponent.Builder().setName(componentName).setDirections(directionInfo).setLogic(componentLogic);
+        return registerSpecialComponent(componentName, directionInfo, componentLogic, builder);
     }
 
     /**
@@ -42,11 +42,11 @@ public class QuartusCircuitComponents {
      * @param componentName         Nome do componenete a ser registrado
      * @param directionInfo         Informação sobre a direção relativa de input/output do componente
      * @param componentLogic        Lógica do componente
-     * @param componentSupplier     Construtor da classe que herda CircuitComponent
+     * @param componentBuilder      Construtor da classe que herda CircuitComponent
      * @return                      Classe com as informações do tipo de componenete que foi registrado
      */
-    public static ComponentInfo registerSpecialComponent(String componentName, ComponentDirectionInfo directionInfo, QuartusLogic componentLogic, Supplier<CircuitComponent> componentSupplier) {
-        ComponentInfo info = new ComponentInfo(componentSupplier, directionInfo, componentLogic);
+    public static ComponentInfo registerSpecialComponent(String componentName, ComponentDirectionInfo directionInfo, QuartusLogic componentLogic, CircuitComponent.Builder componentBuilder) {
+        ComponentInfo info = new ComponentInfo(componentBuilder, directionInfo, componentLogic);
         componentInfoPerComponentName.putIfAbsent(componentName, info);
         return info;
     }
@@ -90,8 +90,8 @@ public class QuartusCircuitComponents {
         //TODO: dar implementação real ao extensor
         EXTENSOR_GATE = registerComponent("ExtensorGate", WES2NDirInfo, QuartusLogics.EXTENSOR);
 
-        INPUT = registerSpecialComponent(CircuitInput.COMP_NAME, CircuitInput.inputDirectionInfo, QuartusLogics.INPUT, CircuitInput::new);
-        OUTPUT = registerSpecialComponent(CircuitOutput.COMP_NAME, CircuitOutput.outputDirectionInfo, QuartusLogics.OUTPUT, CircuitOutput::new);
+        INPUT = registerSpecialComponent(CircuitInput.COMP_NAME, CircuitInput.inputDirectionInfo, QuartusLogics.INPUT, new CircuitInput.Builder());
+        OUTPUT = registerSpecialComponent(CircuitOutput.COMP_NAME, CircuitOutput.outputDirectionInfo, QuartusLogics.OUTPUT, new CircuitOutput.Builder());
     }
 
 }

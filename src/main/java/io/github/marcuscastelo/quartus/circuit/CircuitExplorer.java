@@ -1,20 +1,13 @@
 package io.github.marcuscastelo.quartus.circuit;
 
-import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.QuartusInGameComponent;
 import io.github.marcuscastelo.quartus.block.circuit_parts.WireBlock;
 import io.github.marcuscastelo.quartus.circuit.components.CircuitComponent;
-import io.github.marcuscastelo.quartus.circuit.components.CircuitInput;
-import io.github.marcuscastelo.quartus.circuit.components.CircuitOutput;
-import io.github.marcuscastelo.quartus.circuit.components.info.ComponentInfo;
-import io.github.marcuscastelo.quartus.registry.QuartusCircuitComponents;
-import io.github.marcuscastelo.quartus.registry.QuartusLogics;
 import io.github.marcuscastelo.quartus.util.DirectionUtils;
 import io.github.marcuscastelo.quartus.util.WireConnector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -24,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static io.github.marcuscastelo.quartus.util.DirectionUtils.getAbsoluteDirection;
-import static io.github.marcuscastelo.quartus.util.DirectionUtils.getRelativeDirection;
 
 /**
  * Classe que contém algoritmos de exploração de circuito
@@ -103,7 +95,7 @@ public class CircuitExplorer {
                 throughWireInfo.ifPresent(connectedNodesAboluteInfo::add);
             }
         }
-        
+
         return connectedNodesAboluteInfo;
     }
 
@@ -143,38 +135,5 @@ public class CircuitExplorer {
         Direction relativeBtoA = DirectionUtils.getRelativeDirection(BFacing, directionToGo.getOpposite());
 
         return Optional.of(new ConnectedBlocksInfo(relativeAtoB, relativeBtoA, compBPos));
-    }
-
-    /**
-	 * Método que retorna um objeto de classe genérica pertencente aos componentes do circuito
-	 * Podem ser -	Input
-	 * 			 -	Output
-	 * 			 -	Porta Lógica
-	 * @param gateType		String com o tipo de porta
-	 * @param gateID		Int com o ID da porta
-	 * @return		Objeto genérico de acordo com os parâmetros passados
-	 */
-    public static CircuitComponent createPolimorphicComponent(String gateType, int gateID) {
-        ComponentInfo info = QuartusCircuitComponents.getComponentInfoByName(gateType);
-        if (gateType.equals(CircuitInput.COMP_NAME))
-            return new CircuitInput(gateID);
-        else if (gateType.equals(CircuitOutput.COMP_NAME))
-            return new CircuitOutput(gateID);
-        else
-            return new CircuitComponent(gateType, info.directionInfo, gateID, QuartusLogics.getLogicByName(gateType));
-    }
-
-	/**
-	 * Método auxiliar que retorna um par,
-	 * relacionando a String que identifica um componente
-	 * com seu ID identificador
-	 * @param componentStr		String que identifica um componente
-	 * @return		Par de String e Int, que identificam um tipo de componente
-	 */
-    public static Pair<String, Integer> getComponentStrInfo(String componentStr) {
-        String[] params = componentStr.split("_");
-        String gateType = params[0];
-        int gateID = Integer.parseInt(params[1]);
-        return new Pair<>(gateType, gateID);
     }
 }

@@ -9,4 +9,5 @@ import io.github.marcuscastelo.quartus.circuit.components.info.ComponentExecutio
 @FunctionalInterface
 public interface QuartusLogic {
     void updateLogic(ComponentExecutionInfo executionInfo);
+    QuartusLogic EMPTY_LOGIC = (executionInfo -> {});
 }

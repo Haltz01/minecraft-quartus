@@ -10,15 +10,15 @@ import java.util.function.Supplier;
  */
 public class ComponentInfo {
 	//Variáveis que identificam o componente e atribuem a informação
-    public final Supplier<CircuitComponent> componentSupplier;
+    public final CircuitComponent.Builder componentBuilder;
     public final ComponentDirectionInfo directionInfo;
     public final QuartusLogic componentLogic;
 
 	/**
 	 * Construtor padrão da classe ComponentInfo
 	 */
-    public ComponentInfo(Supplier<CircuitComponent> componentSupplier, ComponentDirectionInfo directionInfo, QuartusLogic componentLogic) {
-        this.componentSupplier = componentSupplier;
+    public ComponentInfo(CircuitComponent.Builder componentBuilder, ComponentDirectionInfo directionInfo, QuartusLogic componentLogic) {
+        this.componentBuilder = componentBuilder;
         this.directionInfo = directionInfo;
         this.componentLogic = componentLogic;
     }

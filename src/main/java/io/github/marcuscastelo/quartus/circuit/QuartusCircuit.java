@@ -20,6 +20,7 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
     private final Map<Integer, CircuitInput> circuitInputs;
     private final Map<Integer, CircuitOutput> circuitOutputs;
     private final Map<Integer, CircuitComponent> otherComponents;
+    private int lastID;
 
 	//Construtor padrão da classe QuartusCircuit, adicionando os componentes ao circuito
     public QuartusCircuit(List<CircuitComponent> components) {
@@ -32,6 +33,11 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
         circuitInputs = new HashMap<>();
         circuitOutputs = new HashMap<>();
         otherComponents = new HashMap<>();
+        this.lastID = 1;
+    }
+
+    public int generateID() {
+        return lastID++;
     }
 
 	/**
@@ -162,7 +168,7 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
 
             str.append(component.getOutputConnectionsString());
             for (ComponentConnection connection: component.getOutputConnections())
-                componentsToPrint.add(getComponentByID(CircuitExplorer.getComponentStrInfo(connection.connectToCompStr).getRight()));
+                componentsToPrint.add(getComponentByID(CircuitComponent.getComponentStrInfo(connection.connectToCompStr).getRight()));
         }
 
         return str.toString();
@@ -194,8 +200,8 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
             Direction directionAtoB = Direction.byName(directionAtoBStr);
             Direction directionBtoA = Direction.byName(directionBtoAStr);
 
-            Pair<String, Integer> fromGateInfo = CircuitExplorer.getComponentStrInfo(fromGateStr);
-            Pair<String, Integer> toGateInfo = CircuitExplorer.getComponentStrInfo(toGateStr);
+            Pair<String, Integer> fromGateInfo = CircuitComponent.getComponentStrInfo(fromGateStr);
+            Pair<String, Integer> toGateInfo = CircuitComponent.getComponentStrInfo(toGateStr);
 
             String fromGateType = fromGateInfo.getLeft();
             int fromGateID = fromGateInfo.getRight();
@@ -207,13 +213,13 @@ public class QuartusCircuit implements QuartusSerializable<QuartusCircuit, Strin
             CircuitComponent toComp = initializedGates.getOrDefault(toGateID, null);
 
             if (fromComp == null) {
-                fromComp = CircuitExplorer.createPolimorphicComponent(fromGateType, fromGateID);
+                fromComp = CircuitComponent.createPolimorphicComponent(fromGateType, fromGateID);
                 initializedGates.putIfAbsent(fromGateID, fromComp);
                 addComponent(fromComp);
             }
 
             if (toComp == null) {
-                toComp = CircuitExplorer.createPolimorphicComponent(toGateType, toGateID);
+                toComp = CircuitComponent.createPolimorphicComponent(toGateType, toGateID);
                 initializedGates.putIfAbsent(toGateID, toComp);
                 addComponent(toComp);
             }
