@@ -86,7 +86,7 @@ public class QuartusItems {
 
         COMPILER = register("compiler", QuartusBlocks.COMPILER);
         EXECUTOR = register("executor", QuartusBlocks.EXECUTOR);
-        EXTENSOR_IO = register("extensor_io", QuartusBlocks.EXECUTOR_IO);
+        EXTENSOR_IO = register("executor_io", QuartusBlocks.EXECUTOR_IO);
 
         MULTIPLEXER_GATE = register("multiplexer", QuartusBlocks.MULTIPLEXER_GATE);
 

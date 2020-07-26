@@ -1,0 +1,28 @@
+{
+	"variants": {
+		"executor_io_state=void,facing=north": { "model": "quartus:block/executor_io_void", "y": 0 },
+		"executor_io_state=void,facing=east": { "model": "quartus:block/executor_io_void", "y": 90 },
+		"executor_io_state=void,facing=south": { "model": "quartus:block/executor_io_void", "y": 180 },
+		"executor_io_state=void,facing=west": { "model": "quartus:block/executor_io_void", "y": 270 },
+
+		"executor_io_state=void_end,facing=north": { "model": "quartus:block/executor_io_void_end", "y": 0 },
+		"executor_io_state=void_end,facing=east": { "model": "quartus:block/executor_io_void_end", "y": 90 },
+		"executor_io_state=void_end,facing=south": { "model": "quartus:block/executor_io_void_end", "y": 180 },
+		"executor_io_state=void_end,facing=west": { "model": "quartus:block/executor_io_void_end", "y": 270 },
+
+		"executor_io_state=input,facing=north": { "model": "quartus:block/executor_io_input", "y": 0 },
+		"executor_io_state=input,facing=east": { "model": "quartus:block/executor_io_input", "y": 90 },
+		"executor_io_state=input,facing=south": { "model": "quartus:block/executor_io_input", "y": 180 },
+		"executor_io_state=input,facing=west": { "model": "quartus:block/executor_io_input", "y": 270 },
+
+		"executor_io_state=output,facing=north": { "model": "quartus:block/executor_io_output", "y": 0 },
+		"executor_io_state=output,facing=east": { "model": "quartus:block/executor_io_output", "y": 90 },
+		"executor_io_state=output,facing=south": { "model": "quartus:block/executor_io_output", "y": 180 },
+		"executor_io_state=output,facing=west": { "model": "quartus:block/executor_io_output", "y": 270 },
+
+		"executor_io_state=io,facing=north": { "model": "quartus:block/executor_io_io", "y": 0 },
+		"executor_io_state=io,facing=east": { "model": "quartus:block/executor_io_io", "y": 90 },
+		"executor_io_state=io,facing=south": { "model": "quartus:block/executor_io_io", "y": 180 },
+		"executor_io_state=io,facing=west": { "model": "quartus:block/executor_io_io", "y": 270 }
+	}
+}

@@ -269,15 +269,10 @@ public class ExecutorBlockEntity extends BlockEntity implements ImplementedInven
                     .setWorld(world)
                     .build();
         } catch (Exception e) {
+            System.out.println("Failed to create circuit executor (resuming executor)");
             e.printStackTrace();
+            return;
         }
-
-        System.out.println("D Carregado: " + circuitDescStr);
-        System.out.println("D Atualmente: " + circuitDescriptor.serialize());
-
-        System.out.println("E Carregado: " + circuitStateStr);
-        System.out.println("E Atualmente: " + circuitExecutor.serialize());
-
         scheduleTick();
     }
 

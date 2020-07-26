@@ -60,7 +60,7 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
     }
 
 	//Variáveis auxiliares para definição dos estados dos blocos IO (Input Output)
-    public static final EnumProperty<ExecutorIOState> EXTENSOR_STATE = EnumProperty.of("extensor_state", ExecutorIOState.class);
+    public static final EnumProperty<ExecutorIOState> EXTENSOR_STATE = EnumProperty.of("executor_io_state", ExecutorIOState.class);
     public static final BooleanProperty POWERED = Properties.POWERED;
 
 

@@ -86,7 +86,7 @@ public class QuartusBlocks {
         COMPILER = registerBlock("compiler", new CompilerBlock());
         EXECUTOR = registerBlock("executor", new ExecutorBlock());
 
-        EXECUTOR_IO = registerBlock("extensor_io", new ExecutorIOBlock());
+        EXECUTOR_IO = registerBlock("executor_io", new ExecutorIOBlock());
 
         INPUT = registerComponentBlock("input", "Input");
         OUTPUT = registerComponentBlock("output", "Output");
