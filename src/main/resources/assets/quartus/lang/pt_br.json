@@ -17,7 +17,7 @@
   "block.quartus.input": "Entrada do circuito",
   "block.quartus.output": "Saída do circuito",
   "block.quartus.multiplexer": "Multiplexador",
-  "block.quartus.extensor_io": "E/S do executor",
+  "block.quartus.executor_io": "E/S do executor",
   "gui.quartus.executor.empty": "Não há disquetes no compilador",
   "gui.quartus.executor.no_circuit": "O disquete provido não contém um circuito",
   "gui.quartus.executor.execute_btn": "Executar",
@@ -26,6 +26,7 @@
   "circuitcompiler.unknown_error": "Erro desconhecido ao executar o circuito",
   "circuitcompiler.out_of_bounds": "Algum componente está fora dos limites permitidos. O circuito deve estar dentro da marcação vermelha",
   "circuitcompiler.disconnected_component": "Hm... Parece que algum componente está desconectado do circuito",
+  "circuitcomiler.success": "Circuito compilado com sucesso",
   "quartus.item.floppy_disk.circuit_too_big": "Muitas conexões, clique com o botão direito para ver",
   "quartus.item.floppy_disk.empty": "O disco está vazio"
 }

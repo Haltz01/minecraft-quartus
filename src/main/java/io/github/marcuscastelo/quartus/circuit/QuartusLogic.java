@@ -8,6 +8,12 @@ import io.github.marcuscastelo.quartus.circuit.components.info.ComponentExecutio
  */
 @FunctionalInterface
 public interface QuartusLogic {
+
+    /**
+     * Determina o que acontece com os outputs de um componente
+     * dado os inputs
+     * @param executionInfo dá acesso aos inputs e outputs do componente
+     */
     void execute(ComponentExecutionInfo executionInfo);
     QuartusLogic EMPTY_LOGIC = (executionInfo -> {});
 }

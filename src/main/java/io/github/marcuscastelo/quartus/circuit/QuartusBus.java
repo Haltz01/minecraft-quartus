@@ -16,8 +16,9 @@ import java.util.stream.Collectors;
  * transmitindo os bits de informações entre eles.
  */
 public class QuartusBus {
-    //Variáveis que definem o true(1) e o false(0) no Bus
+    //Equivale a um bus de tamanho 1 e valor true
     public static final QuartusBus HIGH1b;
+    //Equivale a um bus de tamanho 1 e valor false
     public static final QuartusBus LOW1b;
 
     //Método que copia o Bus, retornando-o
@@ -32,6 +33,12 @@ public class QuartusBus {
 
     public ImmutableList<Boolean> values;
 
+    /**
+     * Método auxiliar para usado para converter os parâmetros de um construtor para outro
+     * @param value         Primeiro valor do bus (boolean)
+     * @param moreValues    Array com demais valores
+     * @return              Lista com todos os valores
+     */
     private static List<Boolean> convertParams(Boolean value, Boolean ...moreValues) {
         List<Boolean> list = new BooleanArrayList(moreValues.length+1);
         list.add(value);
@@ -39,6 +46,11 @@ public class QuartusBus {
         return list;
     }
 
+    /**
+     *
+     * @param value
+     * @param moreValues
+     */
     public QuartusBus(Boolean value, Boolean ...moreValues) {
         this(convertParams(value, moreValues));
     }
@@ -97,35 +109,74 @@ public class QuartusBus {
                 '}';
     }
 
+    /**
+     * Operador bitwise que inverte todos os bits de um bus
+     * @return Novo bus com os bits invertidos
+     */
     public QuartusBus bitwiseNot() {
         return new QuartusBus(values.stream().map(b->!b).collect(Collectors.toList()));
     }
 
+    /**
+     * Operador bitwise que faz um "and" entre o bus atual e outro bus, bit a bit
+     * @param otherBus segundo bus a ser comparado bit a bit
+     * @return novo bus após a execução do procedimento
+     */
     public QuartusBus bitwiseAnd(QuartusBus otherBus) {
         return binaryBitwiseOperation(otherBus, (a,b) -> a && b);
     }
 
+    /**
+     * Operador bitwise que faz um "or" entre o bus atual e outro bus, bit a bit
+     * @param otherBus segundo bus a ser comparado bit a bit
+     * @return novo bus após a execução do procedimento
+     */
     public QuartusBus bitwiseOr(QuartusBus otherBus) {
         return binaryBitwiseOperation(otherBus, (a,b) -> a || b);
     }
 
+    /**
+     * Operador bitwise que faz um "xor" entre o bus atual e outro bus, bit a bit
+     * @param otherBus segundo bus a ser comparado bit a bit
+     * @return novo bus após a execução do procedimento
+     */
     public QuartusBus bitwiseXor(QuartusBus otherBus) {
         return binaryBitwiseOperation(otherBus, (a,b) -> a ^ b);
     }
 
+    /**
+     * Operador bitwise que faz um "nand" entre o bus atual e outro bus, bit a bit
+     * @param otherBus segundo bus a ser comparado bit a bit
+     * @return novo bus após a execução do procedimento
+     */
     public QuartusBus bitwiseNand(QuartusBus otherBus) {
         return binaryBitwiseOperation(otherBus, (a,b) -> !(a && b));
     }
 
+    /**
+     * Operador bitwise que faz um "nor" entre o bus atual e outro bus, bit a bit
+     * @param otherBus segundo bus a ser comparado bit a bit
+     * @return novo bus após a execução do procedimento
+     */
     public QuartusBus bitwiseNor(QuartusBus otherBus) {
         return binaryBitwiseOperation(otherBus, (a,b) -> !(a || b));
     }
 
+    /**
+     * Operador bitwise que faz um "xnor" entre o bus atual e outro bus, bit a bit
+     * @param otherBus segundo bus a ser comparado bit a bit
+     * @return novo bus após a execução do procedimento
+     */
     public QuartusBus bitwiseXnor(QuartusBus otherBus) {
         return binaryBitwiseOperation(otherBus, (a,b) -> a == b);
     }
 
-    //TODO: determinar como o bitwise and entre buses de tamanho diferente deve funcionar (atualmente preenche com zeros)
+    /**
+     * Operador bitwise que faz uma certa operação genérica entre o bus atual e outro bus, bit a bit
+     * @param otherBus segundo bus a ser comparado bit a bit
+     * @param operationLogic operação a ser realizada, bit a bit
+     * @return novo bus após a execução do procedimento
+     */
     public QuartusBus binaryBitwiseOperation(QuartusBus otherBus, BiPredicate<Boolean, Boolean> operationLogic) {
         int newBusSize = Math.max(otherBus.getBusSize(), this.getBusSize());
         List<Boolean> newBusValues = new ArrayList<>(newBusSize);
@@ -139,12 +190,14 @@ public class QuartusBus {
         return new QuartusBus(newBusValues);
     }
 
-    //Define o que significa true e false num Bus
     static {
         HIGH1b = new QuartusBus(true);
         LOW1b = new QuartusBus(false);
     }
 
+    /**
+     * Classe que serializa o objeto para uma string ou faz o processo contrário
+     */
     public static class Serializer implements QuartusSimetricSerializer<QuartusBus, String> {
         @Override
         public String serialize(QuartusBus bus) {

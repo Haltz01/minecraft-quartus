@@ -1,5 +1,7 @@
 package io.github.marcuscastelo.quartus.registry;
 
+import io.github.marcuscastelo.quartus.network.QuartusCompilerAreaChangeC2SPacket;
+import io.github.marcuscastelo.quartus.network.handlers.QuartusCompilerAreaChangeC2SPacketHandler;
 import io.github.marcuscastelo.quartus.network.handlers.QuartusExecutorStartC2SPacketHandler;
 import io.github.marcuscastelo.quartus.network.handlers.QuartusExtensorIOUpdateC2SPacketHandler;
 import io.github.marcuscastelo.quartus.network.handlers.QuartusFloppyDiskUpdateC2SPacketHandler;
@@ -15,5 +17,7 @@ public class QuartusNetworkHandlers {
         QuartusExtensorIOUpdateC2SPacketHandler.register();
         // Handler que trata o pedido de início de execução do circuito no executor
         QuartusExecutorStartC2SPacketHandler.register();
+        // Handler que trata o pedido de alteração do tamanho da área de compilação
+        QuartusCompilerAreaChangeC2SPacketHandler.register();
     }
 }

@@ -6,9 +6,7 @@ import io.github.marcuscastelo.quartus.circuit.ComponentConnection;
 import io.github.marcuscastelo.quartus.circuit.QuartusBus;
 import io.github.marcuscastelo.quartus.circuit.components.ComponentDescriptor;
 import io.github.marcuscastelo.quartus.circuit.components.info.ComponentExecutionInfo;
-import io.github.marcuscastelo.quartus.network.QuartusBuildable;
 import io.github.marcuscastelo.quartus.network.QuartusSerializer;
-import io.github.marcuscastelo.quartus.network.QuartusSimetricSerializer;
 import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.SerializationException;
 import org.apache.commons.lang3.StringUtils;
@@ -16,14 +14,13 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Map;
 
-public class ExecutableComponent extends QuartusBuildable<ExecutableComponent> {
+public class ExecutableComponent {
     protected CircuitExecutor executor;
     protected ComponentDescriptor descriptor;
     protected ComponentExecutionInfo executionInfo;
 
 
-    //TODO: make private
-    protected ExecutableComponent(CircuitExecutor executor, ComponentDescriptor componentDescriptor, ComponentExecutionInfo executionInfo) {
+    public ExecutableComponent(CircuitExecutor executor, ComponentDescriptor componentDescriptor, ComponentExecutionInfo executionInfo) {
         this.executor = executor;
         this.descriptor = componentDescriptor;
         this.executionInfo = executionInfo;
@@ -84,10 +81,10 @@ public class ExecutableComponent extends QuartusBuildable<ExecutableComponent> {
     }
 
 
-    public static class Builder extends QuartusBuildable.Builder<ExecutableComponent> {
-        CircuitExecutor circuitExecutor;
-        ComponentDescriptor componentDescriptor;
-        ComponentExecutionInfo executionInfo;
+    public static class Builder {
+        protected CircuitExecutor circuitExecutor;
+        protected ComponentDescriptor componentDescriptor;
+        protected ComponentExecutionInfo executionInfo;
         public Builder() {}
 
         public Builder setCircuitExecutor(CircuitExecutor circuitExecutor) {

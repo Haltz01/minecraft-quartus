@@ -1,6 +1,7 @@
 package io.github.marcuscastelo.quartus.network.handlers;
 
 import io.github.marcuscastelo.quartus.blockentity.ExecutorBlockEntity;
+import io.github.marcuscastelo.quartus.network.QuartusCompilerAreaChangeC2SPacket;
 import io.github.marcuscastelo.quartus.network.QuartusExecutorStartC2SPacket;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.block.entity.BlockEntity;

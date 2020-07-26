@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
+//TODO: salvar blockenttutu
+
 /**
  * Classe que define o BlocoEntity do Compiler
  * BlockEntity guarda dados dentro de um bloco ao qual ele foi atribuído
@@ -27,7 +29,7 @@ import java.util.Random;
 public class CompilerBlockEntity extends BlockEntity implements ImplementedInventory, Tickable, BlockEntityClientSerializable {
 	//Variável que armazena os itens dentro do bloco
 	private final DefaultedList<ItemStack> inventoryItems;
-	private int compilingAreaSize;
+	private int compilingAreaSize = 10;
 	public static int MAX_COMPILING_AREA_SIZE = 99;
 	
 	/**
@@ -36,11 +38,14 @@ public class CompilerBlockEntity extends BlockEntity implements ImplementedInven
     public CompilerBlockEntity() {
         super(QuartusBlockEntities.COMPILER_BLOCK_ENTITY_TYPE);
         inventoryItems = DefaultedList.ofSize(1, ItemStack.EMPTY);
-        compilingAreaSize = 10;
-
     }
 
-	/**
+    @Override
+    public void markRemoved() {
+        super.markRemoved();
+    }
+
+    /**
 	 * Método que retorna uma lista com os itens do bloco
 	 */
     @Override

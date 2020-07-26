@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,8 +17,6 @@ import java.util.List;
  * que inicializa os módulos do mod.
  */
 public class Quartus implements ModInitializer {
-    //TODO: adicionar receitas ao livro de crafting
-
 	//Prefixo utilizado para qualquer recurso do mod que necessite ser registrado no jogo (blocos, itens, controladores de inventário, etc.).
     public static final String MOD_ID = "quartus";
 
@@ -28,7 +27,6 @@ public class Quartus implements ModInitializer {
      *  No menu criativo, os itens estão separados por categorias - ou grupos de itens.
      *  Este campo armazena o grupo de itens do mod (tanto itens puros quanto itens de blocos).
      *  OBS: a ordem dos itens no grupo é dada pela função @QuartusItems::appendItemGroupStacksInOrder
-     *  @see QuartusItems#appendItemGroupStacksInOrder(List lista a ser preenchida na ordem)
      */
     public static ItemGroup ITEMGROUP =
             FabricItemGroupBuilder.create(id("item_group"))

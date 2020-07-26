@@ -106,18 +106,4 @@ public class DirectionUtils {
         Function<Direction, Direction> rotationFunction = getRotationFunction(facingDir);
         return rotationFunction.apply(relativeDirection);
     }
-
-    public Vec3i decomposeDirection(Direction direction) {
-        if (direction.equals(Direction.NORTH)) return new Vec3i(0, 0, -1);
-        if (direction.equals(Direction.SOUTH)) return new Vec3i(0, 0, 1);
-        if (direction.equals(Direction.WEST)) return new Vec3i(-1, 0, 0);
-        if (direction.equals(Direction.EAST)) return new Vec3i(1, 0, 0);
-        if (direction.equals(Direction.UP)) return new Vec3i(0, 1, 0);
-        if (direction.equals(Direction.DOWN)) return new Vec3i(0, -1, 0);
-        throw new IllegalArgumentException("Direction " + direction + " not supported");
-    }
-
-    public Vec3i multiplyEveryCoordinate(Vec3i baseVec, Vec3i selectorVec) {
-        return new Vec3i(baseVec.getX() * selectorVec.getX(), baseVec.getY() * selectorVec.getY(), baseVec.getZ() * selectorVec.getZ());
-    }
 }

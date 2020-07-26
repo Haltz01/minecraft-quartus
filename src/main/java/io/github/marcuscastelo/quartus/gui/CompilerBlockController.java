@@ -5,6 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.marcuscastelo.quartus.blockentity.CompilerBlockEntity;
 import io.github.marcuscastelo.quartus.circuit.CircuitDescriptor;
 import io.github.marcuscastelo.quartus.circuit.CircuitCompiler;
+import io.github.marcuscastelo.quartus.network.QuartusCompilerAreaChangeC2SPacket;
 import io.github.marcuscastelo.quartus.network.QuartusFloppyDiskUpdateC2SPacket;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
 import io.netty.buffer.Unpooled;
@@ -35,13 +36,28 @@ public class CompilerBlockController extends CottonCraftingController {
     private final BlockPos compilerBlockPosition;
 
     private final Consumer<Integer> onCompileAreaSizeSetted;
+
+    /**
+     * Envia um pacote pro servidor solicitando que a área do compilador
+     * seja alterada. Adicionalmente, chama o callback onCompileAreaSizeSetted
+     * @param newSize   Novo tamanho
+     */
     private void setCompilingAreaSize(int newSize) {
         BlockEntity be = world.getBlockEntity(compilerBlockPosition);
         if (!(be instanceof CompilerBlockEntity)) return;
+
         ((CompilerBlockEntity) be).setCompilingAreaSize(newSize);
-        if (onCompileAreaSizeSetted != null) onCompileAreaSizeSetted.accept(getCompilingAreaSize());
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        QuartusCompilerAreaChangeC2SPacket packet = new QuartusCompilerAreaChangeC2SPacket(compilerBlockPosition, newSize);
+        packet.send(buf);
+
+        if (onCompileAreaSizeSetted != null) onCompileAreaSizeSetted.accept(newSize);
     }
 
+    /**
+     * Verifica na BlockEntity qual é a área de compilação atual
+     * @return tamanho de compilação
+     */
     private int getCompilingAreaSize() {
         BlockEntity be = world.getBlockEntity(compilerBlockPosition);
         if (!(be instanceof CompilerBlockEntity)) return 0;

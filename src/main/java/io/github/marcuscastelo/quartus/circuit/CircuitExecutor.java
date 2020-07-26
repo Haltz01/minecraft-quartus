@@ -17,6 +17,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 import java.util.function.Consumer;
 
+/**
+ * Classe que realiza a execução do circuito.
+ */
 public class CircuitExecutor {
     private final CircuitDescriptor descriptor;
 
@@ -24,6 +27,13 @@ public class CircuitExecutor {
     ImmutableMap<Integer, ExecutableComponent> otherComponents;
     ImmutableMap<Integer, ExecutableWorldOutput> outputs;
 
+    /**
+     * Define a construção de um executor de circuito
+     * @param world                 Mundo
+     * @param inputControllers      Posição dos inputs no mundo
+     * @param outputControllers     Posição dos outputs no mundo
+     * @param descriptor            Descrição do circuito compilado
+     */
     private CircuitExecutor(World world, List<BlockPos> inputControllers, List<BlockPos> outputControllers, CircuitDescriptor descriptor) {
         this.descriptor = descriptor;
 
@@ -57,6 +67,11 @@ public class CircuitExecutor {
 
     }
 
+    /**
+     * Obtém um componente executável dado o ID
+     * @param ID ID do componente desejado
+     * @return Componente executável obtido
+     */
     public ExecutableComponent getComponentByID(int ID) {
         ExecutableComponent component = otherComponents.getOrDefault(ID, null);
         if (component == null) component = inputs.getOrDefault(ID, null);
@@ -65,42 +80,61 @@ public class CircuitExecutor {
         return component;
     }
 
+    /**
+     * Define o estado dos inputs e outputs de um componente
+     * @param ID                ID do componente
+     * @param executionInfo     Dados de execução do componente
+     */
     public void setComponentExecutionInfo(int ID, ComponentExecutionInfo executionInfo) {
         getComponentByID(ID).setExecutionInfo(executionInfo);
     }
 
-    //Método que atualiza a saída dos Inputs
-    //A saída do Input é a mesma que a sua entrada do mundo "real"
+    /**
+     * Método que atualiza a saída dos Inputs
+     * A saída do Input é a mesma que a sua entrada do mundo "real"
+     */
     private void updateInputs() {
         for (ExecutableWorldInput input: inputs.values()) {
             input.updateComponent();
         }
     }
 
-    //Método que atualiza as saídas dos componentes
-    //De acordo com cada entrada e tipo de componente
-    //a saída calculada
+    /**
+     * Método que atualiza as saídas dos componentes
+     * De acordo com cada entrada e tipo de componente
+     * a saída calculada
+     */
     private void updateComponents() {
         for (ExecutableComponent component: otherComponents.values()) {
             component.updateComponent();
         }
     }
 
-    //Método que atualiza a saída dos Outputs
-    //A saída para o mundo "real" é a mesma que a entrada
+    /**
+     * Método que atualiza a saída dos Outputs
+     * A saída para o mundo "real" é a mesma que a entrada
+     */
     private void updateOutputs() {
         for (ExecutableWorldOutput output: outputs.values()) {
             output.updateComponent();
         }
     }
 
-    //Método que faz a chamada de atualização para os componentes do circuito
+    /**
+     * Método que faz a chamada de atualização para os componentes do circuito
+     */
     public void updateCircuit() {
         updateInputs();
         updateComponents();
         updateOutputs();
     }
 
+    /**
+     * Classe que cria um construtor de CircuitExecutor,
+     * alimentando gradualmente os membros do construtor.
+     * Em certo momento, os membros do construtor estarão completos,
+     * a construção pode ser feita.
+     */
     public static class Builder {
         World world;
         List<BlockPos> inputControllersPos;
@@ -147,6 +181,9 @@ public class CircuitExecutor {
         }
     }
 
+    /**
+     * Classe que serializa o objeto para uma string ou faz o processo contrário
+     */
     public static class Serializer implements QuartusSerializer<CircuitExecutor, CircuitExecutor.Builder, String> {
         private static ExecutableComponent.Serializer componentSerializer = new ExecutableComponent.Serializer();
         private static ComponentExecutionInfo.Serializer executionInfoSerializer = new ComponentExecutionInfo.Serializer();

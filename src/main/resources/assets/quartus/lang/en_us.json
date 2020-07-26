@@ -18,7 +18,7 @@
   "block.quartus.input": "Circuit input",
   "block.quartus.output": "Circuit output",
   "block.quartus.multiplexer": "Multiplexer",
-  "block.quartus.extensor_io": "Executor I/O",
+  "block.quartus.executor_io": "Executor I/O",
   "gui.quartus.executor.empty": "There are no floppy disks to execute",
   "gui.quartus.executor.no_circuit": "The floppy disk provided doesn't have a circuit",
   "gui.quartus.executor.execute_btn": "Execute",
@@ -27,6 +27,7 @@
   "circuitcompiler.unknown_error": "Unknown error when compiling the circuit",
   "circuitcompiler.out_of_bounds": "Some component is out of bounds. The circuit must be inside the red marking",
   "circuitcompiler.disconnected_component": "Hm... It seems like a component is disconnected from the circuit",
+  "circuitcomiler.success": "Circuit compiled successfully",
   "quartus.item.floppy_disk.circuit_too_big": "Too many connections, right click to see",
   "quartus.item.floppy_disk.empty": "The disk is empty"
 }

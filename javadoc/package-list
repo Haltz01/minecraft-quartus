@@ -3,9 +3,7 @@ io.github.marcuscastelo.quartus.block
 io.github.marcuscastelo.quartus.block.circuit_parts
 io.github.marcuscastelo.quartus.blockentity
 io.github.marcuscastelo.quartus.circuit
-io.github.marcuscastelo.quartus.circuit.analyze
 io.github.marcuscastelo.quartus.circuit.components
-io.github.marcuscastelo.quartus.circuit.components.executor
 io.github.marcuscastelo.quartus.gui
 io.github.marcuscastelo.quartus.gui.client
 io.github.marcuscastelo.quartus.item

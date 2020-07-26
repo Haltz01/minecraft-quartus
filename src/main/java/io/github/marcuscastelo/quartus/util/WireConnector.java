@@ -72,7 +72,7 @@ public class WireConnector {
 
 	/**
 	 * Método que retorna um par de direções horizontais, sem se preocupar com
-	 * facing ou auxDirection. Se a quantidade de blocos foi <= 2,
+	 * facing ou auxDirection. Se a quantidade de blocos foi menor ou igual 2,
 	 * salva no par os blocos conectados de acordo com a direção,
 	 * pois não é possível conectar um fio a mais de 2 componentes.
 	 * @param mainWirePos		Posição do bloco principal
@@ -94,7 +94,7 @@ public class WireConnector {
 
 	/**
 	 * Método que retorna um par de direções verticais, sem se preocupar com
-	 * facing ou auxDirection. Se a quantidade de blocos foi <= 2,
+	 * facing ou auxDirection. Se a quantidade de blocos foi menor ou igual 2,
 	 * salva no par os blocos conectados de acordo com a direção,
 	 * pois não é possível conectar um fio a mais de 2 componentes.
 	 * @param mainWirePos		Posição do bloco principal
@@ -221,8 +221,8 @@ public class WireConnector {
 	/**
 	 * Método que retorna a direção contrária da FACING de um fio
 	 * com base nos booleans que indica para qual sentido está virado
-	 * Positivo	->	anti-horário
-	 * Negativo	->	horário
+	 * Positivo	anti-horário
+	 * Negativo	horário
 	 * seguindo a regra da mão direita para uma base positivamente orientada
 	 * @param facingDirection		Direção para o qual o fio 'olha'
 	 * @param turned		Boolean que indica se está virado

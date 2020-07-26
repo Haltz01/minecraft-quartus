@@ -46,11 +46,23 @@ public class CircuitExplorer {
         }
     }
 
+    /**
+     * Função auxiliar que determina se um bloco na posição indicada é um componente (QuartusInGameComponent)
+     * @param world Mundo
+     * @param pos   Posição do bloco
+     * @return      Se o bloco indicado é um componente ou não
+     */
     private static boolean isComponent(World world, BlockPos pos) {
         return (world.getBlockState(pos).getBlock() instanceof QuartusInGameComponent);
 
     }
 
+    /**
+     * Função auxiliar que determina se um bloco na posição indicada é um fio (WireBlock)
+     * @param world Mundo
+     * @param pos   Posição do bloco
+     * @return      Se o bloco indicado é um fio ou não
+     */
     private static boolean isWire(World world, BlockPos pos) {
         return (world.getBlockState(pos).getBlock() instanceof WireBlock);
 
@@ -59,13 +71,12 @@ public class CircuitExplorer {
 	/**
 	 * Método que analisa o circuito a partir de um dado componente do Mod (componente A),
 	 * identificando o caminho a ser seguido com os componentes e adicionando-os a uma lista de Conexões
-	 * @param world			Mundo que está sendo jogado
-	 * @param circuit		TODO: ver oq é isso
-	 * @param componentA	Nó/Componente de origem no circuito
-	 * @param compAPos		Posição do nó/componente de origem TODO: remover parametro?
-	 * @return		Lista com as informações dos nós explorados
+	 * @param world			    Mundo que está sendo jogado
+	 * @param componentA	    Nó/Componente de origem no circuito
+	 * @param compAPos		    Posição do nó/componente de origem
+	 * @return		            Lista com as informações dos nós explorados
 	 */
-    public static List<ConnectedBlocksInfo> getConnectedNodesInfo(World world, CircuitDescriptor circuit, ComponentDescriptor componentA, BlockPos compAPos) {
+    public static List<ConnectedBlocksInfo> getConnectedNodesInfo(World world, ComponentDescriptor componentA, BlockPos compAPos) {
         List<ConnectedBlocksInfo> connectedNodesAboluteInfo = new ArrayList<>();
 
         if (!isWire(world, compAPos) && !isComponent(world,compAPos)) {
@@ -87,28 +98,34 @@ public class CircuitExplorer {
             BlockState neighborState = world.getBlockState(neighborPos);
             Block neighborBlock = neighborState.getBlock();
 
+            ConnectedBlocksInfo connectionInfo = null;
             if (neighborBlock instanceof QuartusInGameComponent){
                 Direction relativeBtoA = DirectionUtils.getRelativeDirection(neighborState.get(Properties.HORIZONTAL_FACING), absoluteAtoB.getOpposite());
                 System.out.println(relativeAtoB + " -------- " + relativeBtoA + " <<<>>>>" + neighborPos);
-                connectedNodesAboluteInfo.add(new ConnectedBlocksInfo(relativeAtoB, relativeBtoA, neighborPos));
+                connectionInfo = new ConnectedBlocksInfo(relativeAtoB, relativeBtoA, neighborPos);
             }
             else if (neighborBlock instanceof WireBlock) {
                 //Se o vizinho for um fio, siga o fio e obtenha a posição do nó em sua extremidade
                 Optional<ConnectedBlocksInfo> throughWireInfo = getNextComponentThroughWires(world, compAPos, absoluteAtoB);
-                throughWireInfo.ifPresent(connectedNodesAboluteInfo::add);
+                connectionInfo = throughWireInfo.orElse(null);
             }
+
+            //Se o bloco não for do mod, encerra a busca nessa direção
+            if (connectionInfo == null) continue;
+
+//            circuitDescriptor
+
         }
-        //TODO: verificar por direção ruim
 
         return connectedNodesAboluteInfo;
     }
 
-	/** TODO: melhorar comentario
+	/**
 	 * Método auxiliar que analisa um fio/wire do circuito e identifica qual direção para seguir
-	 * @param world             Mundo em que o circuito é compilado
-	 * @param compAPos        Posição do bloco que chamou a função
+	 * @param world         Mundo em que o circuito é compilado
+	 * @param compAPos      Posição do bloco que chamou a função
 	 * @param absoluteAtoB  Direção que o bloco que chamou andou para encontrar o fio que está prestes a ser percorrido
-	 * @return                  Par de posição e direção do componente que foi encontrado
+	 * @return              posição e direção do componente que foi encontrado
 	 */
     private static Optional<ConnectedBlocksInfo> getNextComponentThroughWires(World world, BlockPos compAPos, Direction absoluteAtoB) {
         BlockPos compBPos = compAPos.offset(absoluteAtoB);

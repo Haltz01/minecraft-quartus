@@ -4,8 +4,6 @@ import io.github.marcuscastelo.quartus.Quartus;
 import io.github.marcuscastelo.quartus.block.ExecutorIOBlock;
 import io.github.marcuscastelo.quartus.circuit.CircuitDescriptor;
 import io.github.marcuscastelo.quartus.circuit.CircuitExecutor;
-import io.github.marcuscastelo.quartus.circuit.components.info.ComponentDirectionInfo;
-import io.github.marcuscastelo.quartus.circuit.components.info.ComponentExecutionInfo;
 import io.github.marcuscastelo.quartus.registry.QuartusBlockEntities;
 import io.github.marcuscastelo.quartus.registry.QuartusBlocks;
 import io.github.marcuscastelo.quartus.registry.QuartusItems;
@@ -22,12 +20,8 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

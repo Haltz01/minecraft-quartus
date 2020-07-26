@@ -85,7 +85,7 @@ public class ExecutorBlock extends HorizontalFacingBlock implements BlockEntityP
 	/**
 	 * Método que define as propriedades que o bloco designado terá.
 	 * @param builder  Construtor usado para especificar que o bloco criado terá
-	 * 					como propriedade FACING -> orientação no mundo
+	 * 					como propriedade FACING orientação no mundo
 	 */
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {

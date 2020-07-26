@@ -32,7 +32,7 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
 	 */
     public ExecutorIOBlock() {
         super(Settings.of(Material.PART).nonOpaque());
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH).with(EXTENSOR_STATE, ExecutorIOState.VOID).with(POWERED, false));
+        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH).with(EXTENSOR_STATE, ExecutorIOState.VOID).with(Properties.POWERED, false));
 	}
 	
 	/**
@@ -61,8 +61,6 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
 
 	//Variáveis auxiliares para definição dos estados dos blocos IO (Input Output)
     public static final EnumProperty<ExecutorIOState> EXTENSOR_STATE = EnumProperty.of("executor_io_state", ExecutorIOState.class);
-    public static final BooleanProperty POWERED = Properties.POWERED;
-
 
 	/**
 	 * Método que informa o jogo que esse bloco é um bloco que pode emitir redstone
@@ -83,7 +81,7 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
     public int getStrongRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
         Direction outputDir = state.get(FACING);
         if (facing != outputDir) return 0;
-        return state.get(POWERED)? 15: 0;
+        return state.get(Properties.POWERED)? 15: 0;
     }
 
 	/**
@@ -94,7 +92,7 @@ public class ExecutorIOBlock extends HorizontalFacingBlock {
 	 */
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, EXTENSOR_STATE, POWERED);
+        builder.add(FACING, EXTENSOR_STATE, Properties.POWERED);
     }
 
 	/**

@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * Classe que implementa o bloco de componente de circuito.
  * É um mero receptáculo, os blocos componentes são apenas carcaças.
- * Recebem {@link ComponentInfo} para determinar suas propriedades
+ * Recebem ComponentInfo para determinar suas propriedades
  */
 public class CircuitComponentBlock extends HorizontalFacingBlock implements QuartusInGameComponent {
     private final ComponentInfo componentInfo;
@@ -48,8 +48,10 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
         this.componentInfo = componentInfo;
     }
 
-	/** TODO: comment
+	/**
 	 * Método usado para criar instâncias do componente relacionado a este bloco
+	 * @param circuit	Cirucuito usado para definir o ID do compoenente instanciado
+	 * @return 			Componente instanciado
 	 */
     @Override
     public ComponentDescriptor createCircuitComponent(CircuitDescriptor circuit) {
@@ -92,8 +94,8 @@ public class CircuitComponentBlock extends HorizontalFacingBlock implements Quar
     }
 
 	/**
-	 * Método que determina o blockstate após utilizar no método de atualizar os blocos de acordo com seus vizinhos
-	 * @see CircuitComponentBlock#neighborUpdate(BlockState, World, BlockPos, Block, BlockPos, boolean)
+	 * Método que determina o blockstate após utilizar no método de atualizar os blocos de acordo com seus vizinhos,
+	 * de acordo com CircuitComponentBlock::neighborUpdate().
 	 * @param state		Identifica o estado do bloco após o método supracitado
 	 * @param facing		Direção para o qual o bloco 'olha'
 	 * @param neighborState		Estado do bloco vizinho

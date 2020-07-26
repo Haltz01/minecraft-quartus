@@ -16,7 +16,6 @@ import net.minecraft.world.World;
 import java.util.*;
 
 
-//TODO: renomear variávies para nova terminologia
 //TODO: manter ordem dos inputs e outputs
 
 /**
@@ -113,7 +112,7 @@ public class CircuitCompiler {
             // Caso "especial": distribuidor -> a saída de um outro gate gera mais de um fio para vários inputs (de outros gates)
             // Caso "especial": extensores -> aumentam a quantidade de inputs de um gate
             //TODO: resolver parâmetros redundantes
-            List<CircuitExplorer.ConnectedBlocksInfo> nextComponentsPos = CircuitExplorer.getConnectedNodesInfo(world, circuit, component, nodePos);
+            List<CircuitExplorer.ConnectedBlocksInfo> nextComponentsPos = CircuitExplorer.getConnectedNodesInfo(world, component, nodePos);
             if (nextComponentsPos.size() == 0 && !(component instanceof OutputDescriptor)) {
                 errorMessage = new TranslatableText("circuitcompiler.disconnected_component");
                 failed = true;
@@ -122,9 +121,6 @@ public class CircuitCompiler {
             for (CircuitExplorer.ConnectedBlocksInfo nextNodeInfo : nextComponentsPos) {
                 BlockPos nextNodePos = nextNodeInfo.bPos;
 
-                System.out.println("Vizinho: " + nextNodePos);
-
-                System.out.println(nextNodeInfo.AtoB + " --- " + nextNodeInfo.BtoA + " ::: " + component + " --- " + componentInPos.get(nextNodePos));
                 if (componentInPos.getOrDefault(nextNodePos,null) == null) {
                     errorMessage = new TranslatableText("circuitcompiler.out_of_bounds", nextNodePos.toString());
                     failed = true;
@@ -134,9 +130,8 @@ public class CircuitCompiler {
                 circuit.addLink(nextNodeInfo.AtoB, nextNodeInfo.BtoA, component, componentInPos.get(nextNodePos));
 
                 if (componentInPos.get(nextNodePos).hasOutputConnections()) {
-                    System.out.println("Vizinho já explorado... ignorando!");
+                    continue;
                 } else {
-                    System.out.println("Adiconando Vizinho: " + nextNodePos.toString());
                     explorePoll.offer(nextNodePos);
                 }
             }
@@ -158,6 +153,8 @@ public class CircuitCompiler {
         if (failed && MinecraftClient.getInstance().player != null) {
             MinecraftClient.getInstance().player.sendMessage(errorMessage);
             return Optional.empty();
+        } else if (MinecraftClient.getInstance().player != null) {
+            MinecraftClient.getInstance().player.sendMessage(new TranslatableText("circuitcomiler.success"));
         }
 
         return Optional.of(circuit);

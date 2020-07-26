@@ -20,6 +20,8 @@ public class QuartusCircuitComponents {
     public static final ComponentDirectionInfo WES2NDirInfo = new ComponentDirectionInfo(Arrays.asList(Direction.EAST, Direction.WEST, Direction.SOUTH), Direction.NORTH);
     // Descreve as direções de um componenete cujos inputs são sul e outputs são norte, leste, oeste (direções relativas a direção para que o componente olha) [South to North, East, West Direction Info]
     public static final ComponentDirectionInfo S2NEWDirInfo = new ComponentDirectionInfo(Direction.SOUTH, Arrays.asList(Direction.NORTH, Direction.EAST, Direction.WEST));
+    // Descreve as direções de um componenete cujos inputs são sul e outputs são norte (direções relativas a direção para que o componente olha) [South to North Direction Info]
+    public static final ComponentDirectionInfo S2NDirInfo = new ComponentDirectionInfo(Direction.SOUTH, Direction.NORTH);
 
     // Map que guarda a informação de cada tipo de componenete
     public static final Map<String, ComponentInfo> componentInfoPerComponentName = new HashMap<>();
@@ -81,7 +83,7 @@ public class QuartusCircuitComponents {
         NOR_GATE = registerComponent("NorGate", WE2NDirInfo, QuartusLogics.NOR_GATE);
         XOR_GATE = registerComponent("XorGate", WE2NDirInfo, QuartusLogics.XOR_GATE);
         XNOR_GATE = registerComponent("XnorGate", WE2NDirInfo, QuartusLogics.XNOR_GATE);
-        NOT_GATE = registerComponent("NotGate", WE2NDirInfo, QuartusLogics.NOT_GATE);
+        NOT_GATE = registerComponent("NotGate", S2NDirInfo, QuartusLogics.NOT_GATE);
 
         MULTIPLEXER_GATE = registerComponent("MultiplexerGate", WES2NDirInfo,  QuartusLogics.MULTIPLEXER);
         DISTRIBUTOR_GATE = registerComponent("DistributorGate", S2NEWDirInfo, QuartusLogics.DISTRIBUTOR);

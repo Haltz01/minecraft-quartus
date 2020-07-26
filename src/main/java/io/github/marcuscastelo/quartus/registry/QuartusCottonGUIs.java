@@ -35,6 +35,12 @@ public class QuartusCottonGUIs {
         });
     }
 
+    /**
+     * Método que obtém um inventário no mundo dada uma posiçãp
+     * @param world Mundo
+     * @param pos   Posição
+     * @return      Inventário
+     */
     public static Inventory getBlockInventory(World world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof Inventory)
